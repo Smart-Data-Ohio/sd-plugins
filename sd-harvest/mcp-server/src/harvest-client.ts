@@ -1,10 +1,12 @@
 import type {
   HarvestClientConfig,
+  HarvestProjectAssignmentsResponse,
   HarvestProjectsResponse,
   HarvestTimeEntriesResponse,
   HarvestTimeEntry,
   HarvestUser,
   ListProjectsParams,
+  GetMyProjectAssignmentsParams,
   GetTimeEntriesParams,
   CreateTimeEntryBody,
 } from "./types.js";
@@ -45,10 +47,14 @@ export class HarvestClient {
     return url.toString();
   }
 
-  private async request<T>(method: string, path: string, options?: {
-    params?: Record<string, string>;
-    body?: object;
-  }): Promise<T> {
+  private async request<T>(
+    method: string,
+    path: string,
+    options?: {
+      params?: Record<string, string>;
+      body?: object;
+    },
+  ): Promise<T> {
     const url = this.buildUrl(path, options?.params);
     const response = await fetch(url, {
       method,
@@ -64,24 +70,52 @@ export class HarvestClient {
     return response.json() as Promise<T>;
   }
 
-  async listProjects(params?: ListProjectsParams): Promise<HarvestProjectsResponse> {
+  async listProjects(
+    params?: ListProjectsParams,
+  ): Promise<HarvestProjectsResponse> {
     const queryParams: Record<string, string> = {};
-    if (params?.is_active !== undefined) queryParams.is_active = String(params.is_active);
-    if (params?.client_id !== undefined) queryParams.client_id = String(params.client_id);
-    if (params?.per_page !== undefined) queryParams.per_page = String(params.per_page);
+    if (params?.is_active !== undefined)
+      queryParams.is_active = String(params.is_active);
+    if (params?.client_id !== undefined)
+      queryParams.client_id = String(params.client_id);
+    if (params?.per_page !== undefined)
+      queryParams.per_page = String(params.per_page);
 
-    return this.request<HarvestProjectsResponse>("GET", "/projects", { params: queryParams });
+    return this.request<HarvestProjectsResponse>("GET", "/projects", {
+      params: queryParams,
+    });
   }
 
-  async getTimeEntries(params?: GetTimeEntriesParams): Promise<HarvestTimeEntriesResponse> {
+  async getMyProjectAssignments(
+    params: GetMyProjectAssignmentsParams,
+  ): Promise<HarvestProjectAssignmentsResponse> {
     const queryParams: Record<string, string> = {};
-    if (params?.user_id !== undefined) queryParams.user_id = String(params.user_id);
-    if (params?.project_id !== undefined) queryParams.project_id = String(params.project_id);
+    if (params.per_page !== undefined)
+      queryParams.per_page = String(params.per_page);
+
+    return this.request<HarvestProjectAssignmentsResponse>(
+      "GET",
+      `/users/${params.user_id}/project_assignments`,
+      { params: queryParams },
+    );
+  }
+
+  async getTimeEntries(
+    params?: GetTimeEntriesParams,
+  ): Promise<HarvestTimeEntriesResponse> {
+    const queryParams: Record<string, string> = {};
+    if (params?.user_id !== undefined)
+      queryParams.user_id = String(params.user_id);
+    if (params?.project_id !== undefined)
+      queryParams.project_id = String(params.project_id);
     if (params?.from !== undefined) queryParams.from = params.from;
     if (params?.to !== undefined) queryParams.to = params.to;
-    if (params?.per_page !== undefined) queryParams.per_page = String(params.per_page);
+    if (params?.per_page !== undefined)
+      queryParams.per_page = String(params.per_page);
 
-    return this.request<HarvestTimeEntriesResponse>("GET", "/time_entries", { params: queryParams });
+    return this.request<HarvestTimeEntriesResponse>("GET", "/time_entries", {
+      params: queryParams,
+    });
   }
 
   async createTimeEntry(body: CreateTimeEntryBody): Promise<HarvestTimeEntry> {

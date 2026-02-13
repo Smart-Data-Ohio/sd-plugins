@@ -98,6 +98,41 @@ export interface ListProjectsParams {
   per_page?: number;
 }
 
+export interface HarvestTaskAssignment {
+  id: number;
+  billable: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  hourly_rate: number | null;
+  budget: number | null;
+  task: { id: number; name: string };
+}
+
+export interface HarvestProjectAssignment {
+  id: number;
+  is_project_manager: boolean;
+  is_active: boolean;
+  use_default_rates: boolean;
+  budget: number | null;
+  created_at: string;
+  updated_at: string;
+  hourly_rate: number | null;
+  project: { id: number; name: string; code: string };
+  client: { id: number; name: string };
+  task_assignments: HarvestTaskAssignment[];
+}
+
+export interface HarvestProjectAssignmentsResponse extends HarvestPaginatedResponse<HarvestProjectAssignment> {
+  project_assignments: HarvestProjectAssignment[];
+}
+
+export interface GetMyProjectAssignmentsParams {
+  user_id: number;
+  is_active?: boolean;
+  per_page?: number;
+}
+
 export interface GetTimeEntriesParams {
   user_id?: number;
   project_id?: number;
