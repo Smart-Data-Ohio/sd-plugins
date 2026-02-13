@@ -50,35 +50,46 @@ Record what you worked on today. This creates a local entry in `~/.sd-harvest/lo
 
 7. Parse the user's argument as the work description. If no argument was provided, ask what they worked on.
 
-8. Create a new entry object:
+8. Ask the user for the time range of this work (e.g., "9am-12pm", "1:30-5"). Parse into ISO 8601 timestamps using today's date.
 
-   ```json
-   {
-     "text": "User's description",
-     "timestamp": "ISO 8601 timestamp"
-   }
-   ```
+9. **Validate the time range against existing entries for today + this repo:**
+   - Entries must not overlap with any existing entry's start-end range
+   - If overlap is detected, show the conflict and ask the user to adjust
+   - Entries must be sequential — the new entry's start must be >= the latest existing entry's end
+   - If the new entry is earlier than existing ones, insert it in chronological order (but still no overlaps)
 
-9. If an entry already exists for today + this repo, append to its `entries` array. Otherwise create a new log object:
+10. Create a new entry object:
 
-   ```json
-   {
-     "date": "YYYY-MM-DD",
-     "repo": "/full/repo/path",
-     "repo_name": "repo-name",
-     "mapping": {
-       "project_id": 12345,
-       "task_id": 67890,
-       "project_name": "Project Name",
-       "task_name": "Task Name"
-     },
-     "entries": [...]
-   }
-   ```
+    ```json
+    {
+      "text": "User's description",
+      "start": "2026-02-13T09:00:00",
+      "end": "2026-02-13T12:00:00"
+    }
+    ```
 
-   The `mapping` field should be copied from `mappings.json` if one exists for this repo. Omit if no mapping.
+    Duration in hours can be calculated as `(end - start)`. This is used by `/harvest:fill` to determine how many hours to submit.
 
-10. Write updated logs back:
+11. If an entry already exists for today + this repo, append to its `entries` array (maintaining chronological order by start time). Otherwise create a new log object:
+
+    ```json
+    {
+      "date": "YYYY-MM-DD",
+      "repo": "/full/repo/path",
+      "repo_name": "repo-name",
+      "mapping": {
+        "project_id": 12345,
+        "task_id": 67890,
+        "project_name": "Project Name",
+        "task_name": "Task Name"
+      },
+      "entries": [...]
+    }
+    ```
+
+    The `mapping` field should be copied from `mappings.json` if one exists for this repo. Omit if no mapping.
+
+12. Write updated logs back:
 
     ```bash
     cat > ~/.sd-harvest/logs.json << 'EOF'
@@ -86,10 +97,10 @@ Record what you worked on today. This creates a local entry in `~/.sd-harvest/lo
     EOF
     ```
 
-11. Confirm:
+13. Confirm:
 
     ```text
-    Logged for [date]:
+    Logged for [date] ([start time] - [end time], [X.X]h):
       "[description]"
 
     [If mapped] Project: [Project Name] / [Task Name]
@@ -118,11 +129,13 @@ Record what you worked on today. This creates a local entry in `~/.sd-harvest/lo
     "entries": [
       {
         "text": "Fixed auth bug in login flow",
-        "timestamp": "2026-02-13T10:30:00Z"
+        "start": "2026-02-13T09:00:00",
+        "end": "2026-02-13T12:00:00"
       },
       {
         "text": "Code review for PR #123",
-        "timestamp": "2026-02-13T14:00:00Z"
+        "start": "2026-02-13T13:00:00",
+        "end": "2026-02-13T15:30:00"
       }
     ]
   }
@@ -132,6 +145,7 @@ Record what you worked on today. This creates a local entry in `~/.sd-harvest/lo
 ## Notes
 
 - Logs are local only — they aren't submitted to Harvest until `/harvest:fill` (Milestone 3)
-- Multiple entries per day per repo are fine
-- Hours are not estimated here — that happens during `/harvest:fill`
+- Multiple entries per day per repo are fine, but they must not overlap
+- Entries must have both `start` and `end` — duration is calculated as `(end - start)` in hours
+- Entries are stored in chronological order by `start` time
 - If no argument is provided, prompt the user for a description

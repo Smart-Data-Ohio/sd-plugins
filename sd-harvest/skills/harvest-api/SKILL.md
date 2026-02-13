@@ -79,7 +79,9 @@ The plugin stores local data in `~/.sd-harvest/`:
       "project_name": "",
       "task_name": ""
     },
-    "entries": [{ "text": "Description of work", "timestamp": "ISO 8601" }]
+    "entries": [
+      { "text": "Description of work", "start": "ISO 8601", "end": "ISO 8601" }
+    ]
   }
 ]
 ```
