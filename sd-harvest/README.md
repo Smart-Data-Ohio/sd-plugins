@@ -60,12 +60,12 @@ You should see your Harvest user info and active project list.
 
 ## Commands
 
-| Command            | Description                                                  |
-| ------------------ | ------------------------------------------------------------ |
-| `/harvest:status`  | Show active projects and current week's entries              |
-| `/harvest:log`     | Quick daily brain dump of what you worked on *(Milestone 2)* |
-| `/harvest:map`     | Map git repos to Harvest projects *(Milestone 2)*            |
-| `/harvest:fill`    | Assemble and submit weekly timesheet *(Milestone 3)*         |
+| Command           | Description                                                  |
+| ----------------- | ------------------------------------------------------------ |
+| `/harvest:status` | Show active projects and current week's entries              |
+| `/harvest:log`    | Quick daily brain dump of what you worked on _(Milestone 2)_ |
+| `/harvest:map`    | Map git repos to Harvest projects _(Milestone 2)_            |
+| `/harvest:fill`   | Assemble and submit weekly timesheet _(Milestone 3)_         |
 
 ## Project Structure
 

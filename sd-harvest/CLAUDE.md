@@ -27,23 +27,23 @@ cd mcp-server && npm test                         # Run tests (once they exist)
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `HARVEST_ACCESS_TOKEN` | Yes | Personal Access Token from Harvest |
-| `HARVEST_ACCOUNT_ID` | Yes | Harvest account ID (visible when creating token) |
+| Variable               | Required | Description                                      |
+| ---------------------- | -------- | ------------------------------------------------ |
+| `HARVEST_ACCESS_TOKEN` | Yes      | Personal Access Token from Harvest               |
+| `HARVEST_ACCOUNT_ID`   | Yes      | Harvest account ID (visible when creating token) |
 
 Get these from: Harvest web app > Settings > Developers > Personal Access Tokens
 
 ## Plugin Conventions
 
-| Component | Location | Format |
-|-----------|----------|--------|
-| Plugin manifest | `.claude-plugin/plugin.json` | JSON with name, version, description, author |
-| MCP config | `.mcp.json` | Flat format, stdio server type |
-| Commands | `commands/*.md` | YAML frontmatter: description, argument-hint, allowed-tools |
-| Skills | `skills/<name>/SKILL.md` | YAML frontmatter: name, description, version |
-| Agents | `agents/*.md` | YAML frontmatter: name, description, model |
-| Hooks | `hooks/hooks.json` | Wrapper format with description + hooks object |
+| Component       | Location                     | Format                                                      |
+| --------------- | ---------------------------- | ----------------------------------------------------------- |
+| Plugin manifest | `.claude-plugin/plugin.json` | JSON with name, version, description, author                |
+| MCP config      | `.mcp.json`                  | Flat format, stdio server type                              |
+| Commands        | `commands/*.md`              | YAML frontmatter: description, argument-hint, allowed-tools |
+| Skills          | `skills/<name>/SKILL.md`     | YAML frontmatter: name, description, version                |
+| Agents          | `agents/*.md`                | YAML frontmatter: name, description, model                  |
+| Hooks           | `hooks/hooks.json`           | Wrapper format with description + hooks object              |
 
 ## MCP Tool Naming
 

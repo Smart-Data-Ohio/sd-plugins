@@ -145,6 +145,8 @@ export interface HarvestClientConfig {
   accessToken: string;
   accountId: string;
   userAgent?: string;
+  clientId?: string;
+  clientSecret?: string;
 }
 
 export class HarvestApiError extends Error {

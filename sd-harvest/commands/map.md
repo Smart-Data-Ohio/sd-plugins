@@ -1,7 +1,13 @@
 ---
 description: Map this git repo to a Harvest project and task for time tracking
 argument-hint: "[no arguments — interactive selection]"
-allowed-tools: ["mcp__plugin_sd-harvest_harvest__list_projects", "Bash"]
+allowed-tools:
+  [
+    "mcp__plugin_sd-harvest_harvest__list_projects",
+    "mcp__plugin_sd-harvest_harvest__get_mappings",
+    "mcp__plugin_sd-harvest_harvest__set_mapping",
+    "Bash",
+  ]
 ---
 
 # Harvest Project Mapping

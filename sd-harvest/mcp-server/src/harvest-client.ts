@@ -11,19 +11,64 @@ import type {
   CreateTimeEntryBody,
 } from "./types.js";
 import { HarvestApiError } from "./types.js";
+import {
+  isExpired,
+  loadCredentials,
+  refreshAccessToken,
+  saveCredentials,
+} from "./auth.js";
 
 const BASE_URL = "https://api.harvestapp.com/v2";
 const DEFAULT_USER_AGENT = "sd-harvest-mcp/0.1.0";
 
 export class HarvestClient {
-  private readonly accessToken: string;
-  private readonly accountId: string;
+  private accessToken: string;
+  private accountId: string;
   private readonly userAgent: string;
+  private readonly clientId?: string;
+  private readonly clientSecret?: string;
 
   constructor(config: HarvestClientConfig) {
     this.accessToken = config.accessToken;
     this.accountId = config.accountId;
     this.userAgent = config.userAgent ?? DEFAULT_USER_AGENT;
+    this.clientId = config.clientId;
+    this.clientSecret = config.clientSecret;
+  }
+
+  private async ensureFreshToken(): Promise<void> {
+    if (!this.clientId || !this.clientSecret) {
+      // PAT mode — no refresh needed
+      return;
+    }
+
+    const creds = await loadCredentials();
+    if (!creds || !isExpired(creds)) {
+      return;
+    }
+
+    try {
+      const tokenResponse = await refreshAccessToken(
+        creds.refresh_token,
+        this.clientId,
+        this.clientSecret,
+      );
+
+      this.accessToken = tokenResponse.access_token;
+
+      await saveCredentials({
+        ...creds,
+        access_token: tokenResponse.access_token,
+        refresh_token: tokenResponse.refresh_token,
+        expires_at: Date.now() + tokenResponse.expires_in * 1000,
+      });
+    } catch {
+      throw new HarvestApiError(
+        401,
+        "Token Refresh Failed",
+        "Could not refresh access token. Please run harvest_login again.",
+      );
+    }
   }
 
   private buildHeaders(): Record<string, string> {
@@ -55,6 +100,8 @@ export class HarvestClient {
       body?: object;
     },
   ): Promise<T> {
+    await this.ensureFreshToken();
+
     const url = this.buildUrl(path, options?.params);
     const response = await fetch(url, {
       method,

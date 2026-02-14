@@ -1,7 +1,13 @@
 ---
 description: Log what you worked on today in natural language
 argument-hint: "<description of work done>"
-allowed-tools: ["Bash"]
+allowed-tools:
+  [
+    "mcp__plugin_sd-harvest_harvest__get_mappings",
+    "mcp__plugin_sd-harvest_harvest__get_logs",
+    "mcp__plugin_sd-harvest_harvest__add_log_entry",
+    "Bash",
+  ]
 ---
 
 # Harvest Daily Log

@@ -29,9 +29,10 @@ export function registerGetMe(server: McpServer, client: HarvestClient): void {
           ],
         };
       } catch (error) {
-        const message = error instanceof HarvestApiError
-          ? `Harvest API error (${error.status}): ${error.body}`
-          : `Unexpected error: ${error}`;
+        const message =
+          error instanceof HarvestApiError
+            ? `Harvest API error (${error.status}): ${error.body}`
+            : `Unexpected error: ${error}`;
 
         return {
           content: [{ type: "text" as const, text: message }],

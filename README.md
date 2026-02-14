@@ -4,8 +4,8 @@ Monorepo for Smart Data Claude Code plugins.
 
 ## Plugins
 
-| Plugin | Description |
-| ------ | ----------- |
+| Plugin                    | Description                                                                           |
+| ------------------------- | ------------------------------------------------------------------------------------- |
 | [sd-harvest](sd-harvest/) | Harvest time tracking — log daily work, assemble weekly timesheets, submit to Harvest |
 
 ## Getting Started

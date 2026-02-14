@@ -29,6 +29,7 @@ These are enforced across all plugins in this repo:
 - Test files live alongside source
 
 ### Code as Cost
+
 - Every dependency must justify its existence
 - No over-abstraction — three similar lines are better than a premature helper
 - No speculative features — build what's needed now
@@ -39,14 +40,14 @@ These are enforced across all plugins in this repo:
 
 Each plugin follows the same component layout:
 
-| Component | Location | Format |
-|-----------|----------|--------|
-| Plugin manifest | `.claude-plugin/plugin.json` | JSON with name, version, description, author |
-| MCP config | `.mcp.json` | Flat format, stdio server type |
-| Commands | `commands/*.md` | YAML frontmatter: description, argument-hint, allowed-tools |
-| Skills | `skills/<name>/SKILL.md` | YAML frontmatter: name, description, version |
-| Agents | `agents/*.md` | YAML frontmatter: name, description, model |
-| Hooks | `hooks/hooks.json` | Wrapper format with description + hooks object |
+| Component       | Location                     | Format                                                      |
+| --------------- | ---------------------------- | ----------------------------------------------------------- |
+| Plugin manifest | `.claude-plugin/plugin.json` | JSON with name, version, description, author                |
+| MCP config      | `.mcp.json`                  | Flat format, stdio server type                              |
+| Commands        | `commands/*.md`              | YAML frontmatter: description, argument-hint, allowed-tools |
+| Skills          | `skills/<name>/SKILL.md`     | YAML frontmatter: name, description, version                |
+| Agents          | `agents/*.md`                | YAML frontmatter: name, description, model                  |
+| Hooks           | `hooks/hooks.json`           | Wrapper format with description + hooks object              |
 
 ## Marketplace Registry
 

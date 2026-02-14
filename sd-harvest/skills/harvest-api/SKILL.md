@@ -7,12 +7,23 @@ description: This skill should be used when the user asks about Harvest API, tim
 
 ## Available MCP Tools
 
+### Harvest API Tools
+
 | Tool            | Purpose                                                                              |
 | --------------- | ------------------------------------------------------------------------------------ |
 | `list_projects` | List Harvest projects with client, task, and billable info. Filter by active status. |
 | `get_me`        | Get current authenticated user's profile (name, email, timezone, roles).             |
 | `get_entries`   | Query time entries by date range and optional project filter.                        |
 | `create_entry`  | Create a new time entry with project, task, date, hours, notes. _(Milestone 3)_      |
+
+### Local Storage Tools
+
+| Tool            | Purpose                                                                                          |
+| --------------- | ------------------------------------------------------------------------------------------------ |
+| `get_mappings`  | Read all repo-to-project mappings from `~/.sd-harvest/mappings.json`.                            |
+| `set_mapping`   | Map a repo path to a Harvest project+task. Persists to `~/.sd-harvest/mappings.json`.            |
+| `get_logs`      | Read work logs, optionally filtered by date range or repo. From `~/.sd-harvest/logs.json`.       |
+| `add_log_entry` | Add a work log entry with start/end times. Validates no overlaps, maintains chronological order. |
 
 ## API Concepts
 
@@ -47,10 +58,10 @@ description: This skill should be used when the user asks about Harvest API, tim
 
 The plugin stores local data in `~/.sd-harvest/`:
 
-| File            | Purpose                                                                       |
-| --------------- | ----------------------------------------------------------------------------- |
-| `mappings.json` | Maps git repo paths to Harvest project/task pairs. Written by `/harvest:map`. |
-| `logs.json`     | Daily work log entries (natural language). Written by `/harvest:log`.         |
+| File            | Purpose                                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------------------- |
+| `mappings.json` | Maps git repo paths to Harvest project/task pairs. Managed by `get_mappings` and `set_mapping` tools. |
+| `logs.json`     | Daily work log entries with start/end times. Managed by `get_logs` and `add_log_entry` tools.         |
 
 ### mappings.json format
 
