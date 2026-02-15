@@ -82,6 +82,17 @@ export function hasOverlap(
   return null;
 }
 
+export async function clearLogs(
+  filter: { date: string; repo: string }[],
+): Promise<DayLog[]> {
+  const logs = await getLogs();
+  const remaining = logs.filter(
+    (log) => !filter.some((f) => f.date === log.date && f.repo === log.repo),
+  );
+  await writeJson("logs.json", remaining);
+  return remaining;
+}
+
 export async function addLogEntry(
   date: string,
   repo: string,

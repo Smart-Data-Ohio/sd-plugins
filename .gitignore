@@ -3,3 +3,4 @@ mcp-server/dist/
 *.local.json
 .env
 dist/
+.claude/

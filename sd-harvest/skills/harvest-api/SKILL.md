@@ -14,7 +14,7 @@ description: This skill should be used when the user asks about Harvest API, tim
 | `list_projects` | List Harvest projects with client, task, and billable info. Filter by active status. |
 | `get_me`        | Get current authenticated user's profile (name, email, timezone, roles).             |
 | `get_entries`   | Query time entries by date range and optional project filter.                        |
-| `create_entry`  | Create a new time entry with project, task, date, hours, notes. _(Milestone 3)_      |
+| `create_entry`  | Create a new time entry with project, task, date, hours, and notes.                  |
 
 ### Local Storage Tools
 
@@ -24,6 +24,7 @@ description: This skill should be used when the user asks about Harvest API, tim
 | `set_mapping`   | Map a repo path to a Harvest project+task. Persists to `~/.sd-harvest/mappings.json`.            |
 | `get_logs`      | Read work logs, optionally filtered by date range or repo. From `~/.sd-harvest/logs.json`.       |
 | `add_log_entry` | Add a work log entry with start/end times. Validates no overlaps, maintains chronological order. |
+| `clear_logs`    | Remove submitted log entries from local storage by date+repo pairs.                              |
 
 ## API Concepts
 
@@ -45,9 +46,9 @@ description: This skill should be used when the user asks about Harvest API, tim
 
 ### Authentication
 
-- Uses Personal Access Token (not OAuth)
-- Requires both `HARVEST_ACCESS_TOKEN` and `HARVEST_ACCOUNT_ID` environment variables
-- Token obtained from: Harvest web app > Settings > Developers > Personal Access Tokens
+- Supports OAuth2 browser login (`harvest_login` tool) or Personal Access Token fallback
+- OAuth2 credentials stored in `~/.sd-harvest/auth.json` with auto-refresh
+- PAT fallback requires `HARVEST_ACCESS_TOKEN` and `HARVEST_ACCOUNT_ID` environment variables
 
 ### Rate Limits
 
@@ -58,10 +59,11 @@ description: This skill should be used when the user asks about Harvest API, tim
 
 The plugin stores local data in `~/.sd-harvest/`:
 
-| File            | Purpose                                                                                               |
-| --------------- | ----------------------------------------------------------------------------------------------------- |
-| `mappings.json` | Maps git repo paths to Harvest project/task pairs. Managed by `get_mappings` and `set_mapping` tools. |
-| `logs.json`     | Daily work log entries with start/end times. Managed by `get_logs` and `add_log_entry` tools.         |
+| File            | Purpose                                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `mappings.json` | Maps git repo paths to Harvest project/task pairs. Managed by `get_mappings` and `set_mapping` tools.        |
+| `logs.json`     | Daily work log entries with start/end times. Managed by `get_logs`, `add_log_entry`, and `clear_logs` tools. |
+| `auth.json`     | OAuth2 credentials (access token, refresh token, account info). Managed by `harvest_login`/`harvest_logout`. |
 
 ### mappings.json format
 

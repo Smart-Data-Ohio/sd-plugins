@@ -11,6 +11,8 @@ import { registerGetLogs } from "./tools/get-logs.js";
 import { registerAddLogEntry } from "./tools/add-log-entry.js";
 import { registerHarvestLogin } from "./tools/harvest-login.js";
 import { registerHarvestLogout } from "./tools/harvest-logout.js";
+import { registerCreateEntry } from "./tools/create-entry.js";
+import { registerClearLogs } from "./tools/clear-logs.js";
 
 const server = new McpServer({
   name: "harvest-server",
@@ -50,12 +52,14 @@ registerGetMappings(server);
 registerSetMapping(server);
 registerGetLogs(server);
 registerAddLogEntry(server);
+registerClearLogs(server);
 
 // Harvest API tools — only if authenticated
 if (client) {
   registerListProjects(server, client);
   registerGetMe(server, client);
   registerGetEntries(server, client);
+  registerCreateEntry(server, client);
 }
 
 const transport = new StdioServerTransport();
