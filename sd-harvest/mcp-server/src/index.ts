@@ -13,16 +13,21 @@ import { registerHarvestLogin } from "./tools/harvest-login.js";
 import { registerHarvestLogout } from "./tools/harvest-logout.js";
 import { registerCreateEntry } from "./tools/create-entry.js";
 import { registerClearLogs } from "./tools/clear-logs.js";
+import { registerGoogleLogin } from "./tools/google-login.js";
+import { registerGoogleLogout } from "./tools/google-logout.js";
+import { registerGetCalendarEvents } from "./tools/get-calendar-events.js";
+import { registerGetProfile } from "./tools/get-profile.js";
+import { registerSetProfile } from "./tools/set-profile.js";
 
 const server = new McpServer({
   name: "harvest-server",
-  version: "0.2.0",
+  version: "0.3.0",
 });
 
 const clientId = process.env.HARVEST_CLIENT_ID;
 const clientSecret = process.env.HARVEST_CLIENT_SECRET;
 
-// Resolve credentials: auth.json (OAuth2) > env vars (PAT)
+// Resolve Harvest credentials: auth.json (OAuth2) > env vars (PAT)
 let client: HarvestClient | null = null;
 
 const storedCreds = await loadCredentials();
@@ -46,13 +51,20 @@ if (storedCreds) {
 // Auth tools — always available
 registerHarvestLogin(server);
 registerHarvestLogout(server);
+registerGoogleLogin(server);
+registerGoogleLogout(server);
 
-// Storage tools — always available (no Harvest API needed)
+// Storage tools — always available (no API auth needed)
 registerGetMappings(server);
 registerSetMapping(server);
 registerGetLogs(server);
 registerAddLogEntry(server);
 registerClearLogs(server);
+registerGetProfile(server);
+registerSetProfile(server);
+
+// Google Calendar — always available (handles its own auth internally)
+registerGetCalendarEvents(server);
 
 // Harvest API tools — only if authenticated
 if (client) {

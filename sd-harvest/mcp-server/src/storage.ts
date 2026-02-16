@@ -47,6 +47,19 @@ async function writeJson(filename: string, data: unknown): Promise<void> {
   );
 }
 
+export interface UserProfile {
+  is_developer: boolean;
+  repos: string[];
+}
+
+export async function getProfile(): Promise<UserProfile> {
+  return readJson("profile.json", { is_developer: false, repos: [] });
+}
+
+export async function saveProfile(profile: UserProfile): Promise<void> {
+  await writeJson("profile.json", profile);
+}
+
 export async function getMappings(): Promise<Record<string, RepoMapping>> {
   return readJson("mappings.json", {});
 }
