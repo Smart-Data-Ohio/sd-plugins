@@ -136,3 +136,73 @@ For each risk factor in the scoring model, these are targeted mitigation strateg
 - **Document impact of delays** — when decisions stall, quantify the cost in writing
 - **Build momentum through deliverables** — ship early and often to demonstrate value
 - **Add decision-making SLAs** to the SOW — define expected response times for approvals
+
+## Data Migration Factors
+
+These mitigations apply when the project involves data platform migration and the supplemental risk factors from the risk model are assessed.
+
+## Source Data Quality (Score 4-5)
+
+**The Problem:** Unknown or poor data quality causes transformation failures, incorrect business logic, and late-stage rework.
+
+**Mitigations:**
+
+- **Run a Data Profiling Sprint** (1 week) before estimating — use tools like Great Expectations, dbt tests, or Snowflake's data profiling to quantify null rates, duplicate rates, orphan records, and type mismatches
+- **Budget for a data cleansing phase** — don't assume source data is clean; add 10-20% buffer specifically for data quality remediation
+- **Define data quality acceptance criteria** upfront — what's "good enough" for each table? Not every column needs to be perfect
+- **Implement automated data validation** in the migration pipeline — row counts, checksums, sample record comparisons at every layer
+- **Create a data quality triage process** — when issues are found, who decides: fix at source, fix during migration, or accept as-is?
+- **Profile early, profile often** — don't wait until UAT to discover that 30% of customer records have invalid dates
+
+## Source System Documentation (Score 4-5)
+
+**The Problem:** Without documentation, the team reverse-engineers business rules from code, which is slow, error-prone, and often incomplete.
+
+**Mitigations:**
+
+- **Schedule knowledge transfer sessions** with source system SMEs before development starts — record these sessions
+- **Reverse-engineer and document as you go** — make documentation a deliverable, not an afterthought
+- **Start with the most critical business rules** — identify the 20% of logic that drives 80% of business value
+- **Use source system query logs** to identify which tables, views, and procs are actually used vs. legacy dead code
+- **Build a dependency map** from the source code — trace data lineage from raw tables through transformations to reports
+- **Add a documentation buffer** to the estimate — typically 15-25% overhead when documentation is absent
+
+## Regulatory & Compliance Requirements (Score 4-5)
+
+**The Problem:** Compliance requirements (HIPAA, PCI, SOX) constrain architecture decisions and add review cycles that extend timelines.
+
+**Mitigations:**
+
+- **Engage compliance/legal early** — get their requirements before architecture design, not after
+- **Design data masking and RBAC from day 1** — retrofitting security is far more expensive than building it in
+- **Use Snowflake's native security features** — dynamic data masking policies, row access policies, object tagging for sensitivity classification
+- **Separate regulated data into dedicated databases/schemas** — simplifies access control and audit
+- **Plan for compliance testing** as a separate phase — don't combine it with functional testing
+- **Document the data flow end-to-end** — regulators want to see where PII/PHI lives, who can access it, and how it's protected at every stage
+
+## Legacy Code Complexity (Score 4-5)
+
+**The Problem:** Stored procedure and ETL conversion is the most consistently underestimated task in data migrations.
+
+**Mitigations:**
+
+- **Categorize every proc/script** by complexity (simple/moderate/complex/rewrite) before estimating — don't average
+- **Convert business logic to dbt models** where possible — SQL-based transformations are more testable and maintainable than stored procedures
+- **Use Snowpark** (Python/Java) for complex procedural logic that doesn't translate to SQL
+- **Eliminate dead code first** — cross-reference procs with execution logs; many legacy procs are unused
+- **Migrate in dependency order** — start with leaf-node procs (no dependencies), work toward the complex orchestrators
+- **Build regression tests before converting** — run the source proc, capture output, then verify the Snowflake version produces identical results
+- **Budget 2-3x the initial estimate** for procs rated "complex" — they always take longer than expected
+
+## Credit Cost Uncertainty (Score 4-5)
+
+**The Problem:** Snowflake compute costs are driven by warehouse size and active time, which are hard to predict before workload profiling.
+
+**Mitigations:**
+
+- **Run a workload simulation** during the testing phase — replay production-like queries against Snowflake and measure actual credit consumption
+- **Start with smaller warehouses and scale up** — it's cheaper to resize up than to burn credits on an oversized warehouse
+- **Set up resource monitors immediately** — alerts at 50%, 80%, and hard stop at 100% of monthly budget
+- **Use auto-suspend aggressively** — 60 seconds for batch/ETL, 300 seconds for interactive workloads
+- **Separate warehouses by workload** — isolate ETL, BI, and ad-hoc so you can track and control costs per use case
+- **Include a 3-month cost stabilization period** in the project plan — actual costs become predictable after initial tuning

@@ -113,6 +113,22 @@
         "name": "Smart Data"
       },
       "tags": ["budget-tracking", "actuals", "burn-rate", "project-health"]
+    },
+    {
+      "name": "sd-snowflake",
+      "source": "./sd-snowflake",
+      "version": "0.1.0",
+      "description": "Snowflake partner knowledge base — architecture patterns, migration playbooks, and operational cost estimation for Snowflake data platform engagements.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": [
+        "snowflake",
+        "data-platform",
+        "migration",
+        "architecture",
+        "cost-estimation"
+      ]
     }
   ]
 }

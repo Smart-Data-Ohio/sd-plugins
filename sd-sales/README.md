@@ -10,11 +10,12 @@ For full proposal generation capabilities, pair with the official Anthropic Sale
 
 ## Skills
 
-| Skill          | Triggers On                                                                 |
-| -------------- | --------------------------------------------------------------------------- |
-| `capabilities` | "SD capabilities", "what services does Smart Data offer", "service catalog" |
-| `case-studies` | "case studies", "past projects", "references", "portfolio"                  |
-| `proposals`    | "RFP", "proposal", "respond to RFP", "draft proposal", "sales template"     |
+| Skill               | Triggers On                                                                                         |
+| ------------------- | --------------------------------------------------------------------------------------------------- |
+| `capabilities`      | "SD capabilities", "what services does Smart Data offer", "service catalog"                         |
+| `case-studies`      | "case studies", "past projects", "references", "portfolio"                                          |
+| `proposals`         | "RFP", "proposal", "respond to RFP", "draft proposal", "sales template"                             |
+| `snowflake-partner` | "Snowflake capabilities", "data platform proposal", "Snowflake vs Databricks", "migration proposal" |
 
 ## Maintaining Content
 

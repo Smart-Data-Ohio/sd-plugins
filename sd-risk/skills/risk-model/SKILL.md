@@ -169,3 +169,91 @@ Certain factor combinations are more dangerous than their individual scores sugg
 - **Legacy integrations + No documentation** — timelines blow up when integration assumptions prove wrong
 
 When these compound patterns are detected, escalate the risk category by one level (e.g., Moderate → High).
+
+## Data Migration Risk Supplement
+
+When the project involves data platform migration (e.g., to Snowflake, Databricks, or any cloud data warehouse), assess these additional factors. They supplement — not replace — the 10 core factors above.
+
+### 11. Source Data Quality (Weight: 3)
+
+How clean and well-understood is the source data?
+
+| Score | Description                                                                        |
+| ----- | ---------------------------------------------------------------------------------- |
+| 1     | Clean, well-documented data with automated quality checks in place                 |
+| 2     | Generally clean data, minor quality issues are known and documented                |
+| 3     | Some known quality issues, no automated checks, moderate tribal knowledge          |
+| 4     | Significant quality issues discovered during assessment, limited documentation     |
+| 5     | Unknown data quality — no profiling done, no documentation, heavy tribal knowledge |
+
+### 12. Source System Documentation (Weight: 3)
+
+Are schemas, business rules, transformations, and data flows documented?
+
+| Score | Description                                                                   |
+| ----- | ----------------------------------------------------------------------------- |
+| 1     | Comprehensive documentation: ERDs, data dictionaries, transformation logic    |
+| 2     | Good documentation with some gaps, original authors available for questions   |
+| 3     | Partial documentation, some tribal knowledge, authors partially available     |
+| 4     | Minimal documentation, heavy reliance on reverse-engineering existing code    |
+| 5     | No documentation, original authors gone, business rules embedded in code only |
+
+### 13. Regulatory & Compliance Requirements (Weight: 3)
+
+Does the data include PII, PHI, financial data, or other regulated content?
+
+| Score | Description                                                           |
+| ----- | --------------------------------------------------------------------- |
+| 1     | No regulated data, standard internal business data                    |
+| 2     | Minor PII (names, emails), standard handling sufficient               |
+| 3     | Moderate PII/financial data, requires masking and access controls     |
+| 4     | PHI (HIPAA) or PCI data, requires formal compliance review            |
+| 5     | Multiple regulatory frameworks (HIPAA + PCI + SOX), cross-border data |
+
+### 14. Legacy Code Complexity (Weight: 2)
+
+How many stored procedures, ETL packages, or transformation scripts need conversion?
+
+| Score | Description                                                         |
+| ----- | ------------------------------------------------------------------- |
+| 1     | <10 simple stored procs/scripts, mostly straightforward DML         |
+| 2     | 10-30 objects, mix of simple and moderate complexity                |
+| 3     | 30-75 objects, includes complex business logic and control flow     |
+| 4     | 75-150 objects, heavy procedural logic, cursors, dynamic SQL        |
+| 5     | 150+ objects, deeply nested dependencies, undocumented side effects |
+
+### 15. Credit Cost Uncertainty (Weight: 2)
+
+How predictable are the target platform's compute costs before workload profiling?
+
+| Score | Description                                                                |
+| ----- | -------------------------------------------------------------------------- |
+| 1     | Similar workload already running on target platform, costs well understood |
+| 2     | Workload is similar to known patterns, reasonable cost estimates possible  |
+| 3     | Mixed workload types, some uncertainty in warehouse sizing                 |
+| 4     | Complex or unusual workload patterns, cost estimates are rough guesses     |
+| 5     | No workload profiling possible pre-migration, costs are a complete unknown |
+
+### Data Migration Scoring
+
+When data migration factors are assessed, extend the scoring calculation:
+
+```
+Additional weight from migration factors = 3 + 3 + 3 + 2 + 2 = 13
+
+Extended maximum = (26 + 13) × 5 = 195
+Extended minimum = (26 + 13) × 1 = 39
+
+Normalized score = ((weighted_sum - 39) / (195 - 39)) × 100
+```
+
+The same risk categories (Low 0-30, Moderate 31-55, High 56-75, Critical 76-100) and budget outcome probabilities apply.
+
+### Data Migration Compound Patterns
+
+These combinations are especially dangerous in migration projects:
+
+- **Poor data quality + No documentation** — you can't fix what you can't understand, and you can't understand what isn't documented
+- **Heavy legacy code + Tight timeline** — stored procedure conversion consistently takes 2-3x longer than estimated
+- **Regulatory data + New platform** — compliance review adds weeks and may impose architectural constraints discovered late
+- **Large data volume + Credit cost uncertainty** — initial load costs can shock; a 10TB migration on an oversized warehouse burns credits fast

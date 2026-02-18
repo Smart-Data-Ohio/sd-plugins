@@ -1,0 +1,8 @@
+{
+  "name": "sd-snowflake",
+  "version": "0.1.0",
+  "description": "Snowflake partner knowledge base — architecture patterns, migration playbooks, and operational cost estimation for Snowflake data platform engagements.",
+  "author": {
+    "name": "Smart Data"
+  }
+}

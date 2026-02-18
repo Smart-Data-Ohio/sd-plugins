@@ -17,6 +17,7 @@ The marketplace repository for Smart Data's official Claude Code and Claude Cowo
 | [sd-sow](sd-sow/)             | Statement of Work generator — produce draft SOWs from approved estimates with milestones and payment terms                     |
 | [sd-risk](sd-risk/)           | Project risk profiling — heuristic assessment of budget overrun likelihood with mitigation strategies                          |
 | [sd-actuals](sd-actuals/)     | Budget tracking — compare estimated vs actual hours and costs, burn rate projections, overrun warnings                         |
+| [sd-snowflake](sd-snowflake/) | Snowflake partner knowledge — architecture patterns, migration playbooks, operational cost estimation                          |
 
 ## Getting Started
 
