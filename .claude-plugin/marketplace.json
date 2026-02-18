@@ -23,6 +23,16 @@
         "name": "Smart Data"
       },
       "tags": ["team-management", "staffing", "utilization", "google-sheets"]
+    },
+    {
+      "name": "sd-estimates",
+      "source": "./sd-estimates",
+      "version": "0.1.0",
+      "description": "Project estimate generator — produce tiered cost proposals using SD bill rates and team configurations.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["estimation", "pricing", "proposals", "project-management"]
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "name": "sd-estimates",
+  "version": "0.1.0",
+  "description": "Project estimate generator — produce tiered cost proposals using SD bill rates and team configurations from sd-team.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
