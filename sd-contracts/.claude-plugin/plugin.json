@@ -1,0 +1,8 @@
+{
+  "name": "sd-contracts",
+  "version": "0.1.0",
+  "description": "Contract and SOW review — clause-by-clause analysis, red flag detection, payment enforceability checks, and pre-signing checklists for consulting engagements.",
+  "author": {
+    "name": "Smart Data"
+  }
+}

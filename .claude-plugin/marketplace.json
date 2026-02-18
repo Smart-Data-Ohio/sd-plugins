@@ -129,6 +129,16 @@
         "architecture",
         "cost-estimation"
       ]
+    },
+    {
+      "name": "sd-contracts",
+      "source": "./sd-contracts",
+      "version": "0.1.0",
+      "description": "Contract and SOW review — clause-by-clause analysis, red flag detection, payment enforceability checks, and pre-signing checklists.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["contracts", "legal", "sow-review", "payment-protection"]
     }
   ]
 }
