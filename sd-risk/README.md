@@ -8,16 +8,16 @@ Install the plugin in Claude Code. Optionally install sd-estimates to pull estim
 
 ## Commands
 
-| Command          | Description                                        |
-| ---------------- | -------------------------------------------------- |
-| `/risk:assess`   | Run a risk assessment for a project                |
+| Command        | Description                         |
+| -------------- | ----------------------------------- |
+| `/risk:assess` | Run a risk assessment for a project |
 
 ## Skills
 
-| Skill              | Triggers On                                                                    |
-| ------------------- | ----------------------------------------------------------------------------- |
-| `risk-model`       | "risk assessment", "project risk", "budget risk", "likelihood of overrun"      |
-| `risk-mitigation`  | "mitigate risk", "reduce project risk", "risk response", "risk plan"           |
+| Skill             | Triggers On                                                               |
+| ----------------- | ------------------------------------------------------------------------- |
+| `risk-model`      | "risk assessment", "project risk", "budget risk", "likelihood of overrun" |
+| `risk-mitigation` | "mitigate risk", "reduce project risk", "risk response", "risk plan"      |
 
 ## Risk Factors
 

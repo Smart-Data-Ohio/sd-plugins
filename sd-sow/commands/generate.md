@@ -2,10 +2,7 @@
 description: Generate a draft Statement of Work from an approved estimate
 argument-hint: "<estimate ID or 'latest'>"
 allowed-tools:
-  [
-    "mcp__plugin_sd-estimates_estimates__get_estimate",
-    "AskUserQuestion",
-  ]
+  ["mcp__plugin_sd-estimates_estimates__get_estimate", "AskUserQuestion"]
 ---
 
 # Generate Statement of Work

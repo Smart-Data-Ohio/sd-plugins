@@ -31,7 +31,7 @@ export function registerGetBurnRate(server: McpServer): void {
       weekly_actuals: z
         .string()
         .describe(
-          'JSON string of weekly data: [{ week_start: string, hours: number, cost: number }, ...]',
+          "JSON string of weekly data: [{ week_start: string, hours: number, cost: number }, ...]",
         ),
     },
     async ({ weekly_actuals }) => {

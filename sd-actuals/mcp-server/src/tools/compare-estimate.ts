@@ -1,7 +1,11 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { readEstimate, readLatestEstimateId } from "../estimate-reader.js";
-import type { ActualsInput, BudgetStatus, EstimateComparison } from "../types.js";
+import type {
+  ActualsInput,
+  BudgetStatus,
+  EstimateComparison,
+} from "../types.js";
 
 function determineBudgetStatus(
   actualCost: number,
@@ -35,11 +39,13 @@ export function registerCompareEstimate(server: McpServer): void {
         .number()
         .min(1)
         .max(3)
-        .describe("Which tier was approved (1=Essential, 2=Standard, 3=Premium)"),
+        .describe(
+          "Which tier was approved (1=Essential, 2=Standard, 3=Premium)",
+        ),
       actuals: z
         .string()
         .describe(
-          'JSON string of actuals data: { total_hours: number, total_cost: number, by_role: [{role, hours, cost}], by_week: [{week_start, hours, cost}] }',
+          "JSON string of actuals data: { total_hours: number, total_cost: number, by_role: [{role, hours, cost}], by_week: [{week_start, hours, cost}] }",
         ),
       weeks_elapsed: z
         .number()

@@ -11,12 +11,12 @@ Budget status is based on **pace** — how quickly the project is spending relat
 
 ### Status Levels
 
-| Status | Pace Ratio | Meaning | Action |
-| --- | --- | --- | --- |
-| **Under** | <80% of expected pace | Spending significantly below plan | May indicate slow start, blocked work, or understaffing. Investigate — being too far under budget can mean the project is behind schedule. |
-| **On Track** | 80-105% of expected pace | Normal spending | Continue monitoring. Minor fluctuations week-to-week are expected. |
-| **At Risk** | 105-120% of expected pace | Spending above plan | Investigate cause. May need scope adjustment, efficiency improvements, or client conversation about budget impact. |
-| **Over** | >120% of expected pace | Significantly over plan | Immediate attention required. Stop non-critical work, assess remaining scope, prepare client communication. |
+| Status       | Pace Ratio                | Meaning                           | Action                                                                                                                                     |
+| ------------ | ------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Under**    | <80% of expected pace     | Spending significantly below plan | May indicate slow start, blocked work, or understaffing. Investigate — being too far under budget can mean the project is behind schedule. |
+| **On Track** | 80-105% of expected pace  | Normal spending                   | Continue monitoring. Minor fluctuations week-to-week are expected.                                                                         |
+| **At Risk**  | 105-120% of expected pace | Spending above plan               | Investigate cause. May need scope adjustment, efficiency improvements, or client conversation about budget impact.                         |
+| **Over**     | >120% of expected pace    | Significantly over plan           | Immediate attention required. Stop non-critical work, assess remaining scope, prepare client communication.                                |
 
 ### Pace Calculation
 
@@ -35,10 +35,10 @@ Pace ratio = actual_cost_to_date / expected_cost_at_current_week
 
 ### Trends
 
-| Trend | Meaning |
-| --- | --- |
-| **Stable** | Consistent weekly spending. Predictable project. |
-| **Increasing** | Spending is growing week-over-week. Could be: team ramping up (normal in early weeks), scope expanding (investigate), or problems requiring more effort. |
+| Trend          | Meaning                                                                                                                                                            |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Stable**     | Consistent weekly spending. Predictable project.                                                                                                                   |
+| **Increasing** | Spending is growing week-over-week. Could be: team ramping up (normal in early weeks), scope expanding (investigate), or problems requiring more effort.           |
 | **Decreasing** | Spending is declining. Could be: project winding down (expected near end), team members pulled to other projects (investigate), or blockers reducing productivity. |
 
 ### Projected Total at Completion
@@ -48,6 +48,7 @@ projected_total = actual_cost_to_date + (avg_weekly_cost * weeks_remaining)
 ```
 
 This is a simple linear projection. It's most reliable when:
+
 - The project is past the ramp-up phase (usually after week 3-4)
 - The burn rate trend is stable
 - No major scope changes are expected
@@ -57,6 +58,7 @@ This is a simple linear projection. It's most reliable when:
 ### Scope Creep
 
 The #1 cause in consulting. Signs:
+
 - Increasing hours per sprint without matching milestone progress
 - New tasks appearing that weren't in the original estimate
 - Client requests growing in complexity
@@ -66,6 +68,7 @@ The #1 cause in consulting. Signs:
 ### Estimation Errors
 
 Signs:
+
 - Consistently spending more hours per feature than estimated
 - Original estimate didn't account for integration complexity or ramp-up time
 
@@ -74,6 +77,7 @@ Signs:
 ### Ramp-Up Time
 
 Signs:
+
 - First 2-3 weeks significantly over pace
 - New team members or new technology
 
@@ -82,6 +86,7 @@ Signs:
 ### Team Composition Mismatch
 
 Signs:
+
 - Higher-cost team members billing more hours than estimated
 - Lower-cost roles not contributing expected hours (may indicate work is being done by more expensive resources)
 
@@ -90,23 +95,27 @@ Signs:
 ## Recommended Actions by Status
 
 ### Under Budget
+
 1. Verify the project is making expected progress (under budget ≠ ahead of schedule)
 2. Check if any team members are blocked or underutilized
 3. Confirm scope hasn't been quietly reduced
 4. If genuinely efficient, consider reallocating budget to quality improvements
 
 ### On Track
+
 1. Continue monitoring weekly
 2. Note any trend changes early
 3. Prepare for predictable cost spikes (testing phase, deployment)
 
 ### At Risk
+
 1. Identify the cause (scope, estimation, team composition)
 2. Review remaining scope — can anything be deferred?
 3. Prepare talking points for client conversation
 4. Consider adjusting team composition or allocation
 
 ### Over Budget
+
 1. Immediately assess remaining work and cost to complete
 2. Prepare a budget impact summary for client
 3. Present options: reduce scope, extend timeline, accept additional cost

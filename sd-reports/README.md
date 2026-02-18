@@ -8,15 +8,15 @@ Install the plugin in Claude Code. Requires the sd-harvest plugin to be installe
 
 ## Commands
 
-| Command            | Description                                       |
-| ------------------ | ------------------------------------------------- |
-| `/reports:weekly`  | Generate a weekly status report for a project     |
+| Command           | Description                                   |
+| ----------------- | --------------------------------------------- |
+| `/reports:weekly` | Generate a weekly status report for a project |
 
 ## Skills
 
-| Skill            | Triggers On                                                                    |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `status-report`  | "status report", "weekly report", "client update", "project summary this week" |
+| Skill           | Triggers On                                                                    |
+| --------------- | ------------------------------------------------------------------------------ |
+| `status-report` | "status report", "weekly report", "client update", "project summary this week" |
 
 ## Data Sources
 

@@ -19,23 +19,23 @@ npm run build
 
 ## Commands
 
-| Command             | Description                                         |
-| ------------------- | --------------------------------------------------- |
-| `/actuals:health`   | Project health dashboard with traffic-light status  |
-| `/actuals:compare`  | Detailed estimate vs actual breakdown               |
+| Command            | Description                                        |
+| ------------------ | -------------------------------------------------- |
+| `/actuals:health`  | Project health dashboard with traffic-light status |
+| `/actuals:compare` | Detailed estimate vs actual breakdown              |
 
 ## Skills
 
-| Skill              | Triggers On                                                              |
-| ------------------ | ------------------------------------------------------------------------ |
-| `budget-tracking`  | "budget status", "burn rate", "are we over budget", "project health"     |
+| Skill             | Triggers On                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| `budget-tracking` | "budget status", "burn rate", "are we over budget", "project health" |
 
 ## MCP Tools
 
 | Tool               | Description                                                |
-| ------------------- | ---------------------------------------------------------- |
-| `compare_estimate`  | Compute variance between an estimate and actual hours/cost |
-| `get_burn_rate`     | Calculate weekly burn rate and trend from actuals data      |
+| ------------------ | ---------------------------------------------------------- |
+| `compare_estimate` | Compute variance between an estimate and actual hours/cost |
+| `get_burn_rate`    | Calculate weekly burn rate and trend from actuals data     |
 
 ## How It Works
 

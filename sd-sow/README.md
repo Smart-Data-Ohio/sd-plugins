@@ -8,14 +8,14 @@ Install the plugin in Claude Code. Requires the sd-estimates plugin to be instal
 
 ## Commands
 
-| Command          | Description                                      |
-| ---------------- | ------------------------------------------------ |
-| `/sow:generate`  | Generate a draft SOW from an approved estimate   |
+| Command         | Description                                    |
+| --------------- | ---------------------------------------------- |
+| `/sow:generate` | Generate a draft SOW from an approved estimate |
 
 ## Skills
 
-| Skill          | Triggers On                                                            |
-| -------------- | ---------------------------------------------------------------------- |
+| Skill          | Triggers On                                                           |
+| -------------- | --------------------------------------------------------------------- |
 | `sow-template` | "statement of work", "SOW", "draft SOW", "generate contract", "scope" |
 
 ## How It Works

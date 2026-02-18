@@ -1,8 +1,7 @@
 ---
 description: Analyze a job description and extract actual requirements
 argument-hint: "<paste JD text or provide file path>"
-allowed-tools:
-  ["AskUserQuestion"]
+allowed-tools: ["AskUserQuestion"]
 ---
 
 # Decode Job Description

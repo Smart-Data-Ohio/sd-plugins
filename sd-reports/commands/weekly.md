@@ -31,9 +31,11 @@ Generate a comprehensive weekly status report for a project by combining Harvest
 4. **Gather calendar events.** Call `get_calendar_events` for each day of the reporting week (Monday through Friday). Filter for meetings that appear related to the project by checking event summaries for the project or client name.
 
 5. **Gather git history.** Call `get_mappings` to find if any repo is mapped to this Harvest project. If a mapping exists, run:
+
    ```
    git log --since="[Monday date]" --until="[Saturday date]" --oneline --no-merges
    ```
+
    in the mapped repo directory. If no mapping exists, ask the user if they want to include git history from the current repo.
 
 6. **Apply the status report template** from the `status-report` skill. Synthesize all gathered data into the report sections.

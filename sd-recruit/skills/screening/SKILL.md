@@ -18,37 +18,37 @@ Smart Data hires for consulting engagements, not product teams. This means:
 
 ### Frontend Developer
 
-| Area | Question | What to Listen For |
-| --- | --- | --- |
-| Core Competency | "Walk me through how you'd build a complex form with dependent fields, validation, and error handling." | Approach to state management, validation strategy, accessibility awareness, UX consideration |
-| Problem Solving | "You inherit a React app that takes 8 seconds to load. How do you diagnose and fix it?" | Systematic debugging approach, knowledge of performance tools (Lighthouse, React DevTools), bundle analysis, lazy loading |
-| Architecture | "When would you reach for global state management vs. keeping state local?" | Nuanced answer showing they understand trade-offs, not dogmatic about tools |
-| Real-World | "Tell me about a time you had to work with a design that was technically difficult to implement." | Communication with designers, pragmatic trade-offs, creative solutions |
+| Area            | Question                                                                                                | What to Listen For                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Core Competency | "Walk me through how you'd build a complex form with dependent fields, validation, and error handling." | Approach to state management, validation strategy, accessibility awareness, UX consideration                              |
+| Problem Solving | "You inherit a React app that takes 8 seconds to load. How do you diagnose and fix it?"                 | Systematic debugging approach, knowledge of performance tools (Lighthouse, React DevTools), bundle analysis, lazy loading |
+| Architecture    | "When would you reach for global state management vs. keeping state local?"                             | Nuanced answer showing they understand trade-offs, not dogmatic about tools                                               |
+| Real-World      | "Tell me about a time you had to work with a design that was technically difficult to implement."       | Communication with designers, pragmatic trade-offs, creative solutions                                                    |
 
 ### Backend / Full Stack Developer
 
-| Area | Question | What to Listen For |
-| --- | --- | --- |
-| Core Competency | "Design an API for [relevant domain]. What endpoints, what data models, what would you think about?" | REST/GraphQL reasoning, data modeling, error handling, pagination, auth considerations |
+| Area            | Question                                                                                                          | What to Listen For                                                                                 |
+| --------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Core Competency | "Design an API for [relevant domain]. What endpoints, what data models, what would you think about?"              | REST/GraphQL reasoning, data modeling, error handling, pagination, auth considerations             |
 | Problem Solving | "A production API endpoint that usually takes 200ms is now taking 5 seconds. Walk me through your investigation." | Systematic approach: logs, monitoring, database queries, N+1 problems, caching, recent deployments |
-| Architecture | "How do you decide when to split a monolith into services?" | Trade-off awareness, not dogmatic about microservices, understands operational complexity |
-| Real-World | "Tell me about a time you had to make a technical decision with incomplete information." | Comfort with ambiguity, risk assessment, communication about uncertainty |
+| Architecture    | "How do you decide when to split a monolith into services?"                                                       | Trade-off awareness, not dogmatic about microservices, understands operational complexity          |
+| Real-World      | "Tell me about a time you had to make a technical decision with incomplete information."                          | Comfort with ambiguity, risk assessment, communication about uncertainty                           |
 
 ### Data Engineer
 
-| Area | Question | What to Listen For |
-| --- | --- | --- |
-| Core Competency | "Describe how you'd build a pipeline to ingest data from 3 different sources with different schemas and update intervals." | ETL/ELT understanding, schema evolution, error handling, idempotency |
-| Problem Solving | "A daily batch job that processes 10M records started failing after running fine for 6 months. How do you investigate?" | Data volume growth awareness, schema changes, memory issues, upstream data quality |
-| Architecture | "When would you use a streaming approach vs. batch processing?" | Latency requirements, cost considerations, complexity trade-offs, not over-engineering |
+| Area            | Question                                                                                                                   | What to Listen For                                                                     |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Core Competency | "Describe how you'd build a pipeline to ingest data from 3 different sources with different schemas and update intervals." | ETL/ELT understanding, schema evolution, error handling, idempotency                   |
+| Problem Solving | "A daily batch job that processes 10M records started failing after running fine for 6 months. How do you investigate?"    | Data volume growth awareness, schema changes, memory issues, upstream data quality     |
+| Architecture    | "When would you use a streaming approach vs. batch processing?"                                                            | Latency requirements, cost considerations, complexity trade-offs, not over-engineering |
 
 ### QA Engineer
 
-| Area | Question | What to Listen For |
-| --- | --- | --- |
-| Core Competency | "How do you decide what to automate vs. test manually?" | ROI thinking, risk-based testing, maintenance cost awareness |
+| Area            | Question                                                                           | What to Listen For                                                         |
+| --------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Core Competency | "How do you decide what to automate vs. test manually?"                            | ROI thinking, risk-based testing, maintenance cost awareness               |
 | Problem Solving | "You find a critical bug on the day before release. Walk me through your process." | Risk assessment, communication, regression testing, stakeholder management |
-| Test Strategy | "How do you approach testing a feature with multiple user roles and permissions?" | Combinatorial thinking, edge cases, boundary testing, security awareness |
+| Test Strategy   | "How do you approach testing a feature with multiple user roles and permissions?"  | Combinatorial thinking, edge cases, boundary testing, security awareness   |
 
 ## Consulting-Specific Behavioral Questions
 
@@ -93,11 +93,11 @@ These assess skills critical for SD's consulting model:
 
 ### Weight Distribution
 
-| Hire Type | Technical | Consulting Fit | Culture Fit |
-| --- | --- | --- | --- |
-| Client engagement (default) | 55% | 30% | 15% |
-| SD internal / bench hire | 65% | 15% | 20% |
-| Leadership / SM / PM | 30% | 50% | 20% |
+| Hire Type                   | Technical | Consulting Fit | Culture Fit |
+| --------------------------- | --------- | -------------- | ----------- |
+| Client engagement (default) | 55%       | 30%            | 15%         |
+| SD internal / bench hire    | 65%       | 15%            | 20%         |
+| Leadership / SM / PM        | 30%       | 50%            | 20%         |
 
 ### Scoring Scale
 

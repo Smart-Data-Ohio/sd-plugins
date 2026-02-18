@@ -1,8 +1,7 @@
 ---
 description: Generate a screening rubric from a job description or decoded requirements
 argument-hint: "<paste JD or reference a previous decode>"
-allowed-tools:
-  ["AskUserQuestion"]
+allowed-tools: ["AskUserQuestion"]
 ---
 
 # Generate Screening Rubric

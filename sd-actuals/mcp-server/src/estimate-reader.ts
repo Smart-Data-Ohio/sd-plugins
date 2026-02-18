@@ -21,9 +21,7 @@ interface StoredEstimate {
   tiers: EstimateTier[];
 }
 
-export async function readEstimate(
-  id: string,
-): Promise<StoredEstimate | null> {
+export async function readEstimate(id: string): Promise<StoredEstimate | null> {
   try {
     const content = await readFile(
       join(ESTIMATES_DIR, "estimates", `${id}.json`),
@@ -37,10 +35,7 @@ export async function readEstimate(
 
 export async function readLatestEstimateId(): Promise<string | null> {
   try {
-    const content = await readFile(
-      join(ESTIMATES_DIR, "latest.json"),
-      "utf-8",
-    );
+    const content = await readFile(join(ESTIMATES_DIR, "latest.json"), "utf-8");
     return JSON.parse(content) as string;
   } catch {
     return null;

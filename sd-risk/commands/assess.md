@@ -2,10 +2,7 @@
 description: Run a risk assessment for a project
 argument-hint: "<project name or estimate ID>"
 allowed-tools:
-  [
-    "mcp__plugin_sd-estimates_estimates__get_estimate",
-    "AskUserQuestion",
-  ]
+  ["mcp__plugin_sd-estimates_estimates__get_estimate", "AskUserQuestion"]
 ---
 
 # Risk Assessment

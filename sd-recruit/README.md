@@ -8,17 +8,17 @@ Install the plugin in Claude Code. No additional configuration needed — all co
 
 ## Commands
 
-| Command            | Description                                              |
-| ------------------ | -------------------------------------------------------- |
-| `/recruit:decode`  | Analyze a job description and extract actual requirements |
-| `/recruit:screen`  | Generate a screening rubric from decoded requirements    |
+| Command           | Description                                               |
+| ----------------- | --------------------------------------------------------- |
+| `/recruit:decode` | Analyze a job description and extract actual requirements |
+| `/recruit:screen` | Generate a screening rubric from decoded requirements     |
 
 ## Skills
 
-| Skill       | Triggers On                                                                        |
-| ----------- | ---------------------------------------------------------------------------------- |
-| `jd-decoder`  | "analyze JD", "decode job description", "what does this role actually need"        |
-| `screening`   | "screening rubric", "interview questions", "candidate evaluation", "assess resume" |
+| Skill        | Triggers On                                                                        |
+| ------------ | ---------------------------------------------------------------------------------- |
+| `jd-decoder` | "analyze JD", "decode job description", "what does this role actually need"        |
+| `screening`  | "screening rubric", "interview questions", "candidate evaluation", "assess resume" |
 
 ## How It Works
 

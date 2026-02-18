@@ -53,22 +53,24 @@ Derived from the estimate's `required_skills` and tier description:
 
 **Tier-specific scope guidelines:**
 
-| Tier | Scope Depth |
-| --- | --- |
+| Tier      | Scope Depth                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------------------------------ |
 | Essential | Core functionality only. MVP-level deliverables. No documentation beyond inline code comments. No formal training. |
-| Standard | Full project scope. Technical documentation included. Basic knowledge transfer session. |
-| Premium | Full scope + extended documentation, formal training sessions, warranty period, post-launch support window. |
+| Standard  | Full project scope. Technical documentation included. Basic knowledge transfer session.                            |
+| Premium   | Full scope + extended documentation, formal training sessions, warranty period, post-launch support window.        |
 
 ### 4. Deliverables
 
 Map from the estimate tier to concrete deliverables:
 
 **Essential Tier Deliverables:**
+
 - Working software meeting core requirements
 - Source code repository
 - Deployment to client environment
 
 **Standard Tier Deliverables:**
+
 - All Essential deliverables, plus:
 - Technical documentation (architecture, API docs, deployment guide)
 - Test suite (unit and integration tests)
@@ -76,6 +78,7 @@ Map from the estimate tier to concrete deliverables:
 - Sprint review recordings
 
 **Premium Tier Deliverables:**
+
 - All Standard deliverables, plus:
 - User documentation / training materials
 - Formal training sessions (up to [N] hours)
@@ -89,30 +92,30 @@ Generate milestones based on the tier and `duration_weeks` from the estimate:
 
 **Essential Tier (2-3 milestones):**
 
-| Milestone | Timeline | Deliverables | Acceptance Criteria |
-| --- | --- | --- | --- |
-| M1: Project Kickoff & Setup | Week 1 | Environment setup, backlog groomed | Development environment operational |
-| M2: Core Development Complete | Week [N-1] | Working software, source code | Functional requirements met, client UAT |
-| M3: Deployment & Handoff | Week [N] | Production deployment | Go-live successful |
+| Milestone                     | Timeline   | Deliverables                       | Acceptance Criteria                     |
+| ----------------------------- | ---------- | ---------------------------------- | --------------------------------------- |
+| M1: Project Kickoff & Setup   | Week 1     | Environment setup, backlog groomed | Development environment operational     |
+| M2: Core Development Complete | Week [N-1] | Working software, source code      | Functional requirements met, client UAT |
+| M3: Deployment & Handoff      | Week [N]   | Production deployment              | Go-live successful                      |
 
 **Standard Tier (3-4 milestones):**
 
-| Milestone | Timeline | Deliverables | Acceptance Criteria |
-| --- | --- | --- | --- |
-| M1: Project Kickoff & Discovery | Weeks 1-2 | Project plan, environment setup, refined backlog | Aligned on requirements and approach |
-| M2: Development Phase 1 | Weeks 3-[midpoint] | Core features, initial test suite | Sprint demos accepted |
-| M3: Development Phase 2 & QA | Weeks [midpoint]-[N-2] | Remaining features, full test suite, documentation | All features complete, tests passing |
-| M4: Deployment & Knowledge Transfer | Weeks [N-1]-[N] | Production deployment, KT session | Go-live, KT completed |
+| Milestone                           | Timeline               | Deliverables                                       | Acceptance Criteria                  |
+| ----------------------------------- | ---------------------- | -------------------------------------------------- | ------------------------------------ |
+| M1: Project Kickoff & Discovery     | Weeks 1-2              | Project plan, environment setup, refined backlog   | Aligned on requirements and approach |
+| M2: Development Phase 1             | Weeks 3-[midpoint]     | Core features, initial test suite                  | Sprint demos accepted                |
+| M3: Development Phase 2 & QA        | Weeks [midpoint]-[N-2] | Remaining features, full test suite, documentation | All features complete, tests passing |
+| M4: Deployment & Knowledge Transfer | Weeks [N-1]-[N]        | Production deployment, KT session                  | Go-live, KT completed                |
 
 **Premium Tier (4-5 milestones):**
 
-| Milestone | Timeline | Deliverables | Acceptance Criteria |
-| --- | --- | --- | --- |
-| M1: Discovery & Architecture | Weeks 1-2 | Architecture doc, project plan, refined backlog | Architecture approved by client |
-| M2: Development Phase 1 | Weeks 3-[third] | Core features, initial docs | Sprint demos accepted |
-| M3: Development Phase 2 | Weeks [third]-[two-thirds] | Remaining features, test suite | Feature complete |
-| M4: QA, Documentation & Training | Weeks [two-thirds]-[N-2] | Full docs, training materials, security review | QA sign-off, training delivered |
-| M5: Deployment & Support Transition | Weeks [N-1]-[N] | Production deployment, runbook, support handoff | Go-live, support period begins |
+| Milestone                           | Timeline                   | Deliverables                                    | Acceptance Criteria             |
+| ----------------------------------- | -------------------------- | ----------------------------------------------- | ------------------------------- |
+| M1: Discovery & Architecture        | Weeks 1-2                  | Architecture doc, project plan, refined backlog | Architecture approved by client |
+| M2: Development Phase 1             | Weeks 3-[third]            | Core features, initial docs                     | Sprint demos accepted           |
+| M3: Development Phase 2             | Weeks [third]-[two-thirds] | Remaining features, test suite                  | Feature complete                |
+| M4: QA, Documentation & Training    | Weeks [two-thirds]-[N-2]   | Full docs, training materials, security review  | QA sign-off, training delivered |
+| M5: Deployment & Support Transition | Weeks [N-1]-[N]            | Production deployment, runbook, support handoff | Go-live, support period begins  |
 
 ### 6. Team Composition
 
@@ -126,6 +129,7 @@ Derived from the approved tier's team in the estimate:
 ```
 
 Notes:
+
 - Include on-shore / off-shore designation if the estimate uses a blended model
 - Specify allocation (full-time = 35 hrs/week, part-time = specific hours)
 - Smart Data reserves the right to substitute team members of equivalent qualifications with reasonable notice
@@ -135,6 +139,7 @@ Notes:
 Derived from the approved tier's total cost:
 
 **Monthly Billing:**
+
 ```
 Total Project Cost: $[TOTAL]
 Duration: [N] months
@@ -142,6 +147,7 @@ Monthly Invoice: $[TOTAL / N months] due Net 30
 ```
 
 **Milestone-Based Billing:**
+
 ```
 | Milestone | Amount | Due Date | Trigger |
 | --------- | ------ | -------- | ------- |
@@ -152,6 +158,7 @@ Monthly Invoice: $[TOTAL / N months] due Net 30
 ```
 
 **Payment schedule guidelines by tier:**
+
 - Essential: 50% at kickoff, 50% at completion — or monthly
 - Standard: 25% at kickoff, 25% at M2, 25% at M3, 25% at completion
 - Premium: 20% at each of 5 milestones
@@ -208,12 +215,12 @@ Date:                                 Date:
 
 ## Tier-to-SOW Mapping Quick Reference
 
-| SOW Element | Essential | Standard | Premium |
-| --- | --- | --- | --- |
-| Milestones | 2-3 | 3-4 | 4-5 |
-| Documentation | Code comments only | Technical docs + API docs | Full docs + training materials |
-| Training | None | 1-2 hour KT session | Formal training sessions |
-| Post-launch support | None | None | [N] weeks included |
-| QA | Developer testing | Dedicated QA + test suite | QA + security review |
-| Payment splits | 50/50 or monthly | 25% x 4 milestones | 20% x 5 milestones |
-| Acceptance review period | 5 business days | 7 business days | 10 business days |
+| SOW Element              | Essential          | Standard                  | Premium                        |
+| ------------------------ | ------------------ | ------------------------- | ------------------------------ |
+| Milestones               | 2-3                | 3-4                       | 4-5                            |
+| Documentation            | Code comments only | Technical docs + API docs | Full docs + training materials |
+| Training                 | None               | 1-2 hour KT session       | Formal training sessions       |
+| Post-launch support      | None               | None                      | [N] weeks included             |
+| QA                       | Developer testing  | Dedicated QA + test suite | QA + security review           |
+| Payment splits           | 50/50 or monthly   | 25% x 4 milestones        | 20% x 5 milestones             |
+| Acceptance review period | 5 business days    | 7 business days           | 10 business days               |

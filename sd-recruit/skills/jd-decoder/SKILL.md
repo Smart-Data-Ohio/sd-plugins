@@ -22,39 +22,39 @@ The result: a JD that describes a unicorn, when the actual role needs a solid de
 
 ### Technology Inflation
 
-| What the JD Says | What They Probably Need |
-| --- | --- |
-| "Kubernetes experience required" | Deploys to the cloud. Containers helpful, K8s orchestration is the platform team's job |
-| "Machine learning experience" (in a web app role) | Basic data analysis, maybe a regression model. Not actual ML engineering |
-| "Microservices architecture" | They have multiple services. Candidate needs to work in that environment, not design it from scratch |
-| "CI/CD pipeline experience" | Knows how to use git, push code, and fix a failing build. Not writing pipeline YAML from scratch |
-| "Terraform / CloudFormation" | The infra team handles this. Candidate might occasionally read or tweak a config |
-| "GraphQL required" | They have a GraphQL API. Candidate needs to query it, not design the schema |
-| "Docker experience" | Can run `docker-compose up` and debug a failing container. Not writing production Dockerfiles |
-| "AWS / Azure / GCP" (listing all three) | They use one cloud. They listed all three to not miss candidates. Any cloud experience transfers |
-| "NoSQL and SQL databases" | They have both. Candidate will mainly use one. Basic understanding of the other is fine |
-| "Event-driven architecture" | They use a message queue. Candidate needs to publish/consume messages, not architect the system |
+| What the JD Says                                  | What They Probably Need                                                                              |
+| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| "Kubernetes experience required"                  | Deploys to the cloud. Containers helpful, K8s orchestration is the platform team's job               |
+| "Machine learning experience" (in a web app role) | Basic data analysis, maybe a regression model. Not actual ML engineering                             |
+| "Microservices architecture"                      | They have multiple services. Candidate needs to work in that environment, not design it from scratch |
+| "CI/CD pipeline experience"                       | Knows how to use git, push code, and fix a failing build. Not writing pipeline YAML from scratch     |
+| "Terraform / CloudFormation"                      | The infra team handles this. Candidate might occasionally read or tweak a config                     |
+| "GraphQL required"                                | They have a GraphQL API. Candidate needs to query it, not design the schema                          |
+| "Docker experience"                               | Can run `docker-compose up` and debug a failing container. Not writing production Dockerfiles        |
+| "AWS / Azure / GCP" (listing all three)           | They use one cloud. They listed all three to not miss candidates. Any cloud experience transfers     |
+| "NoSQL and SQL databases"                         | They have both. Candidate will mainly use one. Basic understanding of the other is fine              |
+| "Event-driven architecture"                       | They use a message queue. Candidate needs to publish/consume messages, not architect the system      |
 
 ### Seniority Inflation
 
-| What the JD Says | What the Responsibilities Suggest |
-| --- | --- |
-| "10+ years experience required" | Senior-level judgment. A strong dev with 5-6 years could do this |
-| "Staff Engineer" but all IC work | Senior Developer who occasionally mentors. No actual staff-level scope |
-| "Architect" but writing code daily | Senior Developer who can draw architecture diagrams. Not a true architect role |
-| "Lead" but no direct reports listed | Senior individual contributor. "Lead" means "takes initiative" |
-| "Junior" but expecting independent work | They want mid-level at junior pay |
-| "Senior" but simple CRUD app work | Mid-level role. They over-titled to attract candidates |
+| What the JD Says                        | What the Responsibilities Suggest                                              |
+| --------------------------------------- | ------------------------------------------------------------------------------ |
+| "10+ years experience required"         | Senior-level judgment. A strong dev with 5-6 years could do this               |
+| "Staff Engineer" but all IC work        | Senior Developer who occasionally mentors. No actual staff-level scope         |
+| "Architect" but writing code daily      | Senior Developer who can draw architecture diagrams. Not a true architect role |
+| "Lead" but no direct reports listed     | Senior individual contributor. "Lead" means "takes initiative"                 |
+| "Junior" but expecting independent work | They want mid-level at junior pay                                              |
+| "Senior" but simple CRUD app work       | Mid-level role. They over-titled to attract candidates                         |
 
 ### Scope Inflation
 
-| What the JD Says | What It Actually Means |
-| --- | --- |
-| "Full stack developer" | Check the actual tasks. Often they need frontend OR backend, not both equally |
-| "DevOps and development" | They can't afford separate roles. Candidate will do one more than the other |
-| "Hands-on and strategic" | They want an IC who can present to leadership occasionally |
-| "Build from the ground up" | There's existing code. They want someone who can start new features |
-| "Wear many hats" | Role is undefined. Could be good (startup flexibility) or bad (no boundaries) |
+| What the JD Says           | What It Actually Means                                                        |
+| -------------------------- | ----------------------------------------------------------------------------- |
+| "Full stack developer"     | Check the actual tasks. Often they need frontend OR backend, not both equally |
+| "DevOps and development"   | They can't afford separate roles. Candidate will do one more than the other   |
+| "Hands-on and strategic"   | They want an IC who can present to leadership occasionally                    |
+| "Build from the ground up" | There's existing code. They want someone who can start new features           |
+| "Wear many hats"           | Role is undefined. Could be good (startup flexibility) or bad (no boundaries) |
 
 ## Role-to-Actual-Work Mapping
 
