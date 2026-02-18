@@ -1,6 +1,6 @@
 # sd-plugins
 
-Monorepo for Smart Data Claude Code plugins.
+The marketplace repository for Smart Data's official Claude Code and Claude Cowork plugins.
 
 ## Plugins
 
