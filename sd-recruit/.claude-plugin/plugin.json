@@ -1,0 +1,8 @@
+{
+  "name": "sd-recruit",
+  "version": "0.1.0",
+  "description": "Recruiting assistant — decode job descriptions to extract actual requirements vs buzzword noise, generate screening rubrics for candidates.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
