@@ -13,6 +13,16 @@
         "name": "Smart Data"
       },
       "tags": ["time-tracking", "harvest", "productivity"]
+    },
+    {
+      "name": "sd-team",
+      "source": "./sd-team",
+      "version": "0.1.0",
+      "description": "Team availability and suggestion — view developer utilization from Harvest, manage roster via Google Sheets, suggest team configurations for projects.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["team-management", "staffing", "utilization", "google-sheets"]
     }
   ]
 }
