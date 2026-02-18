@@ -139,6 +139,16 @@
         "name": "Smart Data"
       },
       "tags": ["contracts", "legal", "sow-review", "payment-protection"]
+    },
+    {
+      "name": "sd-slides",
+      "source": "./sd-slides",
+      "version": "0.1.0",
+      "description": "Branded presentation generator — build proposal and pitch decks from Smart Data's master slide library via Google Slides API.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["presentations", "google-slides", "proposals", "pitch-decks"]
     }
   ]
 }

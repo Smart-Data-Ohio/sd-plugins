@@ -19,6 +19,7 @@ The marketplace repository for Smart Data's official Claude Code and Claude Cowo
 | [sd-actuals](sd-actuals/)     | Budget tracking — compare estimated vs actual hours and costs, burn rate projections, overrun warnings                         |
 | [sd-snowflake](sd-snowflake/) | Snowflake partner knowledge — architecture patterns, migration playbooks, operational cost estimation                          |
 | [sd-contracts](sd-contracts/) | Contract and SOW review — clause-by-clause analysis, red flag detection, payment enforceability checks                         |
+| [sd-slides](sd-slides/)       | Branded presentation generator — build proposal and pitch decks from the master slide library via Google Slides                |
 
 ## Getting Started
 
