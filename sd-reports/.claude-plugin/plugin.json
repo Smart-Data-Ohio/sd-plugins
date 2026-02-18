@@ -1,0 +1,8 @@
+{
+  "name": "sd-reports",
+  "version": "0.1.0",
+  "description": "Weekly status report generator — produce client-ready project reports from Harvest time entries, git history, and Google Calendar meetings.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
