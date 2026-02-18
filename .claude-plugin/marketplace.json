@@ -63,6 +63,56 @@
         "name": "Smart Data"
       },
       "tags": ["hr", "benefits", "pto", "policies", "onboarding"]
+    },
+    {
+      "name": "sd-recruit",
+      "source": "./sd-recruit",
+      "version": "0.1.0",
+      "description": "Recruiting assistant — decode job descriptions to extract actual requirements, generate screening rubrics for candidates.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["recruiting", "hiring", "screening", "job-descriptions"]
+    },
+    {
+      "name": "sd-reports",
+      "source": "./sd-reports",
+      "version": "0.1.0",
+      "description": "Weekly status report generator — produce client-ready project reports from Harvest time entries, git history, and Google Calendar meetings.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["reporting", "status-reports", "client-communication"]
+    },
+    {
+      "name": "sd-sow",
+      "source": "./sd-sow",
+      "version": "0.1.0",
+      "description": "Statement of Work generator — produce draft SOWs from approved estimates with milestones, deliverables, and payment schedules.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["sow", "contracts", "milestones", "proposals"]
+    },
+    {
+      "name": "sd-risk",
+      "source": "./sd-risk",
+      "version": "0.1.0",
+      "description": "Project risk profiling — heuristic assessment of budget overrun likelihood with mitigation strategies.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["risk-assessment", "project-management", "budget"]
+    },
+    {
+      "name": "sd-actuals",
+      "source": "./sd-actuals",
+      "version": "0.1.0",
+      "description": "Budget tracking — compare estimated vs actual hours and costs from Harvest, with burn rate projections and early overrun warnings.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["budget-tracking", "actuals", "burn-rate", "project-health"]
     }
   ]
 }
