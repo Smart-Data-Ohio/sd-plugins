@@ -8,17 +8,19 @@ Install the plugin in Claude Code. No additional configuration needed — all co
 
 ## Commands
 
-| Command           | Description                                               |
-| ----------------- | --------------------------------------------------------- |
-| `/recruit:decode` | Analyze a job description and extract actual requirements |
-| `/recruit:screen` | Generate a screening rubric from decoded requirements     |
+| Command             | Description                                                 |
+| ------------------- | ----------------------------------------------------------- |
+| `/recruit:decode`   | Analyze a job description and extract actual requirements   |
+| `/recruit:generate` | Generate a JD from a project description or recruiter notes |
+| `/recruit:screen`   | Generate a screening rubric from decoded requirements       |
 
 ## Skills
 
-| Skill        | Triggers On                                                                        |
-| ------------ | ---------------------------------------------------------------------------------- |
-| `jd-decoder` | "analyze JD", "decode job description", "what does this role actually need"        |
-| `screening`  | "screening rubric", "interview questions", "candidate evaluation", "assess resume" |
+| Skill          | Triggers On                                                                        |
+| -------------- | ---------------------------------------------------------------------------------- |
+| `jd-decoder`   | "analyze JD", "decode job description", "what does this role actually need"        |
+| `jd-generator` | "write a job description", "create a JD", "generate a job posting", "draft a role" |
+| `screening`    | "screening rubric", "interview questions", "candidate evaluation", "assess resume" |
 
 ## How It Works
 
@@ -32,6 +34,15 @@ Paste a job description and the plugin will categorize requirements into:
 - **Role translation** — what this person will actually do
 - **Red flags** — contradictions, unrealistic expectations
 - **Clarification questions** — suggested questions for the hiring manager
+
+### JD Generator
+
+Describe a project or role (even informally) and the plugin will produce a clean, ready-to-post job description:
+
+- **Client-anonymous** — describes industry and environment without naming the client
+- **Honest requirements** — only lists skills the person will actually use daily
+- **Realistic seniority** — matches the title to the actual responsibilities
+- **Complete logistics** — contract type, duration, location, team structure
 
 ### Screening Rubric
 
