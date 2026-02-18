@@ -1,0 +1,8 @@
+{
+  "name": "sd-knowledge",
+  "version": "0.1.0",
+  "description": "Internal knowledge base — architecture decisions, technical standards, project retrospectives, and coding conventions.",
+  "author": {
+    "name": "Smart Data"
+  }
+}

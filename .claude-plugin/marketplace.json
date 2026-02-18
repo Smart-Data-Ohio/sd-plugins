@@ -33,6 +33,36 @@
         "name": "Smart Data"
       },
       "tags": ["estimation", "pricing", "proposals", "project-management"]
+    },
+    {
+      "name": "sd-sales",
+      "source": "./sd-sales",
+      "version": "0.1.0",
+      "description": "RFP and sales proposal support — SD capabilities, case studies, service catalog, and proposal templates.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["sales", "rfp", "proposals", "case-studies"]
+    },
+    {
+      "name": "sd-knowledge",
+      "source": "./sd-knowledge",
+      "version": "0.1.0",
+      "description": "Internal knowledge base — architecture decisions, technical standards, project retrospectives, and coding conventions.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["knowledge-base", "architecture", "standards", "retrospectives"]
+    },
+    {
+      "name": "sd-hr",
+      "source": "./sd-hr",
+      "version": "0.1.0",
+      "description": "HR and benefits Q&A — PTO policy, health insurance, retirement plan, expense policy, and onboarding information.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["hr", "benefits", "pto", "policies", "onboarding"]
     }
   ]
 }
