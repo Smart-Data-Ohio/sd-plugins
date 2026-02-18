@@ -1,0 +1,8 @@
+{
+  "name": "sd-actuals",
+  "version": "0.1.0",
+  "description": "Budget tracking — compare estimated vs actual hours and costs from Harvest, with burn rate projections and early overrun warnings.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
