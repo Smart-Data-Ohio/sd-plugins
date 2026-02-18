@@ -1,0 +1,8 @@
+{
+  "name": "sd-sow",
+  "version": "0.1.0",
+  "description": "Statement of Work generator — produce draft SOWs from approved sd-estimates cost proposals with milestone schedules and payment terms.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
