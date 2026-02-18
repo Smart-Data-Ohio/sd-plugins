@@ -18,14 +18,15 @@ import { registerGoogleLogout } from "./tools/google-logout.js";
 import { registerGetCalendarEvents } from "./tools/get-calendar-events.js";
 import { registerGetProfile } from "./tools/get-profile.js";
 import { registerSetProfile } from "./tools/set-profile.js";
+import { HARVEST_CLIENT_ID, HARVEST_CLIENT_SECRET } from "./defaults.js";
 
 const server = new McpServer({
   name: "harvest-server",
   version: "0.3.0",
 });
 
-const clientId = process.env.HARVEST_CLIENT_ID;
-const clientSecret = process.env.HARVEST_CLIENT_SECRET;
+const clientId = HARVEST_CLIENT_ID;
+const clientSecret = HARVEST_CLIENT_SECRET;
 
 // Resolve Harvest credentials: auth.json (OAuth2) > env vars (PAT)
 let client: HarvestClient | null = null;

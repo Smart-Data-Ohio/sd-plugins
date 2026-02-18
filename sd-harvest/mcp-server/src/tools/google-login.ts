@@ -9,6 +9,7 @@ import {
   saveGoogleCredentials,
   type GoogleCredentials,
 } from "../google-auth.js";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "../defaults.js";
 
 const AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const CALLBACK_PORT = 8743;
@@ -98,26 +99,14 @@ function waitForCallback(
 }
 
 export function registerGoogleLogin(server: McpServer): void {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const clientId = GOOGLE_CLIENT_ID;
+  const clientSecret = GOOGLE_CLIENT_SECRET;
 
   server.tool(
     "google_login",
     "Connect Google Calendar via browser-based OAuth2. Opens your browser to authorize read-only calendar access.",
     {},
     async () => {
-      if (!clientId || !clientSecret) {
-        return {
-          content: [
-            {
-              type: "text" as const,
-              text: "Missing GOOGLE_CLIENT_ID and/or GOOGLE_CLIENT_SECRET environment variables. These must be configured in .mcp.json or set as system environment variables.",
-            },
-          ],
-          isError: true,
-        };
-      }
-
       const state = randomBytes(16).toString("hex");
       const authorizeUrl = `${AUTHORIZE_URL}?client_id=${encodeURIComponent(clientId)}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(SCOPE)}&state=${state}&access_type=offline&prompt=consent`;
 

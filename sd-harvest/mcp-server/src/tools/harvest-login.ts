@@ -9,6 +9,7 @@ import {
   saveCredentials,
   type StoredCredentials,
 } from "../auth.js";
+import { HARVEST_CLIENT_ID, HARVEST_CLIENT_SECRET } from "../defaults.js";
 
 const AUTHORIZE_URL = "https://id.getharvest.com/oauth2/authorize";
 const CALLBACK_PORT = 8742;
@@ -101,26 +102,14 @@ function waitForCallback(
 }
 
 export function registerHarvestLogin(server: McpServer): void {
-  const clientId = process.env.HARVEST_CLIENT_ID;
-  const clientSecret = process.env.HARVEST_CLIENT_SECRET;
+  const clientId = HARVEST_CLIENT_ID;
+  const clientSecret = HARVEST_CLIENT_SECRET;
 
   server.tool(
     "harvest_login",
     "Sign in to Harvest via browser-based OAuth2. Opens your browser to authorize access, then stores credentials locally.",
     {},
     async () => {
-      if (!clientId || !clientSecret) {
-        return {
-          content: [
-            {
-              type: "text" as const,
-              text: "Missing HARVEST_CLIENT_ID and/or HARVEST_CLIENT_SECRET environment variables. These must be configured in .mcp.json or set as system environment variables.",
-            },
-          ],
-          isError: true,
-        };
-      }
-
       const state = randomBytes(16).toString("hex");
       const authorizeUrl = `${AUTHORIZE_URL}?client_id=${encodeURIComponent(clientId)}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}`;
 

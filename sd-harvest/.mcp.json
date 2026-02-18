@@ -1,14 +1,6 @@
 {
   "harvest": {
     "command": "node",
-    "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/dist/index.js"],
-    "env": {
-      "HARVEST_CLIENT_ID": "${HARVEST_CLIENT_ID}",
-      "HARVEST_CLIENT_SECRET": "${HARVEST_CLIENT_SECRET}",
-      "HARVEST_ACCESS_TOKEN": "${HARVEST_ACCESS_TOKEN}",
-      "HARVEST_ACCOUNT_ID": "${HARVEST_ACCOUNT_ID}",
-      "GOOGLE_CLIENT_ID": "${GOOGLE_CLIENT_ID}",
-      "GOOGLE_CLIENT_SECRET": "${GOOGLE_CLIENT_SECRET}"
-    }
+    "args": ["${CLAUDE_PLUGIN_ROOT}/mcp-server/dist/index.js"]
   }
 }

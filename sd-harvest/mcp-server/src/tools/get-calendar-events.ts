@@ -6,13 +6,14 @@ import {
   refreshGoogleToken,
   saveGoogleCredentials,
 } from "../google-auth.js";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "../defaults.js";
 
 const CALENDAR_EVENTS_URL =
   "https://www.googleapis.com/calendar/v3/calendars/primary/events";
 
 export function registerGetCalendarEvents(server: McpServer): void {
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const clientId = GOOGLE_CLIENT_ID;
+  const clientSecret = GOOGLE_CLIENT_SECRET;
 
   server.tool(
     "get_calendar_events",
