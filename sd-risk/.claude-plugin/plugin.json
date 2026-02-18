@@ -1,0 +1,8 @@
+{
+  "name": "sd-risk",
+  "version": "0.1.0",
+  "description": "Project risk profiling — heuristic assessment of budget overrun likelihood based on project characteristics, team composition, and engagement factors.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
