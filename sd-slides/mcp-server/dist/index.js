@@ -8622,7 +8622,7 @@ var require_BufferList = __commonJS({
         this.head = this.tail = null;
         this.length = 0;
       };
-      BufferList.prototype.join = function join(s) {
+      BufferList.prototype.join = function join2(s) {
         if (this.length === 0) return "";
         var p = this.head;
         var ret = "" + p.data;
@@ -45428,20 +45428,98 @@ function registerListTemplates(server2) {
 
 // src/tools/create-presentation.ts
 var import_pptxgenjs = __toESM(require_pptxgen_cjs(), 1);
+import { exec, execSync } from "child_process";
 import * as path from "path";
 import * as fs from "fs";
+import * as os from "os";
+function getDefaultOutputDir() {
+  const desktop = path.join(os.homedir(), "Desktop");
+  if (fs.existsSync(desktop)) return desktop;
+  return os.homedir();
+}
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+function detectPptxApp() {
+  const platform = process.platform;
+  if (platform === "win32") {
+    try {
+      const assoc = execSync("assoc .pptx", {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "pipe"],
+      }).trim();
+      if (assoc) return assoc.split("=")[1] ?? "system default";
+    } catch {
+      const candidates = [
+        path.join(
+          process.env.PROGRAMFILES ?? "",
+          "LibreOffice",
+          "program",
+          "soffice.exe",
+        ),
+        path.join(
+          process.env["PROGRAMFILES(X86)"] ?? "",
+          "LibreOffice",
+          "program",
+          "soffice.exe",
+        ),
+        path.join(process.env.PROGRAMFILES ?? "", "Microsoft Office"),
+        path.join(
+          process.env.LOCALAPPDATA ?? "",
+          "Programs",
+          "LibreOffice",
+          "program",
+          "soffice.exe",
+        ),
+      ];
+      for (const candidate of candidates) {
+        if (fs.existsSync(candidate)) return candidate;
+      }
+    }
+  } else if (platform === "darwin") {
+    for (const app of [
+      "/Applications/LibreOffice.app",
+      "/Applications/Microsoft PowerPoint.app",
+      "/Applications/Keynote.app",
+    ]) {
+      if (fs.existsSync(app)) return path.basename(app);
+    }
+  } else {
+    try {
+      execSync("which libreoffice", { stdio: ["pipe", "pipe", "pipe"] });
+      return "libreoffice";
+    } catch {}
+  }
+  return null;
+}
+function openFile(filePath) {
+  const platform = process.platform;
+  const cmd =
+    platform === "win32"
+      ? `start "" "${filePath}"`
+      : platform === "darwin"
+        ? `open "${filePath}"`
+        : `xdg-open "${filePath}"`;
+  exec(cmd, () => {});
+}
 function registerCreatePresentation(server2) {
   server2.tool(
     "create_presentation",
-    "Create a new branded PowerPoint (.pptx) presentation from selected slide templates. Saves the file locally.",
+    "Create a new branded PowerPoint (.pptx) presentation from selected slide templates. Saves locally and opens in the default app. If output_path is omitted, saves to Desktop with a generated filename. Re-running with the same path overwrites the file for easy iteration.",
     {
       title: external_exports
         .string()
-        .describe("Presentation title (used in file metadata)"),
+        .describe(
+          "Presentation title (used in file metadata and default filename)",
+        ),
       output_path: external_exports
         .string()
+        .optional()
         .describe(
-          "Full file path where the .pptx will be saved (e.g., '/Users/me/Desktop/proposal.pptx')",
+          "File path for the .pptx. If omitted, saves to Desktop as '<title-slug>.pptx'. If provided without directory, saves to Desktop.",
         ),
       slides: external_exports
         .array(
@@ -45455,8 +45533,12 @@ function registerCreatePresentation(server2) {
           }),
         )
         .describe("Ordered array of slides to include"),
+      open: external_exports
+        .boolean()
+        .optional()
+        .describe("Auto-open the file after creation (default: true)"),
     },
-    async ({ title, output_path, slides }) => {
+    async ({ title, output_path, slides, open }) => {
       try {
         const invalidIds = [];
         for (const slide of slides) {
@@ -45489,14 +45571,40 @@ Available: ${available}`,
           const template = getTemplate(slide.template_id);
           template.render(pptx, slide.data);
         }
-        const dir = path.dirname(output_path);
+        let filePath;
+        if (!output_path) {
+          const defaultDir = getDefaultOutputDir();
+          filePath = path.join(defaultDir, `${slugify(title)}.pptx`);
+        } else if (
+          !path.isAbsolute(output_path) &&
+          !output_path.includes(path.sep)
+        ) {
+          const defaultDir = getDefaultOutputDir();
+          filePath = path.join(defaultDir, output_path);
+        } else {
+          filePath = output_path;
+        }
+        if (!filePath.endsWith(".pptx")) {
+          filePath += ".pptx";
+        }
+        const dir = path.dirname(filePath);
         if (!fs.existsSync(dir)) {
           fs.mkdirSync(dir, { recursive: true });
         }
-        const filePath = output_path.endsWith(".pptx")
-          ? output_path
-          : `${output_path}.pptx`;
         await pptx.writeFile({ fileName: filePath });
+        const detectedApp = detectPptxApp();
+        let openStatus = "";
+        if (open !== false) {
+          if (detectedApp) {
+            openFile(filePath);
+            openStatus = `
+
+Opening with ${detectedApp}...`;
+          } else {
+            openStatus =
+              "\n\nNo .pptx viewer detected. Install LibreOffice (free) or Microsoft Office to open the file.";
+          }
+        }
         return {
           content: [
             {
@@ -45505,7 +45613,7 @@ Available: ${available}`,
 
 Title: ${title}
 Slides: ${slides.length}
-Saved to: ${filePath}`,
+Saved to: ${filePath}${openStatus}`,
             },
           ],
         };

@@ -148,7 +148,13 @@
       "author": {
         "name": "Smart Data"
       },
-      "tags": ["presentations", "powerpoint", "pptx", "proposals", "pitch-decks"]
+      "tags": [
+        "presentations",
+        "powerpoint",
+        "pptx",
+        "proposals",
+        "pitch-decks"
+      ]
     }
   ]
 }
