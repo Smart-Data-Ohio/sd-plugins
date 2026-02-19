@@ -24079,7 +24079,15 @@ function registerGoogleSlidesLogin(server2) {
           clientSecret,
           REDIRECT_URI,
         );
-        const email2 = await fetchGoogleUserEmail(tokenResponse.access_token);
+        if (!tokenResponse.access_token) {
+          throw new Error(
+            "Token exchange succeeded but no access_token was returned. Check your Google Cloud OAuth configuration.",
+          );
+        }
+        let email2 = "unknown";
+        try {
+          email2 = await fetchGoogleUserEmail(tokenResponse.access_token);
+        } catch {}
         const credentials = {
           access_token: tokenResponse.access_token,
           refresh_token: tokenResponse.refresh_token ?? "",

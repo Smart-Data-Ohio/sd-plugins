@@ -125,7 +125,18 @@ export function registerGoogleSlidesLogin(server: McpServer): void {
           REDIRECT_URI,
         );
 
-        const email = await fetchGoogleUserEmail(tokenResponse.access_token);
+        if (!tokenResponse.access_token) {
+          throw new Error(
+            "Token exchange succeeded but no access_token was returned. Check your Google Cloud OAuth configuration.",
+          );
+        }
+
+        let email = "unknown";
+        try {
+          email = await fetchGoogleUserEmail(tokenResponse.access_token);
+        } catch {
+          // Email fetch is non-critical — save credentials anyway
+        }
 
         const credentials: GoogleCredentials = {
           access_token: tokenResponse.access_token,
