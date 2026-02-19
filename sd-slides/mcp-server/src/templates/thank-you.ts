@@ -75,13 +75,14 @@ export const thankYouTemplate: SlideTemplate = {
     }
 
     // Full "smartdata" wordmark — bottom-left on dark background
+    // full_sd_name_light.png is 1368x246 (ratio ~5.56:1)
     if (SD_LOGOS.fullNameLight) {
       slide.addImage({
         data: SD_LOGOS.fullNameLight,
         x: 1,
         y: 6.3,
-        w: 2.8,
-        h: 0.55,
+        w: 2.5,
+        h: 0.45,
       });
     }
   },

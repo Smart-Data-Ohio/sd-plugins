@@ -38,6 +38,11 @@ const logoLight = loadLogoBase64("logo_light.png");
 const fullNameLight = loadLogoBase64("full_sd_name_light.png");
 const fullNameDark = loadLogoBase64("full_sd_name_dark.png");
 
+// Diagnostic: log to stderr (MCP uses stdout for protocol)
+console.error(
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark}`,
+);
+
 // Export for use in individual slide templates
 export const SD_LOGOS = {
   logoDark,
@@ -63,6 +68,7 @@ export function defineSlideMasters(pptx: Pptx): void {
         },
       },
       // Logo in header bar (light version on dark background)
+      // logo_light.png is 245x217 (ratio ~1.13:1)
       ...(logoLight
         ? [
             {
@@ -70,7 +76,7 @@ export function defineSlideMasters(pptx: Pptx): void {
                 data: logoLight,
                 x: 12.23,
                 y: 0.08,
-                w: 0.44,
+                w: 0.5,
                 h: 0.44,
               },
             },
@@ -111,14 +117,15 @@ export function defineSlideMasters(pptx: Pptx): void {
     background: { color: SD_COLORS.dark },
     objects: [
       // Logo top-right (light version on dark background)
+      // logo_light.png is 245x217 (ratio ~1.13:1)
       ...(logoLight
         ? [
             {
               image: {
                 data: logoLight,
-                x: 12.03,
+                x: 11.94,
                 y: 0.3,
-                w: 0.7,
+                w: 0.79,
                 h: 0.7,
               },
             },
@@ -142,15 +149,16 @@ export function defineSlideMasters(pptx: Pptx): void {
     title: "SD_SECTION",
     background: { color: SD_COLORS.green },
     objects: [
-      // Logo top-right (light version on green background)
-      ...(logoLight
+      // Logo top-right (dark version on green background)
+      // logo_dark.png is 90x84 (ratio ~1.07:1)
+      ...(logoDark
         ? [
             {
               image: {
-                data: logoLight,
-                x: 12.03,
+                data: logoDark,
+                x: 11.96,
                 y: 0.3,
-                w: 0.7,
+                w: 0.75,
                 h: 0.7,
               },
             },

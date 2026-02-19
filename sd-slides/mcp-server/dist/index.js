@@ -44241,6 +44241,9 @@ var logoDark = loadLogoBase64("logo_dark.png");
 var logoLight = loadLogoBase64("logo_light.png");
 var fullNameLight = loadLogoBase64("full_sd_name_light.png");
 var fullNameDark = loadLogoBase64("full_sd_name_dark.png");
+console.error(
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark}`,
+);
 var SD_LOGOS = {
   logoDark,
   logoLight,
@@ -44263,6 +44266,7 @@ function defineSlideMasters(pptx) {
         },
       },
       // Logo in header bar (light version on dark background)
+      // logo_light.png is 245x217 (ratio ~1.13:1)
       ...(logoLight
         ? [
             {
@@ -44270,7 +44274,7 @@ function defineSlideMasters(pptx) {
                 data: logoLight,
                 x: 12.23,
                 y: 0.08,
-                w: 0.44,
+                w: 0.5,
                 h: 0.44,
               },
             },
@@ -44309,14 +44313,15 @@ function defineSlideMasters(pptx) {
     background: { color: SD_COLORS.dark },
     objects: [
       // Logo top-right (light version on dark background)
+      // logo_light.png is 245x217 (ratio ~1.13:1)
       ...(logoLight
         ? [
             {
               image: {
                 data: logoLight,
-                x: 12.03,
+                x: 11.94,
                 y: 0.3,
-                w: 0.7,
+                w: 0.79,
                 h: 0.7,
               },
             },
@@ -44338,15 +44343,16 @@ function defineSlideMasters(pptx) {
     title: "SD_SECTION",
     background: { color: SD_COLORS.green },
     objects: [
-      // Logo top-right (light version on green background)
-      ...(logoLight
+      // Logo top-right (dark version on green background)
+      // logo_dark.png is 90x84 (ratio ~1.07:1)
+      ...(logoDark
         ? [
             {
               image: {
-                data: logoLight,
-                x: 12.03,
+                data: logoDark,
+                x: 11.96,
                 y: 0.3,
-                w: 0.7,
+                w: 0.75,
                 h: 0.7,
               },
             },
@@ -44440,8 +44446,8 @@ var coverTemplate = {
         data: SD_LOGOS.fullNameLight,
         x: 1,
         y: 6.3,
-        w: 2.8,
-        h: 0.55,
+        w: 2.5,
+        h: 0.45,
       });
     }
   },
@@ -45439,8 +45445,8 @@ var thankYouTemplate = {
         data: SD_LOGOS.fullNameLight,
         x: 1,
         y: 6.3,
-        w: 2.8,
-        h: 0.55,
+        w: 2.5,
+        h: 0.45,
       });
     }
   },
