@@ -15,7 +15,7 @@ const AUTHORIZE_URL = "https://accounts.google.com/o/oauth2/v2/auth";
 const CALLBACK_PORT = 8745;
 const REDIRECT_URI = `http://localhost:${CALLBACK_PORT}/callback`;
 const SCOPE =
-  "https://www.googleapis.com/auth/presentations https://www.googleapis.com/auth/drive";
+  "https://www.googleapis.com/auth/presentations https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email";
 const TIMEOUT_MS = 5 * 60 * 1000;
 
 function openBrowser(url: string): void {

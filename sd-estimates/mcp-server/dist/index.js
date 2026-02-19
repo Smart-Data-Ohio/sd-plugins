@@ -4398,8 +4398,8 @@ var require_schemes = __commonJS({
     function getSchemeHandler(scheme) {
       return (
         (scheme &&
-          (/** @type {SchemeName} */
-          SCHEMES[scheme] ||
+          /** @type {SchemeName} */
+          (SCHEMES[scheme] ||
             SCHEMES[
               /** @type {SchemeName} */
               scheme.toLowerCase()
