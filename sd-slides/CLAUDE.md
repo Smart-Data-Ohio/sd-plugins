@@ -4,7 +4,6 @@
 
 A Claude Code plugin that generates branded Smart Data PowerPoint (.pptx) presentations locally using pptxgenjs. No cloud APIs, no authentication, no internet required.
 
-- `/slides:catalog` — Browse available slide templates
 - `/slides:create` — Interactive wizard: describe what you need, Claude selects templates, generates a branded .pptx
 
 The MCP server uses pptxgenjs to create PowerPoint files from coded slide templates that encode Smart Data's branding (colors, fonts, layout). Commands and skills are all markdown.

@@ -5,16 +5,14 @@ Branded presentation generator for Claude Code. Builds proposal and pitch decks 
 ## Setup
 
 1. Install the plugin in Claude Code
-2. Run `/slides:catalog` to browse available templates
 
 No authentication or internet connection required.
 
 ## Commands
 
-| Command           | Description                                                         |
-| ----------------- | ------------------------------------------------------------------- |
-| `/slides:catalog` | Browse available slide templates by category                        |
-| `/slides:create`  | Interactive wizard to build a branded .pptx from selected templates |
+| Command          | Description                                                         |
+| ---------------- | ------------------------------------------------------------------- |
+| `/slides:create` | Interactive wizard to build a branded .pptx from selected templates |
 
 ## Skills
 
