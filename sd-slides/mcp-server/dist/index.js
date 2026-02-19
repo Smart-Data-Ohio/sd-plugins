@@ -3784,7 +3784,7 @@ var require_compile = __commonJS({
       ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, ref);
       const schOrFunc = root.refs[ref];
       if (schOrFunc) return schOrFunc;
-      let _sch = resolve.call(this, root, ref);
+      let _sch = resolve2.call(this, root, ref);
       if (_sch === void 0) {
         const schema =
           (_a = root.localRefs) === null || _a === void 0 ? void 0 : _a[ref];
@@ -3813,7 +3813,7 @@ var require_compile = __commonJS({
         s1.baseId === s2.baseId
       );
     }
-    function resolve(root, ref) {
+    function resolve2(root, ref) {
       let sch;
       while (typeof (sch = this.refs[ref]) == "string") ref = sch;
       return sch || this.schemas[ref] || resolveSchema.call(this, root, ref);
@@ -4076,8 +4076,8 @@ var require_utils = __commonJS({
       }
       return ind;
     }
-    function removeDotSegments(path2) {
-      let input = path2;
+    function removeDotSegments(path3) {
+      let input = path3;
       const output = [];
       let nextSlash = -1;
       let len = 0;
@@ -4284,8 +4284,8 @@ var require_schemes = __commonJS({
         wsComponent.secure = void 0;
       }
       if (wsComponent.resourceName) {
-        const [path2, query] = wsComponent.resourceName.split("?");
-        wsComponent.path = path2 && path2 !== "/" ? path2 : void 0;
+        const [path3, query] = wsComponent.resourceName.split("?");
+        wsComponent.path = path3 && path3 !== "/" ? path3 : void 0;
         wsComponent.query = query;
         wsComponent.resourceName = void 0;
       }
@@ -4409,8 +4409,8 @@ var require_schemes = __commonJS({
     function getSchemeHandler(scheme) {
       return (
         (scheme &&
-          /** @type {SchemeName} */
-          (SCHEMES[scheme] ||
+          (/** @type {SchemeName} */
+          SCHEMES[scheme] ||
             SCHEMES[
               /** @type {SchemeName} */
               scheme.toLowerCase()
@@ -4448,7 +4448,7 @@ var require_fast_uri = __commonJS({
       }
       return uri;
     }
-    function resolve(baseURI, relativeURI, options) {
+    function resolve2(baseURI, relativeURI, options) {
       const schemelessOptions = options
         ? Object.assign({ scheme: "null" }, options)
         : { scheme: "null" };
@@ -4735,7 +4735,7 @@ var require_fast_uri = __commonJS({
     var fastUri = {
       SCHEMES,
       normalize,
-      resolve,
+      resolve: resolve2,
       resolveComponent,
       equal,
       serialize,
@@ -8302,14 +8302,14 @@ var require_dist = __commonJS({
       if (!f) throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats(ajv, list, fs2, exportName) {
+    function addFormats(ajv, list, fs3, exportName) {
       var _a;
       var _b;
       (_a = (_b = ajv.opts.code).formats) !== null && _a !== void 0
         ? _a
         : (_b.formats = (0,
           codegen_1._)`require("ajv-formats/dist/formats").${exportName}`);
-      for (const f of list) ajv.addFormat(f, fs2[f]);
+      for (const f of list) ajv.addFormat(f, fs3[f]);
     }
     module.exports = exports = formatsPlugin;
     Object.defineProperty(exports, "__esModule", { value: true });
@@ -8622,7 +8622,7 @@ var require_BufferList = __commonJS({
         this.head = this.tail = null;
         this.length = 0;
       };
-      BufferList.prototype.join = function join2(s) {
+      BufferList.prototype.join = function join3(s) {
         if (this.length === 0) return "";
         var p = this.head;
         var ret = "" + p.data;
@@ -10772,8 +10772,8 @@ var require_lib2 = __commonJS({
         return this;
       }
       var p = this.constructor;
-      return this.then(resolve2, reject2);
-      function resolve2(value) {
+      return this.then(resolve3, reject2);
+      function resolve3(value) {
         function yes() {
           return value;
         }
@@ -10936,8 +10936,8 @@ var require_lib2 = __commonJS({
       }
       return out;
     }
-    Promise2.resolve = resolve;
-    function resolve(value) {
+    Promise2.resolve = resolve2;
+    function resolve2(value) {
       if (value instanceof this) {
         return value;
       }
@@ -11435,8 +11435,8 @@ var require_utils2 = __commonJS({
       var result = transform2[inputType][outputType](input);
       return result;
     };
-    exports.resolve = function (path2) {
-      var parts = path2.split("/");
+    exports.resolve = function (path3) {
+      var parts = path3.split("/");
       var result = [];
       for (var index = 0; index < parts.length; index++) {
         var part = parts[index];
@@ -11529,10 +11529,10 @@ var require_utils2 = __commonJS({
               Object.prototype.toString.call(data),
             ) !== -1);
         if (isBlob && typeof FileReader !== "undefined") {
-          return new external.Promise(function (resolve, reject) {
+          return new external.Promise(function (resolve2, reject) {
             var reader = new FileReader();
             reader.onload = function (e) {
-              resolve(e.target.result);
+              resolve2(e.target.result);
             };
             reader.onerror = function (e) {
               reject(e.target.error);
@@ -12123,7 +12123,7 @@ var require_StreamHelper = __commonJS({
       }
     }
     function accumulate(helper, updateCallback) {
-      return new external.Promise(function (resolve, reject) {
+      return new external.Promise(function (resolve2, reject) {
         var dataArray = [];
         var chunkType = helper._internalType,
           resultType = helper._outputType,
@@ -12146,7 +12146,7 @@ var require_StreamHelper = __commonJS({
                 concat(chunkType, dataArray),
                 mimeType,
               );
-              resolve(result);
+              resolve2(result);
             } catch (e) {
               reject(e);
             }
@@ -13173,8 +13173,9 @@ var require_trees = __commonJS({
       }
       node = elems;
       do {
-        n = s.heap[1];
-        /*SMALLEST*/
+        n =
+          s.heap[1];
+          /*SMALLEST*/
         s.heap[1] = s.heap[s.heap_len--];
         /*SMALLEST*/
         pqdownheap(
@@ -13183,8 +13184,9 @@ var require_trees = __commonJS({
           1,
           /*SMALLEST*/
         );
-        m = s.heap[1];
-        /*SMALLEST*/
+        m =
+          s.heap[1];
+          /*SMALLEST*/
         s.heap[--s.heap_max] = n;
         s.heap[--s.heap_max] = m;
         tree[node * 2] = tree[n * 2] + tree[m * 2];
@@ -13192,7 +13194,7 @@ var require_trees = __commonJS({
           (s.depth[n] >= s.depth[m] ? s.depth[n] : s.depth[m]) + 1;
         tree[n * 2 + 1] = tree[m * 2 + 1] = node;
         s.heap[1] =
-          /*SMALLEST*/
+        /*SMALLEST*/
           node++;
         pqdownheap(
           s,
@@ -13201,8 +13203,9 @@ var require_trees = __commonJS({
           /*SMALLEST*/
         );
       } while (s.heap_len >= 2);
-      s.heap[--s.heap_max] = s.heap[1];
-      /*SMALLEST*/
+      s.heap[--s.heap_max] =
+        s.heap[1];
+        /*SMALLEST*/
       gen_bitlen(s, desc);
       gen_codes(tree, max_code, s.bl_count);
     }
@@ -17726,18 +17729,18 @@ var require_object = __commonJS({
       var object3 = new ZipObject(name, zipObjectContent, o);
       this.files[name] = object3;
     };
-    var parentFolder = function (path2) {
-      if (path2.slice(-1) === "/") {
-        path2 = path2.substring(0, path2.length - 1);
+    var parentFolder = function (path3) {
+      if (path3.slice(-1) === "/") {
+        path3 = path3.substring(0, path3.length - 1);
       }
-      var lastSlash = path2.lastIndexOf("/");
-      return lastSlash > 0 ? path2.substring(0, lastSlash) : "";
+      var lastSlash = path3.lastIndexOf("/");
+      return lastSlash > 0 ? path3.substring(0, lastSlash) : "";
     };
-    var forceTrailingSlash = function (path2) {
-      if (path2.slice(-1) !== "/") {
-        path2 += "/";
+    var forceTrailingSlash = function (path3) {
+      if (path3.slice(-1) !== "/") {
+        path3 += "/";
       }
-      return path2;
+      return path3;
     };
     var folderAdd = function (name, createFolders) {
       createFolders =
@@ -18756,7 +18759,7 @@ var require_load = __commonJS({
     var Crc32Probe = require_Crc32Probe();
     var nodejsUtils = require_nodejsUtils();
     function checkEntryCRC32(zipEntry) {
-      return new external.Promise(function (resolve, reject) {
+      return new external.Promise(function (resolve2, reject) {
         var worker = zipEntry.decompressed
           .getContentWorker()
           .pipe(new Crc32Probe());
@@ -18768,7 +18771,7 @@ var require_load = __commonJS({
             if (worker.streamInfo.crc32 !== zipEntry.decompressed.crc32) {
               reject(new Error("Corrupted zip : CRC32 mismatch"));
             } else {
-              resolve();
+              resolve2();
             }
           })
           .resume();
@@ -18908,11 +18911,11 @@ var require_pptxgen_cjs = __commonJS({
       function adopt(value) {
         return value instanceof P
           ? value
-          : new P(function (resolve) {
-              resolve(value);
+          : new P(function (resolve2) {
+              resolve2(value);
             });
       }
-      return new (P || (P = Promise))(function (resolve, reject) {
+      return new (P || (P = Promise))(function (resolve2, reject) {
         function fulfilled(value) {
           try {
             step(generator.next(value));
@@ -18929,7 +18932,7 @@ var require_pptxgen_cjs = __commonJS({
         }
         function step(result) {
           result.done
-            ? resolve(result.value)
+            ? resolve2(result.value)
             : adopt(result.value).then(fulfilled, rejected);
         }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
@@ -22392,7 +22395,7 @@ var require_pptxgen_cjs = __commonJS({
               data = chartObject.data;
               return [
                 4,
-                new Promise(function (resolve, reject) {
+                new Promise(function (resolve2, reject) {
                   var _a2, _b;
                   var zipExcel = new JSZip__default["default"]();
                   var intBubbleCols = (data.length - 1) * 2 + 1;
@@ -22877,7 +22880,7 @@ var require_pptxgen_cjs = __commonJS({
                         "ppt/charts/".concat(chartObject.fileName),
                         makeXmlCharts(chartObject),
                       );
-                      resolve("");
+                      resolve2("");
                     })
                     .catch(function (strErr) {
                       reject(strErr);
@@ -25006,7 +25009,7 @@ var require_pptxgen_cjs = __commonJS({
       }
     }
     function encodeSlideMediaRels(layout) {
-      var fs2 =
+      var fs3 =
         typeof __require !== "undefined" && typeof window === "undefined"
           ? __require("fs")
           : null;
@@ -25037,10 +25040,10 @@ var require_pptxgen_cjs = __commonJS({
         })
         .forEach(function (rel) {
           imageProms.push(
-            new Promise(function (resolve, reject) {
-              if (fs2 && rel.path.indexOf("http") !== 0) {
+            new Promise(function (resolve2, reject) {
+              if (fs3 && rel.path.indexOf("http") !== 0) {
                 try {
-                  var bitmap = fs2.readFileSync(rel.path);
+                  var bitmap = fs3.readFileSync(rel.path);
                   rel.data = Buffer.from(bitmap).toString("base64");
                   candidateRels
                     .filter(function (dupe) {
@@ -25049,7 +25052,7 @@ var require_pptxgen_cjs = __commonJS({
                     .forEach(function (dupe) {
                       return (dupe.data = rel.data);
                     });
-                  resolve("done");
+                  resolve2("done");
                 } catch (ex) {
                   rel.data = IMG_BROKEN;
                   candidateRels
@@ -25067,7 +25070,7 @@ var require_pptxgen_cjs = __commonJS({
                     ),
                   );
                 }
-              } else if (fs2 && https && rel.path.indexOf("http") === 0) {
+              } else if (fs3 && https && rel.path.indexOf("http") === 0) {
                 https.get(rel.path, function (res) {
                   var rawData = "";
                   res.setEncoding("binary");
@@ -25085,7 +25088,7 @@ var require_pptxgen_cjs = __commonJS({
                       .forEach(function (dupe) {
                         return (dupe.data = rel.data);
                       });
-                    resolve("done");
+                    resolve2("done");
                   });
                   res.on("error", function (_ex) {
                     rel.data = IMG_BROKEN;
@@ -25119,11 +25122,11 @@ var require_pptxgen_cjs = __commonJS({
                         return (dupe.data = rel.data);
                       });
                     if (!rel.isSvgPng) {
-                      resolve("done");
+                      resolve2("done");
                     } else {
                       createSvgPngPreview(rel)
                         .then(function () {
-                          resolve("done");
+                          resolve2("done");
                         })
                         .catch(function (ex) {
                           reject(ex);
@@ -25161,7 +25164,7 @@ var require_pptxgen_cjs = __commonJS({
           return rel.isSvgPng && rel.data;
         })
         .forEach(function (rel) {
-          if (fs2) {
+          if (fs3) {
             rel.data = IMG_BROKEN;
             imageProms.push(
               Promise.resolve().then(function () {
@@ -25181,7 +25184,7 @@ var require_pptxgen_cjs = __commonJS({
             case 0:
               return [
                 4,
-                new Promise(function (resolve, reject) {
+                new Promise(function (resolve2, reject) {
                   var image = new Image();
                   image.onload = function () {
                     if (image.width + image.height === 0) {
@@ -25194,7 +25197,7 @@ var require_pptxgen_cjs = __commonJS({
                     ctx.drawImage(image, 0, 0);
                     try {
                       rel.data = canvas.toDataURL(rel.type);
-                      resolve("done");
+                      resolve2("done");
                     } catch (ex) {
                       image.onerror(ex);
                     }
@@ -28385,12 +28388,12 @@ var require_pptxgen_cjs = __commonJS({
         };
         PptxGenJS3.prototype.writeFile = function (props) {
           return __awaiter(this, void 0, void 0, function () {
-            var fs2, propsExpName, propsCompress, fileName;
+            var fs3, propsExpName, propsCompress, fileName;
             var _this = this;
             return __generator(this, function (_a) {
               switch (_a.label) {
                 case 0:
-                  fs2 =
+                  fs3 =
                     typeof __require !== "undefined" &&
                     typeof window === "undefined"
                       ? __require("fs")
@@ -28424,24 +28427,24 @@ var require_pptxgen_cjs = __commonJS({
                     4,
                     this.exportPresentation({
                       compression: propsCompress,
-                      outputType: fs2 ? "nodebuffer" : null,
+                      outputType: fs3 ? "nodebuffer" : null,
                     }).then(function (content) {
                       return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a2) {
                           switch (_a2.label) {
                             case 0:
-                              if (!fs2) return [3, 2];
+                              if (!fs3) return [3, 2];
                               return [
                                 4,
-                                new Promise(function (resolve, reject) {
-                                  fs2.writeFile(
+                                new Promise(function (resolve2, reject) {
+                                  fs3.writeFile(
                                     fileName,
                                     content,
                                     function (err) {
                                       if (err) {
                                         reject(err);
                                       } else {
-                                        resolve(fileName);
+                                        resolve2(fileName);
                                       }
                                     },
                                   );
@@ -29119,8 +29122,8 @@ function getErrorMap() {
 
 // node_modules/zod/v3/helpers/parseUtil.js
 var makeIssue = (params) => {
-  const { data, path: path2, errorMaps, issueData } = params;
-  const fullPath = [...path2, ...(issueData.path || [])];
+  const { data, path: path3, errorMaps, issueData } = params;
+  const fullPath = [...path3, ...(issueData.path || [])];
   const fullIssue = {
     ...issueData,
     path: fullPath,
@@ -29236,11 +29239,11 @@ var errorUtil;
 
 // node_modules/zod/v3/types.js
 var ParseInputLazyPath = class {
-  constructor(parent, value, path2, key) {
+  constructor(parent, value, path3, key) {
     this._cachedPath = [];
     this.parent = parent;
     this.data = value;
-    this._path = path2;
+    this._path = path3;
     this._key = key;
   }
   get path() {
@@ -32994,9 +32997,9 @@ function assignProp(target, prop, value) {
     configurable: true,
   });
 }
-function getElementAtPath(obj, path2) {
-  if (!path2) return obj;
-  return path2.reduce((acc, key) => acc?.[key], obj);
+function getElementAtPath(obj, path3) {
+  if (!path3) return obj;
+  return path3.reduce((acc, key) => acc?.[key], obj);
 }
 function promiseAllObject(promisesObj) {
   const keys = Object.keys(promisesObj);
@@ -33334,11 +33337,11 @@ function aborted(x, startIndex = 0) {
   }
   return false;
 }
-function prefixIssues(path2, issues) {
+function prefixIssues(path3, issues) {
   return issues.map((iss) => {
     var _a;
     (_a = iss).path ?? (_a.path = []);
-    iss.path.unshift(path2);
+    iss.path.unshift(path3);
     return iss;
   });
 }
@@ -41715,7 +41718,7 @@ var Protocol = class {
         }
         const pollInterval =
           task2.pollInterval ?? this._options?.defaultTaskPollInterval ?? 1e3;
-        await new Promise((resolve) => setTimeout(resolve, pollInterval));
+        await new Promise((resolve2) => setTimeout(resolve2, pollInterval));
         options?.signal?.throwIfAborted();
       }
     } catch (error2) {
@@ -41741,7 +41744,7 @@ var Protocol = class {
       task,
       relatedTask,
     } = options ?? {};
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve2, reject) => {
       const earlyReject = (error2) => {
         reject(error2);
       };
@@ -41829,7 +41832,7 @@ var Protocol = class {
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
-            resolve(parseResult.data);
+            resolve2(parseResult.data);
           }
         } catch (error2) {
           reject(error2);
@@ -42153,12 +42156,12 @@ var Protocol = class {
         interval = task.pollInterval;
       }
     } catch {}
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve2, reject) => {
       if (signal.aborted) {
         reject(new McpError(ErrorCode.InvalidRequest, "Request cancelled"));
         return;
       }
-      const timeoutId = setTimeout(resolve, interval);
+      const timeoutId = setTimeout(resolve2, interval);
       signal.addEventListener(
         "abort",
         () => {
@@ -43377,7 +43380,7 @@ var McpServer = class {
       task.status !== "failed" &&
       task.status !== "cancelled"
     ) {
-      await new Promise((resolve) => setTimeout(resolve, pollInterval));
+      await new Promise((resolve2) => setTimeout(resolve2, pollInterval));
       const updatedTask = await extra.taskStore.getTask(taskId);
       if (!updatedTask) {
         throw new McpError(
@@ -44198,18 +44201,21 @@ var StdioServerTransport = class {
     this.onclose?.();
   }
   send(message) {
-    return new Promise((resolve) => {
+    return new Promise((resolve2) => {
       const json = serializeMessage(message);
       if (this._stdout.write(json)) {
-        resolve();
+        resolve2();
       } else {
-        this._stdout.once("drain", resolve);
+        this._stdout.once("drain", resolve2);
       }
     });
   }
 };
 
 // src/templates/master-layout.ts
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
 var SD_COLORS = {
   green: "5BB131",
   dark: "1B202E",
@@ -44221,6 +44227,25 @@ var SD_COLORS = {
 var SD_FONTS = {
   heading: "Poppins",
   body: "Poppins",
+};
+var __filename = fileURLToPath(import.meta.url);
+var __dirname = path.dirname(__filename);
+var assetsDir = path.resolve(__dirname, "..", "..", "assets");
+function loadLogoBase64(filename) {
+  const filePath = path.join(assetsDir, filename);
+  if (!fs.existsSync(filePath)) return null;
+  const data = fs.readFileSync(filePath);
+  return `image/png;base64,${data.toString("base64")}`;
+}
+var logoDark = loadLogoBase64("logo_dark.png");
+var logoLight = loadLogoBase64("logo_light.png");
+var fullNameLight = loadLogoBase64("full_sd_name_light.png");
+var fullNameDark = loadLogoBase64("full_sd_name_dark.png");
+var SD_LOGOS = {
+  logoDark,
+  logoLight,
+  fullNameLight,
+  fullNameDark,
 };
 function defineSlideMasters(pptx) {
   pptx.defineSlideMaster({
@@ -44237,6 +44262,20 @@ function defineSlideMasters(pptx) {
           fill: { color: SD_COLORS.dark },
         },
       },
+      // Logo in header bar (light version on dark background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.23,
+                y: 0.08,
+                w: 0.44,
+                h: 0.44,
+              },
+            },
+          ]
+        : []),
       // Bottom green accent line
       {
         rect: {
@@ -44269,6 +44308,20 @@ function defineSlideMasters(pptx) {
     title: "SD_TITLE",
     background: { color: SD_COLORS.dark },
     objects: [
+      // Logo top-right (light version on dark background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.03,
+                y: 0.3,
+                w: 0.7,
+                h: 0.7,
+              },
+            },
+          ]
+        : []),
       // Green accent line near bottom
       {
         rect: {
@@ -44285,6 +44338,20 @@ function defineSlideMasters(pptx) {
     title: "SD_SECTION",
     background: { color: SD_COLORS.green },
     objects: [
+      // Logo top-right (light version on green background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.03,
+                y: 0.3,
+                w: 0.7,
+                h: 0.7,
+              },
+            },
+          ]
+        : []),
       {
         rect: {
           x: 0,
@@ -44366,6 +44433,15 @@ var coverTemplate = {
         fontSize: 14,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
+      });
+    }
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 1,
+        y: 6.3,
+        w: 2.8,
+        h: 0.55,
       });
     }
   },
@@ -45358,6 +45434,15 @@ var thankYouTemplate = {
         lineSpacingMultiple: 1.6,
       });
     }
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 1,
+        y: 6.3,
+        w: 2.8,
+        h: 0.55,
+      });
+    }
   },
 };
 
@@ -45426,12 +45511,12 @@ function registerListTemplates(server2) {
 // src/tools/create-presentation.ts
 var import_pptxgenjs = __toESM(require_pptxgen_cjs(), 1);
 import { exec, execSync } from "child_process";
-import * as path from "path";
-import * as fs from "fs";
+import * as path2 from "path";
+import * as fs2 from "fs";
 import * as os from "os";
 function getDefaultOutputDir() {
-  const desktop = path.join(os.homedir(), "Desktop");
-  if (fs.existsSync(desktop)) return desktop;
+  const desktop = path2.join(os.homedir(), "Desktop");
+  if (fs2.existsSync(desktop)) return desktop;
   return os.homedir();
 }
 function slugify(text) {
@@ -45451,20 +45536,20 @@ function detectPptxApp() {
       if (assoc) return assoc.split("=")[1] ?? "system default";
     } catch {
       const candidates = [
-        path.join(
+        path2.join(
           process.env.PROGRAMFILES ?? "",
           "LibreOffice",
           "program",
           "soffice.exe",
         ),
-        path.join(
+        path2.join(
           process.env["PROGRAMFILES(X86)"] ?? "",
           "LibreOffice",
           "program",
           "soffice.exe",
         ),
-        path.join(process.env.PROGRAMFILES ?? "", "Microsoft Office"),
-        path.join(
+        path2.join(process.env.PROGRAMFILES ?? "", "Microsoft Office"),
+        path2.join(
           process.env.LOCALAPPDATA ?? "",
           "Programs",
           "LibreOffice",
@@ -45473,7 +45558,7 @@ function detectPptxApp() {
         ),
       ];
       for (const candidate of candidates) {
-        if (fs.existsSync(candidate)) return candidate;
+        if (fs2.existsSync(candidate)) return candidate;
       }
     }
   } else if (platform === "darwin") {
@@ -45482,7 +45567,7 @@ function detectPptxApp() {
       "/Applications/Microsoft PowerPoint.app",
       "/Applications/Keynote.app",
     ]) {
-      if (fs.existsSync(app)) return path.basename(app);
+      if (fs2.existsSync(app)) return path2.basename(app);
     }
   } else {
     try {
@@ -45571,22 +45656,22 @@ Available: ${available}`,
         let filePath;
         if (!output_path) {
           const defaultDir = getDefaultOutputDir();
-          filePath = path.join(defaultDir, `${slugify(title)}.pptx`);
+          filePath = path2.join(defaultDir, `${slugify(title)}.pptx`);
         } else if (
-          !path.isAbsolute(output_path) &&
-          !output_path.includes(path.sep)
+          !path2.isAbsolute(output_path) &&
+          !output_path.includes(path2.sep)
         ) {
           const defaultDir = getDefaultOutputDir();
-          filePath = path.join(defaultDir, output_path);
+          filePath = path2.join(defaultDir, output_path);
         } else {
           filePath = output_path;
         }
         if (!filePath.endsWith(".pptx")) {
           filePath += ".pptx";
         }
-        const dir = path.dirname(filePath);
-        if (!fs.existsSync(dir)) {
-          fs.mkdirSync(dir, { recursive: true });
+        const dir = path2.dirname(filePath);
+        if (!fs2.existsSync(dir)) {
+          fs2.mkdirSync(dir, { recursive: true });
         }
         await pptx.writeFile({ fileName: filePath });
         const detectedApp = detectPptxApp();

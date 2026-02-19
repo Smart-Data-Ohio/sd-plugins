@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LOGOS } from "./master-layout.js";
 
 export const coverTemplate: SlideTemplate = {
   id: "cover",
@@ -72,6 +72,17 @@ export const coverTemplate: SlideTemplate = {
         fontSize: 14,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
+      });
+    }
+
+    // Full "smartdata" wordmark — bottom-left on dark background
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 1,
+        y: 6.3,
+        w: 2.8,
+        h: 0.55,
       });
     }
   },

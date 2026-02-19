@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LOGOS } from "./master-layout.js";
 
 export const thankYouTemplate: SlideTemplate = {
   id: "thank-you",
@@ -71,6 +71,17 @@ export const thankYouTemplate: SlideTemplate = {
         fontFace: SD_FONTS.body,
         align: "center",
         lineSpacingMultiple: 1.6,
+      });
+    }
+
+    // Full "smartdata" wordmark — bottom-left on dark background
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 1,
+        y: 6.3,
+        w: 2.8,
+        h: 0.55,
       });
     }
   },

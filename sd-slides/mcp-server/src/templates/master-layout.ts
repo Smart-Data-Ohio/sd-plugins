@@ -1,3 +1,7 @@
+import * as fs from "fs";
+import * as path from "path";
+import { fileURLToPath } from "url";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Pptx = any;
 
@@ -16,6 +20,32 @@ export const SD_FONTS = {
   body: "Poppins",
 } as const;
 
+// Resolve assets directory relative to the bundle output (dist/index.js → ../../assets/)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const assetsDir = path.resolve(__dirname, "..", "..", "assets");
+
+function loadLogoBase64(filename: string): string | null {
+  const filePath = path.join(assetsDir, filename);
+  if (!fs.existsSync(filePath)) return null;
+  const data = fs.readFileSync(filePath);
+  return `image/png;base64,${data.toString("base64")}`;
+}
+
+// Load logos once at startup
+const logoDark = loadLogoBase64("logo_dark.png");
+const logoLight = loadLogoBase64("logo_light.png");
+const fullNameLight = loadLogoBase64("full_sd_name_light.png");
+const fullNameDark = loadLogoBase64("full_sd_name_dark.png");
+
+// Export for use in individual slide templates
+export const SD_LOGOS = {
+  logoDark,
+  logoLight,
+  fullNameLight,
+  fullNameDark,
+} as const;
+
 export function defineSlideMasters(pptx: Pptx): void {
   // Standard branded slide with dark header bar
   pptx.defineSlideMaster({
@@ -32,6 +62,20 @@ export function defineSlideMasters(pptx: Pptx): void {
           fill: { color: SD_COLORS.dark },
         },
       },
+      // Logo in header bar (light version on dark background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.23,
+                y: 0.08,
+                w: 0.44,
+                h: 0.44,
+              },
+            },
+          ]
+        : []),
       // Bottom green accent line
       {
         rect: {
@@ -66,6 +110,20 @@ export function defineSlideMasters(pptx: Pptx): void {
     title: "SD_TITLE",
     background: { color: SD_COLORS.dark },
     objects: [
+      // Logo top-right (light version on dark background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.03,
+                y: 0.3,
+                w: 0.7,
+                h: 0.7,
+              },
+            },
+          ]
+        : []),
       // Green accent line near bottom
       {
         rect: {
@@ -84,6 +142,20 @@ export function defineSlideMasters(pptx: Pptx): void {
     title: "SD_SECTION",
     background: { color: SD_COLORS.green },
     objects: [
+      // Logo top-right (light version on green background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 12.03,
+                y: 0.3,
+                w: 0.7,
+                h: 0.7,
+              },
+            },
+          ]
+        : []),
       {
         rect: {
           x: 0,
