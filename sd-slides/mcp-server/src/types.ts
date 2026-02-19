@@ -1,84 +1,30 @@
-export interface GoogleCredentials {
-  access_token: string;
-  refresh_token: string;
-  expires_at: number;
-  email: string;
+// pptxgenjs uses namespace+class export pattern incompatible with InstanceType.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Pptx = any;
+
+export interface SlideTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  contentAreas: ContentArea[];
+  render: (pptx: Pptx, data: Record<string, unknown>) => void;
 }
 
-export interface GoogleTokenResponse {
-  access_token: string;
-  refresh_token?: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
+export interface ContentArea {
+  name: string;
+  type: "text" | "bullets" | "table" | "image-placeholder";
+  required: boolean;
+  description: string;
 }
 
-export interface MasterDeckConfig {
-  presentation_id: string;
-}
-
-export interface SlidesConfig {
-  master_deck?: MasterDeckConfig;
-}
-
-export interface SlideInfo {
-  slide_id: string;
-  index: number;
+export interface PresentationRequest {
   title: string;
-  subtitle: string;
-  speaker_notes: string;
-  shape_count: number;
+  outputPath: string;
+  slides: SlideRequest[];
 }
 
-export interface TextStyleInfo {
-  font_family?: string;
-  font_size?: number;
-  bold?: boolean;
-  italic?: boolean;
-  underline?: boolean;
-  foreground_color?: string;
-}
-
-export interface ShapePosition {
-  x: number;
-  y: number;
-}
-
-export interface ShapeInfo {
-  shape_id: string;
-  shape_type: string;
-  text: string;
-  width: number;
-  height: number;
-  position?: ShapePosition;
-  text_style?: TextStyleInfo;
-}
-
-export interface PresentationInfo {
-  presentation_id: string;
-  title: string;
-  slide_count: number;
-  url: string;
-}
-
-export class SlidesApiError extends Error {
-  constructor(
-    public readonly status: number,
-    public readonly statusText: string,
-    public readonly body: string,
-  ) {
-    super(`Google Slides API error ${status} ${statusText}: ${body}`);
-    this.name = "SlidesApiError";
-  }
-}
-
-export class DriveApiError extends Error {
-  constructor(
-    public readonly status: number,
-    public readonly statusText: string,
-    public readonly body: string,
-  ) {
-    super(`Google Drive API error ${status} ${statusText}: ${body}`);
-    this.name = "DriveApiError";
-  }
+export interface SlideRequest {
+  templateId: string;
+  data: Record<string, unknown>;
 }
