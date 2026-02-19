@@ -143,12 +143,12 @@
     {
       "name": "sd-slides",
       "source": "./sd-slides",
-      "version": "0.1.0",
-      "description": "Branded presentation generator — build proposal and pitch decks from Smart Data's master slide library via Google Slides API.",
+      "version": "1.0.0",
+      "description": "Branded presentation generator — build proposal and pitch decks as local .pptx files from Smart Data's slide template library.",
       "author": {
         "name": "Smart Data"
       },
-      "tags": ["presentations", "google-slides", "proposals", "pitch-decks"]
+      "tags": ["presentations", "powerpoint", "pptx", "proposals", "pitch-decks"]
     }
   ]
 }
