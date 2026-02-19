@@ -24279,6 +24279,26 @@ function extractText(textContent) {
     .join("")
     .trim();
 }
+function rgbToString(rgb) {
+  return `rgb(${Math.round((rgb.red ?? 0) * 255)}, ${Math.round((rgb.green ?? 0) * 255)}, ${Math.round((rgb.blue ?? 0) * 255)})`;
+}
+function extractTextStyle(textContent) {
+  if (!textContent?.textElements) return void 0;
+  const firstRun = textContent.textElements.find(
+    (el) => el.textRun?.style && el.textRun.content?.trim(),
+  );
+  if (!firstRun?.textRun?.style) return void 0;
+  const s = firstRun.textRun.style;
+  const rgb = s.foregroundColor?.opaqueColor?.rgbColor;
+  const style = {};
+  if (s.fontFamily) style.font_family = s.fontFamily;
+  if (s.fontSize?.magnitude) style.font_size = s.fontSize.magnitude;
+  if (s.bold) style.bold = true;
+  if (s.italic) style.italic = true;
+  if (s.underline) style.underline = true;
+  if (rgb) style.foreground_color = rgbToString(rgb);
+  return Object.keys(style).length > 0 ? style : void 0;
+}
 function extractShapeText(elements) {
   let title = "";
   let subtitle = "";
@@ -24348,14 +24368,36 @@ async function getSlideContent(presentationId, slideIndex) {
       const text = el.shape?.text ? extractText(el.shape.text) : "";
       const width = el.size?.width?.magnitude ?? 0;
       const height = el.size?.height?.magnitude ?? 0;
+      const textStyle = extractTextStyle(el.shape?.text);
+      const position = el.transform
+        ? { x: el.transform.translateX ?? 0, y: el.transform.translateY ?? 0 }
+        : void 0;
       return {
         shape_id: el.objectId ?? "",
         shape_type: el.shape?.shapeType ?? "UNKNOWN",
         text,
         width,
         height,
+        position,
+        text_style: textStyle,
       };
     });
+}
+async function getSlideThumbnail(presentationId, slideId) {
+  const data = await slidesRequest(
+    `/${presentationId}/pages/${slideId}/thumbnail?thumbnailProperties.thumbnailSize=LARGE`,
+  );
+  if (!data.contentUrl) {
+    throw new Error("No thumbnail URL returned from Google Slides API");
+  }
+  const imageResponse = await fetch(data.contentUrl);
+  if (!imageResponse.ok) {
+    throw new Error(
+      `Failed to fetch thumbnail image: ${imageResponse.statusText}`,
+    );
+  }
+  const arrayBuffer = await imageResponse.arrayBuffer();
+  return Buffer.from(arrayBuffer).toString("base64");
 }
 async function batchUpdate(presentationId, requests) {
   return slidesRequest(`/${presentationId}:batchUpdate`, {
@@ -24491,12 +24533,33 @@ function registerGetSlideContent(server2) {
           };
         }
         const output = shapes
-          .map(
-            (s) => `Shape: ${s.shape_id}
+          .map((s) => {
+            let result = `Shape: ${s.shape_id}
   Type: ${s.shape_type}
   Text: ${s.text || "(empty)"}
-  Size: ${Math.round(s.width)}x${Math.round(s.height)}`,
-          )
+  Size: ${Math.round(s.width)}x${Math.round(s.height)}`;
+            if (s.position) {
+              result += `
+  Position: (${Math.round(s.position.x)}, ${Math.round(s.position.y)})`;
+            }
+            if (s.text_style) {
+              const parts = [];
+              if (s.text_style.font_family)
+                parts.push(`font: ${s.text_style.font_family}`);
+              if (s.text_style.font_size)
+                parts.push(`size: ${Math.round(s.text_style.font_size)}pt`);
+              if (s.text_style.bold) parts.push("bold");
+              if (s.text_style.italic) parts.push("italic");
+              if (s.text_style.underline) parts.push("underline");
+              if (s.text_style.foreground_color)
+                parts.push(`color: ${s.text_style.foreground_color}`);
+              if (parts.length > 0) {
+                result += `
+  Style: ${parts.join(", ")}`;
+              }
+            }
+            return result;
+          })
           .join("\n\n");
         return {
           content: [
@@ -24523,8 +24586,89 @@ ${output}`,
   );
 }
 
+// src/tools/get-slide-thumbnail.ts
+function registerGetSlideThumbnail(server2) {
+  server2.tool(
+    "get_slide_thumbnail",
+    "Get visual thumbnail images of slides. Returns base64-encoded PNG images so you can see what slides look like. Use this to visually inspect slide layout, design, and content.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      slide_indices: external_exports
+        .array(external_exports.number())
+        .optional()
+        .describe(
+          "Zero-based indices of slides to get thumbnails for. If omitted, returns all slides.",
+        ),
+    },
+    async ({ presentation_id, slide_indices }) => {
+      try {
+        const slides = await listSlides(presentation_id);
+        const indicesToFetch = slide_indices ?? slides.map((_, i) => i);
+        const invalid = indicesToFetch.filter(
+          (i) => i < 0 || i >= slides.length,
+        );
+        if (invalid.length > 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Invalid slide indices: ${invalid.join(", ")}. Presentation has ${slides.length} slides (0-${slides.length - 1}).`,
+              },
+            ],
+            isError: true,
+          };
+        }
+        const content = [];
+        for (const index of indicesToFetch) {
+          const slide = slides[index];
+          const base642 = await getSlideThumbnail(
+            presentation_id,
+            slide.slide_id,
+          );
+          content.push({
+            type: "text",
+            text: `
+[Slide ${index}] ${slide.title || "(untitled)"}`,
+          });
+          content.push({
+            type: "image",
+            data: base642,
+            mimeType: "image/png",
+          });
+        }
+        return { content };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to get slide thumbnails: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
 // src/drive-client.ts
 var DRIVE_BASE_URL = "https://www.googleapis.com/drive/v3/files";
+async function deletePresentation(presentationId) {
+  const token = await getAccessToken();
+  const response = await fetch(`${DRIVE_BASE_URL}/${presentationId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    const body = await response.text();
+    throw new DriveApiError(response.status, response.statusText, body);
+  }
+}
 async function copyPresentation(sourcePresentationId, newTitle) {
   const token = await getAccessToken();
   const response = await fetch(
@@ -24611,6 +24755,86 @@ URL: ${info.url}`,
   );
 }
 
+// src/tools/create-text-box.ts
+function registerCreateTextBox(server2) {
+  server2.tool(
+    "create_text_box",
+    "Create a new text box on a slide. Position and size are in EMU (914400 EMU = 1 inch). Use list_slides to get the slide object ID.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      slide_id: external_exports
+        .string()
+        .describe("Slide object ID (page object ID from list_slides)"),
+      text: external_exports
+        .string()
+        .describe("Text content for the new text box"),
+      x: external_exports.number().describe("X position in EMU"),
+      y: external_exports.number().describe("Y position in EMU"),
+      width: external_exports.number().describe("Width in EMU"),
+      height: external_exports.number().describe("Height in EMU"),
+    },
+    async ({ presentation_id, slide_id, text, x, y, width, height }) => {
+      try {
+        const elementId = `textbox_${Date.now()}`;
+        const requests = [
+          {
+            createShape: {
+              objectId: elementId,
+              shapeType: "TEXT_BOX",
+              elementProperties: {
+                pageObjectId: slide_id,
+                size: {
+                  width: { magnitude: width, unit: "EMU" },
+                  height: { magnitude: height, unit: "EMU" },
+                },
+                transform: {
+                  scaleX: 1,
+                  scaleY: 1,
+                  translateX: x,
+                  translateY: y,
+                  unit: "EMU",
+                },
+              },
+            },
+          },
+          {
+            insertText: {
+              objectId: elementId,
+              insertionIndex: 0,
+              text,
+            },
+          },
+        ];
+        await batchUpdate(presentation_id, requests);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Created text box on slide ${slide_id}.
+Shape ID: ${elementId}
+Position: (${x}, ${y}) EMU
+Size: ${width}x${height} EMU
+Text: "${text.length > 100 ? text.slice(0, 100) + "..." : text}"`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to create text box: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
 // src/tools/delete-slides.ts
 function registerDeleteSlides(server2) {
   server2.tool(
@@ -24662,6 +24886,101 @@ function registerDeleteSlides(server2) {
             {
               type: "text",
               text: `Failed to delete slides: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
+// src/tools/delete-presentation.ts
+function registerDeletePresentation(server2) {
+  server2.tool(
+    "delete_presentation",
+    "Delete a presentation from Google Drive. This permanently removes the file and cannot be undone.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID to delete"),
+    },
+    async ({ presentation_id }) => {
+      try {
+        await deletePresentation(presentation_id);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Successfully deleted presentation ${presentation_id}.`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to delete presentation: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
+// src/tools/duplicate-slide.ts
+function registerDuplicateSlide(server2) {
+  server2.tool(
+    "duplicate_slide",
+    "Duplicate a slide within a presentation. The copy is inserted immediately after the source slide.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      slide_index: external_exports
+        .number()
+        .describe("Zero-based index of the slide to duplicate"),
+    },
+    async ({ presentation_id, slide_index }) => {
+      try {
+        const slides = await listSlides(presentation_id);
+        if (slide_index < 0 || slide_index >= slides.length) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Invalid slide index: ${slide_index}. Presentation has ${slides.length} slides (0-${slides.length - 1}).`,
+              },
+            ],
+            isError: true,
+          };
+        }
+        const sourceSlideId = slides[slide_index].slide_id;
+        const requests = [
+          {
+            duplicateObject: {
+              objectId: sourceSlideId,
+            },
+          },
+        ];
+        await batchUpdate(presentation_id, requests);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Duplicated slide ${slide_index} ("${slides[slide_index].title || "(untitled)"}"). New slide inserted at position ${slide_index + 1}.`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to duplicate slide: ${error2 instanceof Error ? error2.message : error2}`,
             },
           ],
           isError: true,
@@ -24872,10 +25191,417 @@ function registerUpdateTextBox(server2) {
   );
 }
 
+// src/tools/update-text-style.ts
+function parseColor(color) {
+  if (color.startsWith("#")) {
+    const hex = color.slice(1);
+    return {
+      red: parseInt(hex.slice(0, 2), 16) / 255,
+      green: parseInt(hex.slice(2, 4), 16) / 255,
+      blue: parseInt(hex.slice(4, 6), 16) / 255,
+    };
+  }
+  const match = color.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+  if (match) {
+    return {
+      red: parseInt(match[1]) / 255,
+      green: parseInt(match[2]) / 255,
+      blue: parseInt(match[3]) / 255,
+    };
+  }
+  throw new Error(
+    `Invalid color format: ${color}. Use hex (#FF0000) or rgb (rgb(255, 0, 0)).`,
+  );
+}
+function registerUpdateTextStyle(server2) {
+  server2.tool(
+    "update_text_style",
+    "Apply text formatting to a shape's text content. Can set font family, size, bold, italic, underline, and color. Applies to all text by default, or a character range.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      shape_id: external_exports.string().describe("Shape/text box object ID"),
+      font_family: external_exports
+        .string()
+        .optional()
+        .describe("Font family name (e.g., 'Arial', 'Roboto')"),
+      font_size: external_exports
+        .number()
+        .optional()
+        .describe("Font size in points"),
+      bold: external_exports
+        .boolean()
+        .optional()
+        .describe("Apply bold formatting"),
+      italic: external_exports
+        .boolean()
+        .optional()
+        .describe("Apply italic formatting"),
+      underline: external_exports
+        .boolean()
+        .optional()
+        .describe("Apply underline formatting"),
+      foreground_color: external_exports
+        .string()
+        .optional()
+        .describe("Text color as hex (#FF0000) or rgb (rgb(255, 0, 0))"),
+      start_index: external_exports
+        .number()
+        .optional()
+        .describe(
+          "Start character index (0-based). If omitted, applies to all text.",
+        ),
+      end_index: external_exports
+        .number()
+        .optional()
+        .describe(
+          "End character index (exclusive). If omitted, applies to all text.",
+        ),
+    },
+    async ({
+      presentation_id,
+      shape_id,
+      font_family,
+      font_size,
+      bold,
+      italic,
+      underline,
+      foreground_color,
+      start_index,
+      end_index,
+    }) => {
+      try {
+        const style = {};
+        const fields = [];
+        if (font_family !== void 0) {
+          style.fontFamily = font_family;
+          fields.push("fontFamily");
+        }
+        if (font_size !== void 0) {
+          style.fontSize = { magnitude: font_size, unit: "PT" };
+          fields.push("fontSize");
+        }
+        if (bold !== void 0) {
+          style.bold = bold;
+          fields.push("bold");
+        }
+        if (italic !== void 0) {
+          style.italic = italic;
+          fields.push("italic");
+        }
+        if (underline !== void 0) {
+          style.underline = underline;
+          fields.push("underline");
+        }
+        if (foreground_color !== void 0) {
+          const rgb = parseColor(foreground_color);
+          style.foregroundColor = { opaqueColor: { rgbColor: rgb } };
+          fields.push("foregroundColor");
+        }
+        if (fields.length === 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "No style properties specified. Provide at least one of: font_family, font_size, bold, italic, underline, foreground_color.",
+              },
+            ],
+            isError: true,
+          };
+        }
+        const hasRange = start_index !== void 0 && end_index !== void 0;
+        const textRange = hasRange
+          ? {
+              type: "FIXED_RANGE",
+              startIndex: start_index,
+              endIndex: end_index,
+            }
+          : { type: "ALL" };
+        const requests = [
+          {
+            updateTextStyle: {
+              objectId: shape_id,
+              textRange,
+              style,
+              fields: fields.join(","),
+            },
+          },
+        ];
+        await batchUpdate(presentation_id, requests);
+        const rangeDesc = hasRange
+          ? `characters ${start_index}-${end_index}`
+          : "all text";
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Applied text styling to ${rangeDesc} in shape ${shape_id}.
+Updated: ${fields.join(", ")}`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to update text style: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
+// src/tools/move-resize-shape.ts
+function registerMoveResizeShape(server2) {
+  server2.tool(
+    "move_resize_shape",
+    "Move and/or resize a shape on a slide. Position is in EMU (914400 EMU = 1 inch). Size is controlled via scale factors relative to the shape's base size (1.0 = original size, 2.0 = double). Use get_slide_content to see current positions and dimensions.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      shape_id: external_exports.string().describe("Shape object ID"),
+      x: external_exports
+        .number()
+        .optional()
+        .describe("New X position in EMU (914400 EMU = 1 inch)"),
+      y: external_exports.number().optional().describe("New Y position in EMU"),
+      scale_x: external_exports
+        .number()
+        .optional()
+        .describe(
+          "Horizontal scale factor (1.0 = original width, 0.5 = half, 2.0 = double)",
+        ),
+      scale_y: external_exports
+        .number()
+        .optional()
+        .describe(
+          "Vertical scale factor (1.0 = original height, 0.5 = half, 2.0 = double)",
+        ),
+    },
+    async ({ presentation_id, shape_id, x, y, scale_x, scale_y }) => {
+      try {
+        if (
+          x === void 0 &&
+          y === void 0 &&
+          scale_x === void 0 &&
+          scale_y === void 0
+        ) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "No changes specified. Provide at least one of: x, y, scale_x, scale_y.",
+              },
+            ],
+            isError: true,
+          };
+        }
+        const requests = [
+          {
+            updatePageElementTransform: {
+              objectId: shape_id,
+              transform: {
+                scaleX: scale_x ?? 1,
+                scaleY: scale_y ?? 1,
+                translateX: x ?? 0,
+                translateY: y ?? 0,
+                unit: "EMU",
+              },
+              applyMode: "ABSOLUTE",
+            },
+          },
+        ];
+        await batchUpdate(presentation_id, requests);
+        const changes = [];
+        if (x !== void 0 || y !== void 0) {
+          changes.push(
+            `position: (${x ?? "unchanged"}, ${y ?? "unchanged"}) EMU`,
+          );
+        }
+        if (scale_x !== void 0 || scale_y !== void 0) {
+          changes.push(`scale: (${scale_x ?? 1}x, ${scale_y ?? 1}x)`);
+        }
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Updated shape ${shape_id}: ${changes.join(", ")}.`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to move/resize shape: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
+// src/tools/update-shape-style.ts
+function parseColor2(color) {
+  if (color === "transparent") return null;
+  if (color.startsWith("#")) {
+    const hex = color.slice(1);
+    return {
+      red: parseInt(hex.slice(0, 2), 16) / 255,
+      green: parseInt(hex.slice(2, 4), 16) / 255,
+      blue: parseInt(hex.slice(4, 6), 16) / 255,
+    };
+  }
+  const match = color.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+  if (match) {
+    return {
+      red: parseInt(match[1]) / 255,
+      green: parseInt(match[2]) / 255,
+      blue: parseInt(match[3]) / 255,
+    };
+  }
+  throw new Error(
+    `Invalid color format: ${color}. Use hex (#FF0000), rgb (rgb(255, 0, 0)), or 'transparent'.`,
+  );
+}
+function registerUpdateShapeStyle(server2) {
+  server2.tool(
+    "update_shape_style",
+    "Update a shape's visual properties: fill color, outline color, and outline weight. Use 'transparent' to remove fill or outline.",
+    {
+      presentation_id: external_exports
+        .string()
+        .describe("Google Slides presentation ID"),
+      shape_id: external_exports.string().describe("Shape object ID"),
+      fill_color: external_exports
+        .string()
+        .optional()
+        .describe(
+          "Fill color as hex (#FF0000), rgb (rgb(255, 0, 0)), or 'transparent' for no fill",
+        ),
+      outline_color: external_exports
+        .string()
+        .optional()
+        .describe("Outline color as hex, rgb, or 'transparent' for no outline"),
+      outline_weight: external_exports
+        .number()
+        .optional()
+        .describe("Outline weight in points"),
+    },
+    async ({
+      presentation_id,
+      shape_id,
+      fill_color,
+      outline_color,
+      outline_weight,
+    }) => {
+      try {
+        if (
+          fill_color === void 0 &&
+          outline_color === void 0 &&
+          outline_weight === void 0
+        ) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: "No style properties specified. Provide at least one of: fill_color, outline_color, outline_weight.",
+              },
+            ],
+            isError: true,
+          };
+        }
+        const shapeProperties = {};
+        const fields = [];
+        if (fill_color !== void 0) {
+          const rgb = parseColor2(fill_color);
+          if (rgb === null) {
+            shapeProperties.shapeBackgroundFill = {
+              propertyState: "NOT_RENDERED",
+            };
+          } else {
+            shapeProperties.shapeBackgroundFill = {
+              solidFill: {
+                color: { rgbColor: rgb },
+                alpha: 1,
+              },
+            };
+          }
+          fields.push("shapeBackgroundFill");
+        }
+        if (outline_color !== void 0 || outline_weight !== void 0) {
+          const outline = {};
+          if (outline_color !== void 0) {
+            const rgb = parseColor2(outline_color);
+            if (rgb === null) {
+              outline.propertyState = "NOT_RENDERED";
+            } else {
+              outline.outlineFill = {
+                solidFill: {
+                  color: { rgbColor: rgb },
+                  alpha: 1,
+                },
+              };
+            }
+          }
+          if (outline_weight !== void 0) {
+            outline.weight = { magnitude: outline_weight, unit: "PT" };
+          }
+          shapeProperties.outline = outline;
+          fields.push("outline");
+        }
+        const requests = [
+          {
+            updateShapeProperties: {
+              objectId: shape_id,
+              shapeProperties,
+              fields: fields.join(","),
+            },
+          },
+        ];
+        await batchUpdate(presentation_id, requests);
+        const changes = [];
+        if (fill_color !== void 0) changes.push(`fill: ${fill_color}`);
+        if (outline_color !== void 0)
+          changes.push(`outline color: ${outline_color}`);
+        if (outline_weight !== void 0)
+          changes.push(`outline weight: ${outline_weight}pt`);
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Updated shape ${shape_id} style: ${changes.join(", ")}.`,
+            },
+          ],
+        };
+      } catch (error2) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Failed to update shape style: ${error2 instanceof Error ? error2.message : error2}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  );
+}
+
 // src/index.ts
 var server = new McpServer({
   name: "slides-server",
-  version: "0.1.0",
+  version: "0.2.0",
 });
 registerGoogleSlidesLogin(server);
 registerGoogleSlidesLogout(server);
@@ -24883,10 +25609,17 @@ registerSetMasterDeck(server);
 registerGetMasterDeck(server);
 registerListSlides(server);
 registerGetSlideContent(server);
+registerGetSlideThumbnail(server);
 registerCreateFromMaster(server);
+registerCreateTextBox(server);
 registerDeleteSlides(server);
+registerDeletePresentation(server);
+registerDuplicateSlide(server);
 registerReorderSlides(server);
 registerReplaceText(server);
 registerUpdateTextBox(server);
+registerUpdateTextStyle(server);
+registerMoveResizeShape(server);
+registerUpdateShapeStyle(server);
 var transport = new StdioServerTransport();
 await server.connect(transport);

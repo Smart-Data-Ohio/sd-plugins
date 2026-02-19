@@ -26,10 +26,31 @@ export function registerGetSlideContent(server: McpServer): void {
         }
 
         const output = shapes
-          .map(
-            (s) =>
-              `Shape: ${s.shape_id}\n  Type: ${s.shape_type}\n  Text: ${s.text || "(empty)"}\n  Size: ${Math.round(s.width)}x${Math.round(s.height)}`,
-          )
+          .map((s) => {
+            let result = `Shape: ${s.shape_id}\n  Type: ${s.shape_type}\n  Text: ${s.text || "(empty)"}\n  Size: ${Math.round(s.width)}x${Math.round(s.height)}`;
+
+            if (s.position) {
+              result += `\n  Position: (${Math.round(s.position.x)}, ${Math.round(s.position.y)})`;
+            }
+
+            if (s.text_style) {
+              const parts: string[] = [];
+              if (s.text_style.font_family)
+                parts.push(`font: ${s.text_style.font_family}`);
+              if (s.text_style.font_size)
+                parts.push(`size: ${Math.round(s.text_style.font_size)}pt`);
+              if (s.text_style.bold) parts.push("bold");
+              if (s.text_style.italic) parts.push("italic");
+              if (s.text_style.underline) parts.push("underline");
+              if (s.text_style.foreground_color)
+                parts.push(`color: ${s.text_style.foreground_color}`);
+              if (parts.length > 0) {
+                result += `\n  Style: ${parts.join(", ")}`;
+              }
+            }
+
+            return result;
+          })
           .join("\n\n");
 
         return {

@@ -7,11 +7,18 @@ allowed-tools:
     "mcp__plugin_sd-slides_slides__get_master_deck",
     "mcp__plugin_sd-slides_slides__list_slides",
     "mcp__plugin_sd-slides_slides__get_slide_content",
+    "mcp__plugin_sd-slides_slides__get_slide_thumbnail",
     "mcp__plugin_sd-slides_slides__create_from_master",
+    "mcp__plugin_sd-slides_slides__create_text_box",
     "mcp__plugin_sd-slides_slides__delete_slides",
+    "mcp__plugin_sd-slides_slides__delete_presentation",
+    "mcp__plugin_sd-slides_slides__duplicate_slide",
     "mcp__plugin_sd-slides_slides__reorder_slides",
     "mcp__plugin_sd-slides_slides__replace_text",
     "mcp__plugin_sd-slides_slides__update_text_box",
+    "mcp__plugin_sd-slides_slides__update_text_style",
+    "mcp__plugin_sd-slides_slides__move_resize_shape",
+    "mcp__plugin_sd-slides_slides__update_shape_style",
     "AskUserQuestion",
   ]
 ---

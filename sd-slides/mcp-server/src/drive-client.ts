@@ -9,6 +9,24 @@ interface DriveFileResponse {
   name?: string;
 }
 
+export async function deletePresentation(
+  presentationId: string,
+): Promise<void> {
+  const token = await getAccessToken();
+
+  const response = await fetch(`${DRIVE_BASE_URL}/${presentationId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new DriveApiError(response.status, response.statusText, body);
+  }
+}
+
 export async function copyPresentation(
   sourcePresentationId: string,
   newTitle: string,

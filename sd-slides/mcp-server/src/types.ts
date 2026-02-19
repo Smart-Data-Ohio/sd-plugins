@@ -30,12 +30,28 @@ export interface SlideInfo {
   shape_count: number;
 }
 
+export interface TextStyleInfo {
+  font_family?: string;
+  font_size?: number;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  foreground_color?: string;
+}
+
+export interface ShapePosition {
+  x: number;
+  y: number;
+}
+
 export interface ShapeInfo {
   shape_id: string;
   shape_type: string;
   text: string;
   width: number;
   height: number;
+  position?: ShapePosition;
+  text_style?: TextStyleInfo;
 }
 
 export interface PresentationInfo {

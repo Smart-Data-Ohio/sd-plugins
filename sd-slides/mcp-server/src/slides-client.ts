@@ -1,4 +1,9 @@
-import type { SlideInfo, ShapeInfo, PresentationInfo } from "./types.js";
+import type {
+  SlideInfo,
+  ShapeInfo,
+  PresentationInfo,
+  TextStyleInfo,
+} from "./types.js";
 import { SlidesApiError } from "./types.js";
 import {
   loadGoogleCredentials,
@@ -63,8 +68,28 @@ async function slidesRequest(
 
 // --- Google Slides API response types ---
 
+interface RgbColor {
+  red?: number;
+  green?: number;
+  blue?: number;
+}
+
+interface ApiTextStyle {
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  foregroundColor?: {
+    opaqueColor?: { rgbColor?: RgbColor };
+  };
+  fontSize?: { magnitude?: number; unit?: string };
+  fontFamily?: string;
+}
+
 interface TextElement {
-  textRun?: { content?: string };
+  textRun?: {
+    content?: string;
+    style?: ApiTextStyle;
+  };
 }
 
 interface TextContent {
@@ -81,6 +106,14 @@ interface SizeTransform {
   height?: SizeProperty;
 }
 
+interface PageElementTransform {
+  scaleX?: number;
+  scaleY?: number;
+  translateX?: number;
+  translateY?: number;
+  unit?: string;
+}
+
 interface PageElement {
   objectId?: string;
   shape?: {
@@ -88,6 +121,7 @@ interface PageElement {
     text?: TextContent;
   };
   size?: SizeTransform;
+  transform?: PageElementTransform;
 }
 
 interface SlideProperties {
@@ -108,6 +142,12 @@ interface PresentationResponse {
   slides?: Page[];
 }
 
+interface ThumbnailResponse {
+  contentUrl?: string;
+  width?: number;
+  height?: number;
+}
+
 // --- Public API ---
 
 function extractText(textContent: TextContent | undefined): string {
@@ -116,6 +156,34 @@ function extractText(textContent: TextContent | undefined): string {
     .map((el) => el.textRun?.content ?? "")
     .join("")
     .trim();
+}
+
+function rgbToString(rgb: RgbColor): string {
+  return `rgb(${Math.round((rgb.red ?? 0) * 255)}, ${Math.round((rgb.green ?? 0) * 255)}, ${Math.round((rgb.blue ?? 0) * 255)})`;
+}
+
+function extractTextStyle(
+  textContent: TextContent | undefined,
+): TextStyleInfo | undefined {
+  if (!textContent?.textElements) return undefined;
+
+  const firstRun = textContent.textElements.find(
+    (el) => el.textRun?.style && el.textRun.content?.trim(),
+  );
+  if (!firstRun?.textRun?.style) return undefined;
+
+  const s = firstRun.textRun.style;
+  const rgb = s.foregroundColor?.opaqueColor?.rgbColor;
+
+  const style: TextStyleInfo = {};
+  if (s.fontFamily) style.font_family = s.fontFamily;
+  if (s.fontSize?.magnitude) style.font_size = s.fontSize.magnitude;
+  if (s.bold) style.bold = true;
+  if (s.italic) style.italic = true;
+  if (s.underline) style.underline = true;
+  if (rgb) style.foreground_color = rgbToString(rgb);
+
+  return Object.keys(style).length > 0 ? style : undefined;
 }
 
 function extractShapeText(elements: PageElement[]): {
@@ -213,6 +281,10 @@ export async function getSlideContent(
       const text = el.shape?.text ? extractText(el.shape.text) : "";
       const width = el.size?.width?.magnitude ?? 0;
       const height = el.size?.height?.magnitude ?? 0;
+      const textStyle = extractTextStyle(el.shape?.text);
+      const position = el.transform
+        ? { x: el.transform.translateX ?? 0, y: el.transform.translateY ?? 0 }
+        : undefined;
 
       return {
         shape_id: el.objectId ?? "",
@@ -220,8 +292,33 @@ export async function getSlideContent(
         text,
         width,
         height,
+        position,
+        text_style: textStyle,
       };
     });
+}
+
+export async function getSlideThumbnail(
+  presentationId: string,
+  slideId: string,
+): Promise<string> {
+  const data = (await slidesRequest(
+    `/${presentationId}/pages/${slideId}/thumbnail?thumbnailProperties.thumbnailSize=LARGE`,
+  )) as ThumbnailResponse;
+
+  if (!data.contentUrl) {
+    throw new Error("No thumbnail URL returned from Google Slides API");
+  }
+
+  const imageResponse = await fetch(data.contentUrl);
+  if (!imageResponse.ok) {
+    throw new Error(
+      `Failed to fetch thumbnail image: ${imageResponse.statusText}`,
+    );
+  }
+
+  const arrayBuffer = await imageResponse.arrayBuffer();
+  return Buffer.from(arrayBuffer).toString("base64");
 }
 
 export async function batchUpdate(

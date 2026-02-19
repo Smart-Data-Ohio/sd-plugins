@@ -7,6 +7,7 @@ allowed-tools:
     "mcp__plugin_sd-slides_slides__set_master_deck",
     "mcp__plugin_sd-slides_slides__list_slides",
     "mcp__plugin_sd-slides_slides__get_slide_content",
+    "mcp__plugin_sd-slides_slides__get_slide_thumbnail",
   ]
 ---
 
