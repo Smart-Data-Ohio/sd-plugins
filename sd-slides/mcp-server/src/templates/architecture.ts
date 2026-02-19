@@ -40,7 +40,7 @@ export const architectureTemplate: SlideTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -56,14 +56,13 @@ export const architectureTemplate: SlideTemplate = {
       const y = startY + i * (layerH + layerGap);
 
       // Layer background
-      slide.addShape("roundRect", {
+      slide.addShape("rect", {
         x: 0.5,
         y,
-        w: 9,
+        w: 12,
         h: layerH,
         fill: { color: i % 2 === 0 ? SD_COLORS.lightGray : SD_COLORS.white },
         line: { color: SD_COLORS.green, width: 1 },
-        rectRadius: 0.05,
       });
 
       // Layer label
@@ -80,20 +79,19 @@ export const architectureTemplate: SlideTemplate = {
       });
 
       // Component boxes
-      const compW = Math.min(1.8, 6.5 / layer.components.length);
+      const compW = Math.min(2.2, 9.5 / layer.components.length);
       const compGap = 0.15;
       const compStartX = 2.6;
 
       layer.components.forEach((comp, j) => {
         const cx = compStartX + j * (compW + compGap);
 
-        slide.addShape("roundRect", {
+        slide.addShape("rect", {
           x: cx,
           y: y + 0.15,
           w: compW,
           h: layerH - 0.3,
           fill: { color: SD_COLORS.green },
-          rectRadius: 0.05,
         });
 
         slide.addText(comp.name, {

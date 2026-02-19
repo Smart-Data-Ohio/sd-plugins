@@ -34,7 +34,7 @@ export const differentiatorsTemplate: SlideTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -44,7 +44,7 @@ export const differentiatorsTemplate: SlideTemplate = {
 
     const cols = items.length <= 3 ? items.length : 3;
     const rows = Math.ceil(items.length / cols);
-    const cardW = (8.5 - (cols - 1) * 0.2) / cols;
+    const cardW = (12.0 - (cols - 1) * 0.2) / cols;
     const cardH = rows > 1 ? 2.0 : 3.5;
 
     items.forEach((item, i) => {
@@ -90,7 +90,7 @@ export const differentiatorsTemplate: SlideTemplate = {
         w: cardW - 0.3,
         h: cardH - 0.9,
         fontSize: 10,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
         valign: "top",
       });

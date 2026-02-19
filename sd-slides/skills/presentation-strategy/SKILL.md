@@ -9,7 +9,7 @@ A framework for building effective proposal and pitch decks for Smart Data's con
 
 ## Deck Types
 
-### Proposal Deck (10-15 slides)
+### Proposal Deck (12-16 slides)
 
 Used when responding to an RFP or presenting a project proposal to a potential client. The narrative arc: _we understand your problem → here's how we'd solve it → here's the team → here's the investment → here's why us_.
 
@@ -19,15 +19,19 @@ Used when responding to an RFP or presenting a project proposal to a potential c
 2. **agenda** — 4-5 items, keep it to one line each
 3. **content-bullets** — "Understanding the Challenge" — client's pain points, framed as business problems
 4. **content-bullets** — "Our Approach" — methodology, phases, how SD works
-5. **architecture** (optional) — Proposed system design with layered components
-6. **team** — Proposed team members, roles, relevant experience
-7. **timeline** — Phase-based, 3-5 milestones, high-level dates
-8. **investment** — Pricing tiers if applicable (Essential / Standard / Premium)
-9. **differentiators** — 3-4 value propositions, relevant case studies
-10. **next-steps** — Clear call to action, proposed timeline for decision
-11. **thank-you** — Contact info
+5. **process-flow** — Engagement methodology as numbered steps
+6. **architecture** (optional) — Proposed system design with layered components
+7. **team** — Proposed team members, roles, relevant experience
+8. **timeline** — Phase-based, 3-5 milestones, high-level dates
+9. **investment** — Pricing tiers if applicable (Essential / Standard / Premium)
+10. **comparison** (optional) — Current state vs. proposed solution
+11. **case-study** — Relevant project spotlight with results
+12. **differentiators** — 3-4 value propositions
+13. **stats-metrics** (optional) — Key impact numbers from past engagements
+14. **next-steps** — Clear call to action, proposed timeline for decision
+15. **thank-you** — Contact info
 
-### Pitch Deck (6-8 slides)
+### Pitch Deck (7-10 slides)
 
 Used for introductory meetings, capability overviews, or when a client asks "tell me about Smart Data." Shorter, broader, less project-specific.
 
@@ -36,12 +40,14 @@ Used for introductory meetings, capability overviews, or when a client asks "tel
 1. **cover** — "Smart Data" title, tagline
 2. **content-bullets** — "Who We Are" — brief company overview
 3. **content-bullets** — "What We Do" — service lines
-4. **two-column** — Relevant experience (2-3 case study summaries)
-5. **team** — Key team members or team structure overview
-6. **differentiators** — What sets SD apart
-7. **next-steps** — Contact info, proposed follow-up
+4. **stats-metrics** — Key company numbers (years in business, projects delivered, team size)
+5. **case-study** — Featured project spotlight
+6. **quote-testimonial** (optional) — Client testimonial
+7. **team** — Key team members or team structure overview
+8. **differentiators** — What sets SD apart
+9. **next-steps** — Contact info, proposed follow-up
 
-### Capability Deck (8-12 slides)
+### Capability Deck (10-14 slides)
 
 Used to showcase a specific service line (e.g., "Smart Data's Snowflake Practice" or "Our Custom Development Services").
 
@@ -50,12 +56,15 @@ Used to showcase a specific service line (e.g., "Smart Data's Snowflake Practice
 1. **cover** — Service line title
 2. **content-bullets** — Overview of what this practice does
 3. **section-divider** — "Our Approach"
-4. **content-bullets** — Methodology for this service line
+4. **process-flow** — Methodology as step-by-step flow
 5. **two-column** — Technical capabilities and certifications
 6. **team** — Key practitioners, credentials
-7. **content-bullets** — Case study with results (repeat for 2-3)
-8. **differentiators** — Why SD for this service
-9. **next-steps**
+7. **section-divider** — "Results"
+8. **case-study** — Project spotlight with results (repeat for 2-3)
+9. **quote-testimonial** (optional) — Client testimonial
+10. **stats-metrics** — Aggregate impact numbers
+11. **differentiators** — Why SD for this service
+12. **next-steps**
 
 ## Content Guidelines
 

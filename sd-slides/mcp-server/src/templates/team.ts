@@ -45,29 +45,39 @@ export const teamTemplate: SlideTemplate = {
 
     const cols = members.length <= 3 ? members.length : 3;
     const rows = Math.ceil(members.length / cols);
-    const cardW = 8.5 / cols;
+    const totalW = 12.0;
+    const gap = 0.2;
+    const cardW = (totalW - (cols - 1) * gap) / cols;
     const cardH = rows > 1 ? 2.2 : 3.5;
 
     members.forEach((member, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const x = 0.5 + col * (cardW + 0.15);
+      const x = 0.5 + col * (cardW + gap);
       const y = 1.8 + row * (cardH + 0.3);
 
-      // Card background
-      slide.addShape("roundRect", {
+      // Green accent bar at top of card
+      slide.addShape("rect", {
         x,
         y,
         w: cardW,
-        h: cardH,
+        h: 0.06,
+        fill: { color: SD_COLORS.green },
+      });
+
+      // Card background
+      slide.addShape("rect", {
+        x,
+        y: y + 0.06,
+        w: cardW,
+        h: cardH - 0.06,
         fill: { color: SD_COLORS.lightGray },
-        rectRadius: 0.1,
       });
 
       // Name
       slide.addText(member.name, {
         x: x + 0.2,
-        y: y + 0.3,
+        y: y + 0.2,
         w: cardW - 0.4,
         h: 0.4,
         fontSize: 15,
@@ -95,7 +105,7 @@ export const teamTemplate: SlideTemplate = {
           w: cardW - 0.4,
           h: cardH - 1.4,
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           valign: "top",
         });

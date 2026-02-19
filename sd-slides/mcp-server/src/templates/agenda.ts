@@ -37,23 +37,55 @@ export const agendaTemplate: SlideTemplate = {
       fontFace: SD_FONTS.heading,
     });
 
-    const numberedItems = items.map((item, i) => ({
-      text: `${i + 1}.  ${item}`,
-      options: {
+    const rowH = 0.7;
+    items.forEach((item, i) => {
+      const y = 1.8 + i * (rowH + 0.15);
+
+      // Green number square
+      slide.addShape("rect", {
+        x: 0.8,
+        y,
+        w: 0.5,
+        h: 0.5,
+        fill: { color: SD_COLORS.green },
+      });
+
+      slide.addText(String(i + 1), {
+        x: 0.8,
+        y,
+        w: 0.5,
+        h: 0.5,
+        fontSize: 16,
+        bold: true,
+        color: SD_COLORS.white,
+        fontFace: SD_FONTS.heading,
+        align: "center",
+        valign: "middle",
+      });
+
+      // Agenda item text
+      slide.addText(item, {
+        x: 1.5,
+        y,
+        w: 10.5,
+        h: 0.5,
         fontSize: 16,
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: false as const,
-        lineSpacingMultiple: 1.8,
-      },
-    }));
+        valign: "middle",
+      });
 
-    slide.addText(numberedItems, {
-      x: 1.0,
-      y: 1.8,
-      w: 7.5,
-      h: 4.5,
+      // Subtle separator line
+      if (i < items.length - 1) {
+        slide.addShape("rect", {
+          x: 1.5,
+          y: y + rowH - 0.08,
+          w: 10.5,
+          h: 0.02,
+          fill: { color: SD_COLORS.lightGray },
+        });
+      }
     });
   },
 };

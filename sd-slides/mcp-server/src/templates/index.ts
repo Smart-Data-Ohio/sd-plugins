@@ -11,6 +11,12 @@ import { investmentTemplate } from "./investment.js";
 import { differentiatorsTemplate } from "./differentiators.js";
 import { nextStepsTemplate } from "./next-steps.js";
 import { thankYouTemplate } from "./thank-you.js";
+import { statsMetricsTemplate } from "./stats-metrics.js";
+import { quoteTestimonialTemplate } from "./quote-testimonial.js";
+import { processFlowTemplate } from "./process-flow.js";
+import { comparisonTemplate } from "./comparison.js";
+import { caseStudyTemplate } from "./case-study.js";
+import { imageContentTemplate } from "./image-content.js";
 
 const templates: SlideTemplate[] = [
   coverTemplate,
@@ -25,6 +31,12 @@ const templates: SlideTemplate[] = [
   differentiatorsTemplate,
   nextStepsTemplate,
   thankYouTemplate,
+  statsMetricsTemplate,
+  quoteTestimonialTemplate,
+  processFlowTemplate,
+  comparisonTemplate,
+  caseStudyTemplate,
+  imageContentTemplate,
 ];
 
 const templateMap = new Map(templates.map((t) => [t.id, t]));

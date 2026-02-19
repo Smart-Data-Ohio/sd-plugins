@@ -47,7 +47,7 @@ export const investmentTemplate: SlideTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -104,7 +104,7 @@ export const investmentTemplate: SlideTemplate = {
         text: row.description ?? "",
         options: {
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           fill: { color: i % 2 === 0 ? SD_COLORS.lightGray : SD_COLORS.white },
         },
@@ -161,8 +161,8 @@ export const investmentTemplate: SlideTemplate = {
     slide.addTable(tableRows as any[][], {
       x: 0.5,
       y: 1.7,
-      w: 9,
-      colW: [3, 3.5, 2.5],
+      w: 12,
+      colW: [4, 5, 3],
       border: { type: "solid", pt: 0.5, color: SD_COLORS.lightGray },
       rowH: 0.45,
     });
@@ -171,11 +171,11 @@ export const investmentTemplate: SlideTemplate = {
       slide.addText(String(data.notes), {
         x: 0.5,
         y: 6.2,
-        w: 9,
+        w: 12,
         h: 0.5,
         fontSize: 9,
         italic: true,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
       });
     }

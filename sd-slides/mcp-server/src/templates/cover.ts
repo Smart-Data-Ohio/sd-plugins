@@ -36,6 +36,29 @@ export const coverTemplate: SlideTemplate = {
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
 
+    // Decorative geometric overlay — right-side panel (matching master deck pattern)
+    slide.addShape("rect", {
+      x: 8.8,
+      y: -0.5,
+      w: 5.5,
+      h: 8.5,
+      fill: { color: SD_COLORS.navyMid },
+    });
+    slide.addShape("rect", {
+      x: 9.5,
+      y: 0.5,
+      w: 3.0,
+      h: 3.0,
+      fill: { color: SD_COLORS.charcoal },
+    });
+    slide.addShape("rect", {
+      x: 10.2,
+      y: 4.0,
+      w: 2.5,
+      h: 2.5,
+      fill: { color: SD_COLORS.navyDeep },
+    });
+
     slide.addText(String(data.title ?? ""), {
       x: 1,
       y: 2.0,

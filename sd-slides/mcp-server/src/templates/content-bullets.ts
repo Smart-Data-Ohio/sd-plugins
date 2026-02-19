@@ -44,7 +44,7 @@ export const contentBulletsTemplate: SlideTemplate = {
         w: 9,
         h: 0.4,
         fontSize: 14,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
       });
     }
@@ -58,7 +58,7 @@ export const contentBulletsTemplate: SlideTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.6,
         indentLevel: 0 as const,
       },
@@ -67,7 +67,7 @@ export const contentBulletsTemplate: SlideTemplate = {
     slide.addText(bulletItems, {
       x: 0.8,
       y: topY,
-      w: 8.2,
+      w: 11.0,
       h: 4.8 - (topY - 1.7),
     });
   },

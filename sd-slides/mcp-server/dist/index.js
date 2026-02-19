@@ -44217,12 +44217,21 @@ import * as fs from "fs";
 import * as path from "path";
 import { fileURLToPath } from "url";
 var SD_COLORS = {
+  // Primary brand
   green: "5BB131",
   dark: "1B202E",
   white: "FFFFFF",
+  // Secondary navy shades (for depth and panels)
+  navyMid: "1B2A46",
+  navyDeep: "12141A",
+  charcoal: "282C3A",
+  // Greens
+  greenLight: "95C83D",
+  // Neutrals
+  offWhite: "F5F5F7",
   lightGray: "F2F2F2",
   mediumGray: "888888",
-  darkGray: "444444",
+  darkGray: "333333",
 };
 var SD_FONTS = {
   heading: "Poppins",
@@ -44307,6 +44316,72 @@ function defineSlideMasters(pptx) {
         },
       },
     ],
+    slideNumber: {
+      x: 12.2,
+      y: 7.15,
+      w: 0.6,
+      h: 0.3,
+      fontSize: 8,
+      color: SD_COLORS.mediumGray,
+      fontFace: SD_FONTS.body,
+      align: "right",
+    },
+  });
+  pptx.defineSlideMaster({
+    title: "SD_DARK",
+    background: { color: SD_COLORS.dark },
+    objects: [
+      // Logo top-right (light version on dark background)
+      ...(logoLight
+        ? [
+            {
+              image: {
+                data: logoLight,
+                x: 11.94,
+                y: 0.3,
+                w: 0.79,
+                h: 0.7,
+              },
+            },
+          ]
+        : []),
+      // Bottom green accent line
+      {
+        rect: {
+          x: 0,
+          y: 7.1,
+          w: "100%",
+          h: 0.04,
+          fill: { color: SD_COLORS.green },
+        },
+      },
+      // Footer text
+      {
+        text: {
+          text: "Smart Data  |  Confidential",
+          options: {
+            x: 0.5,
+            y: 7.15,
+            w: 5,
+            h: 0.3,
+            fontSize: 8,
+            bold: true,
+            color: SD_COLORS.charcoal,
+            fontFace: SD_FONTS.body,
+          },
+        },
+      },
+    ],
+    slideNumber: {
+      x: 12.2,
+      y: 7.15,
+      w: 0.6,
+      h: 0.3,
+      fontSize: 8,
+      color: SD_COLORS.charcoal,
+      fontFace: SD_FONTS.body,
+      align: "right",
+    },
   });
   pptx.defineSlideMaster({
     title: "SD_TITLE",
@@ -44406,6 +44481,27 @@ var coverTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
+    slide.addShape("rect", {
+      x: 8.8,
+      y: -0.5,
+      w: 5.5,
+      h: 8.5,
+      fill: { color: SD_COLORS.navyMid },
+    });
+    slide.addShape("rect", {
+      x: 9.5,
+      y: 0.5,
+      w: 3,
+      h: 3,
+      fill: { color: SD_COLORS.charcoal },
+    });
+    slide.addShape("rect", {
+      x: 10.2,
+      y: 4,
+      w: 2.5,
+      h: 2.5,
+      fill: { color: SD_COLORS.navyDeep },
+    });
     slide.addText(String(data.title ?? ""), {
       x: 1,
       y: 2,
@@ -44488,22 +44584,48 @@ var agendaTemplate = {
       color: SD_COLORS.dark,
       fontFace: SD_FONTS.heading,
     });
-    const numberedItems = items.map((item, i) => ({
-      text: `${i + 1}.  ${item}`,
-      options: {
+    const rowH = 0.7;
+    items.forEach((item, i) => {
+      const y = 1.8 + i * (rowH + 0.15);
+      slide.addShape("rect", {
+        x: 0.8,
+        y,
+        w: 0.5,
+        h: 0.5,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(String(i + 1), {
+        x: 0.8,
+        y,
+        w: 0.5,
+        h: 0.5,
+        fontSize: 16,
+        bold: true,
+        color: SD_COLORS.white,
+        fontFace: SD_FONTS.heading,
+        align: "center",
+        valign: "middle",
+      });
+      slide.addText(item, {
+        x: 1.5,
+        y,
+        w: 10.5,
+        h: 0.5,
         fontSize: 16,
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: false,
-        lineSpacingMultiple: 1.8,
-      },
-    }));
-    slide.addText(numberedItems, {
-      x: 1,
-      y: 1.8,
-      w: 7.5,
-      h: 4.5,
+        valign: "middle",
+      });
+      if (i < items.length - 1) {
+        slide.addShape("rect", {
+          x: 1.5,
+          y: y + rowH - 0.08,
+          w: 10.5,
+          h: 0.02,
+          fill: { color: SD_COLORS.lightGray },
+        });
+      }
     });
   },
 };
@@ -44531,6 +44653,21 @@ var sectionDividerTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_SECTION" });
+    slide.addShape("rect", {
+      x: 10,
+      y: -0.3,
+      w: 4,
+      h: 4,
+      fill: { color: SD_COLORS.greenLight },
+    });
+    slide.addShape("rect", {
+      x: 11,
+      y: 3.5,
+      w: 3,
+      h: 3.5,
+      fill: { color: SD_COLORS.dark },
+      transparency: 85,
+    });
     slide.addText(String(data.title ?? ""), {
       x: 1,
       y: 2.5,
@@ -44597,7 +44734,7 @@ var contentBulletsTemplate = {
         w: 9,
         h: 0.4,
         fontSize: 14,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
       });
     }
@@ -44609,7 +44746,7 @@ var contentBulletsTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.6,
         indentLevel: 0,
       },
@@ -44617,7 +44754,7 @@ var contentBulletsTemplate = {
     slide.addText(bulletItems, {
       x: 0.8,
       y: topY,
-      w: 8.2,
+      w: 11,
       h: 4.8 - (topY - 1.7),
     });
   },
@@ -44662,18 +44799,20 @@ var twoColumnTemplate = {
     slide.addText(String(data.title ?? ""), {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
       color: SD_COLORS.dark,
       fontFace: SD_FONTS.heading,
     });
+    const colW = 5.7;
+    const rightX = 6.83;
     if (data.leftHeading) {
       slide.addText(String(data.leftHeading), {
         x: 0.5,
         y: 1.7,
-        w: 4.2,
+        w: colW,
         h: 0.4,
         fontSize: 16,
         bold: true,
@@ -44688,18 +44827,18 @@ var twoColumnTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.5,
       },
     }));
     slide.addText(leftBullets, {
       x: 0.5,
       y: data.leftHeading ? 2.2 : 1.7,
-      w: 4.2,
+      w: colW,
       h: 4.2,
     });
     slide.addShape("rect", {
-      x: 4.85,
+      x: 6.45,
       y: 1.7,
       w: 0.02,
       h: 4.5,
@@ -44707,9 +44846,9 @@ var twoColumnTemplate = {
     });
     if (data.rightHeading) {
       slide.addText(String(data.rightHeading), {
-        x: 5.2,
+        x: rightX,
         y: 1.7,
-        w: 4.2,
+        w: colW,
         h: 0.4,
         fontSize: 16,
         bold: true,
@@ -44724,14 +44863,14 @@ var twoColumnTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.5,
       },
     }));
     slide.addText(rightBullets, {
-      x: 5.2,
+      x: rightX,
       y: data.rightHeading ? 2.2 : 1.7,
-      w: 4.2,
+      w: colW,
       h: 4.2,
     });
   },
@@ -44774,24 +44913,32 @@ var teamTemplate = {
     });
     const cols = members.length <= 3 ? members.length : 3;
     const rows = Math.ceil(members.length / cols);
-    const cardW = 8.5 / cols;
+    const totalW = 12;
+    const gap = 0.2;
+    const cardW = (totalW - (cols - 1) * gap) / cols;
     const cardH = rows > 1 ? 2.2 : 3.5;
     members.forEach((member, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const x = 0.5 + col * (cardW + 0.15);
+      const x = 0.5 + col * (cardW + gap);
       const y = 1.8 + row * (cardH + 0.3);
-      slide.addShape("roundRect", {
+      slide.addShape("rect", {
         x,
         y,
         w: cardW,
-        h: cardH,
+        h: 0.06,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addShape("rect", {
+        x,
+        y: y + 0.06,
+        w: cardW,
+        h: cardH - 0.06,
         fill: { color: SD_COLORS.lightGray },
-        rectRadius: 0.1,
       });
       slide.addText(member.name, {
         x: x + 0.2,
-        y: y + 0.3,
+        y: y + 0.2,
         w: cardW - 0.4,
         h: 0.4,
         fontSize: 15,
@@ -44815,7 +44962,7 @@ var teamTemplate = {
           w: cardW - 0.4,
           h: cardH - 1.4,
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           valign: "top",
         });
@@ -44853,7 +45000,7 @@ var timelineTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -44862,7 +45009,7 @@ var timelineTemplate = {
     });
     const lineY = 3.2;
     const startX = 0.8;
-    const totalW = 8.4;
+    const totalW = 11.5;
     const phaseW = totalW / phases.length;
     slide.addShape("rect", {
       x: startX,
@@ -44873,7 +45020,7 @@ var timelineTemplate = {
     });
     phases.forEach((phase, i) => {
       const cx = startX + i * phaseW + phaseW / 2;
-      slide.addShape("ellipse", {
+      slide.addShape("rect", {
         x: cx - 0.18,
         y: lineY - 0.16,
         w: 0.36,
@@ -44922,7 +45069,7 @@ var timelineTemplate = {
           w: phaseW,
           h: 1.5,
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           align: "center",
           valign: "top",
@@ -44961,7 +45108,7 @@ var architectureTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -44973,14 +45120,13 @@ var architectureTemplate = {
     const layerGap = 0.15;
     layers.forEach((layer, i) => {
       const y = startY + i * (layerH + layerGap);
-      slide.addShape("roundRect", {
+      slide.addShape("rect", {
         x: 0.5,
         y,
-        w: 9,
+        w: 12,
         h: layerH,
         fill: { color: i % 2 === 0 ? SD_COLORS.lightGray : SD_COLORS.white },
         line: { color: SD_COLORS.green, width: 1 },
-        rectRadius: 0.05,
       });
       slide.addText(layer.label, {
         x: 0.6,
@@ -44993,18 +45139,17 @@ var architectureTemplate = {
         fontFace: SD_FONTS.heading,
         valign: "middle",
       });
-      const compW = Math.min(1.8, 6.5 / layer.components.length);
+      const compW = Math.min(2.2, 9.5 / layer.components.length);
       const compGap = 0.15;
       const compStartX = 2.6;
       layer.components.forEach((comp, j) => {
         const cx = compStartX + j * (compW + compGap);
-        slide.addShape("roundRect", {
+        slide.addShape("rect", {
           x: cx,
           y: y + 0.15,
           w: compW,
           h: layerH - 0.3,
           fill: { color: SD_COLORS.green },
-          rectRadius: 0.05,
         });
         slide.addText(comp.name, {
           x: cx,
@@ -45076,7 +45221,7 @@ var investmentTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -45130,7 +45275,7 @@ var investmentTemplate = {
         text: row.description ?? "",
         options: {
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           fill: { color: i % 2 === 0 ? SD_COLORS.lightGray : SD_COLORS.white },
         },
@@ -45184,8 +45329,8 @@ var investmentTemplate = {
     slide.addTable(tableRows, {
       x: 0.5,
       y: 1.7,
-      w: 9,
-      colW: [3, 3.5, 2.5],
+      w: 12,
+      colW: [4, 5, 3],
       border: { type: "solid", pt: 0.5, color: SD_COLORS.lightGray },
       rowH: 0.45,
     });
@@ -45193,11 +45338,11 @@ var investmentTemplate = {
       slide.addText(String(data.notes), {
         x: 0.5,
         y: 6.2,
-        w: 9,
+        w: 12,
         h: 0.5,
         fontSize: 9,
         italic: true,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
       });
     }
@@ -45232,7 +45377,7 @@ var differentiatorsTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -45241,7 +45386,7 @@ var differentiatorsTemplate = {
     });
     const cols = items.length <= 3 ? items.length : 3;
     const rows = Math.ceil(items.length / cols);
-    const cardW = (8.5 - (cols - 1) * 0.2) / cols;
+    const cardW = (12 - (cols - 1) * 0.2) / cols;
     const cardH = rows > 1 ? 2 : 3.5;
     items.forEach((item, i) => {
       const col = i % cols;
@@ -45278,7 +45423,7 @@ var differentiatorsTemplate = {
         w: cardW - 0.3,
         h: cardH - 0.9,
         fontSize: 10,
-        color: SD_COLORS.mediumGray,
+        color: SD_COLORS.darkGray,
         fontFace: SD_FONTS.body,
         valign: "top",
       });
@@ -45314,7 +45459,7 @@ var nextStepsTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -45323,7 +45468,7 @@ var nextStepsTemplate = {
     });
     steps.forEach((step, i) => {
       const y = 1.9 + i * 0.9;
-      slide.addShape("ellipse", {
+      slide.addShape("rect", {
         x: 0.7,
         y: y + 0.05,
         w: 0.45,
@@ -45345,7 +45490,7 @@ var nextStepsTemplate = {
       slide.addText(step.action, {
         x: 1.4,
         y,
-        w: 5.5,
+        w: 10.5,
         h: 0.35,
         fontSize: 14,
         bold: true,
@@ -45359,10 +45504,10 @@ var nextStepsTemplate = {
         slide.addText(meta.join("  |  "), {
           x: 1.4,
           y: y + 0.35,
-          w: 5.5,
+          w: 10.5,
           h: 0.3,
           fontSize: 11,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
         });
       }
@@ -45452,6 +45597,703 @@ var thankYouTemplate = {
   },
 };
 
+// src/templates/stats-metrics.ts
+var statsMetricsTemplate = {
+  id: "stats-metrics",
+  name: "Stats & Metrics",
+  description:
+    "Big bold numbers with labels \u2014 ideal for showcasing key results, KPIs, or impact figures. Dark background, 2-4 metrics displayed prominently.",
+  category: "Content",
+  contentAreas: [
+    {
+      name: "title",
+      type: "text",
+      required: false,
+      description: "Slide title (default: 'By the Numbers')",
+    },
+    {
+      name: "metrics",
+      type: "table",
+      required: true,
+      description:
+        "Array of { value, label } objects (2-4 items). Value should be short (e.g., '98%', '3x', '$2.1M')",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    const title = String(data.title ?? "By the Numbers");
+    const metrics = data.metrics;
+    slide.addText(title, {
+      x: 0.5,
+      y: 0.5,
+      w: 10,
+      h: 0.6,
+      fontSize: 24,
+      bold: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+    });
+    const count = metrics.length;
+    const totalW = 11.5;
+    const cardW = totalW / count;
+    const startX = 0.5;
+    metrics.forEach((metric, i) => {
+      const x = startX + i * cardW;
+      slide.addShape("rect", {
+        x: x + 0.3,
+        y: 2,
+        w: cardW - 0.6,
+        h: 0.06,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(metric.value, {
+        x,
+        y: 2.3,
+        w: cardW,
+        h: 1.5,
+        fontSize: 48,
+        bold: true,
+        color: SD_COLORS.green,
+        fontFace: SD_FONTS.heading,
+        align: "center",
+      });
+      slide.addText(metric.label, {
+        x,
+        y: 3.9,
+        w: cardW,
+        h: 1,
+        fontSize: 14,
+        color: SD_COLORS.offWhite,
+        fontFace: SD_FONTS.body,
+        align: "center",
+        valign: "top",
+      });
+    });
+    slide.addShape("rect", {
+      x: 0,
+      y: 5.8,
+      w: "100%",
+      h: 1.3,
+      fill: { color: SD_COLORS.navyDeep },
+    });
+  },
+};
+
+// src/templates/quote-testimonial.ts
+var quoteTestimonialTemplate = {
+  id: "quote-testimonial",
+  name: "Quote / Testimonial",
+  description:
+    "Client testimonial or quote on a dark background with secondary navy panel. Includes attribution (name, title, company).",
+  category: "Content",
+  contentAreas: [
+    {
+      name: "quote",
+      type: "text",
+      required: true,
+      description: "The testimonial or quote text",
+    },
+    {
+      name: "authorName",
+      type: "text",
+      required: true,
+      description: "Name of the person being quoted",
+    },
+    {
+      name: "authorTitle",
+      type: "text",
+      required: false,
+      description: "Title/role of the person",
+    },
+    {
+      name: "company",
+      type: "text",
+      required: false,
+      description: "Company name",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    slide.addShape("rect", {
+      x: 0.8,
+      y: 1.2,
+      w: 11.73,
+      h: 4.5,
+      fill: { color: SD_COLORS.navyMid },
+    });
+    slide.addText("\u201C", {
+      x: 1.2,
+      y: 1,
+      w: 1,
+      h: 1.2,
+      fontSize: 72,
+      bold: true,
+      color: SD_COLORS.green,
+      fontFace: SD_FONTS.heading,
+    });
+    slide.addText(String(data.quote), {
+      x: 1.5,
+      y: 2,
+      w: 10.5,
+      h: 2.5,
+      fontSize: 20,
+      color: SD_COLORS.offWhite,
+      fontFace: SD_FONTS.body,
+      italic: true,
+      lineSpacingMultiple: 1.5,
+      valign: "top",
+    });
+    slide.addShape("rect", {
+      x: 1.5,
+      y: 4.7,
+      w: 2,
+      h: 0.04,
+      fill: { color: SD_COLORS.green },
+    });
+    const parts = [String(data.authorName)];
+    if (data.authorTitle) parts.push(String(data.authorTitle));
+    if (data.company) parts.push(String(data.company));
+    slide.addText(parts.join("  |  "), {
+      x: 1.5,
+      y: 4.9,
+      w: 10,
+      h: 0.5,
+      fontSize: 13,
+      bold: true,
+      color: SD_COLORS.green,
+      fontFace: SD_FONTS.body,
+    });
+  },
+};
+
+// src/templates/process-flow.ts
+var processFlowTemplate = {
+  id: "process-flow",
+  name: "Process Flow",
+  description:
+    "Numbered steps with connecting horizontal lines \u2014 ideal for methodologies, workflows, or project phases. Supports 3-5 steps.",
+  category: "Planning",
+  contentAreas: [
+    {
+      name: "title",
+      type: "text",
+      required: false,
+      description: "Slide title (default: 'Our Process')",
+    },
+    {
+      name: "steps",
+      type: "table",
+      required: true,
+      description: "Array of { title, description } objects (3-5 steps)",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
+    const title = String(data.title ?? "Our Process");
+    const steps = data.steps;
+    slide.addText(title, {
+      x: 0.5,
+      y: 0.8,
+      w: 9,
+      h: 0.6,
+      fontSize: 24,
+      bold: true,
+      color: SD_COLORS.dark,
+      fontFace: SD_FONTS.heading,
+    });
+    const count = steps.length;
+    const totalW = 11.5;
+    const stepW = totalW / count;
+    const startX = 0.5;
+    const lineY = 2.4;
+    slide.addShape("rect", {
+      x: startX + stepW * 0.5,
+      y: lineY + 0.18,
+      w: totalW - stepW,
+      h: 0.04,
+      fill: { color: SD_COLORS.lightGray },
+    });
+    steps.forEach((step, i) => {
+      const x = startX + i * stepW;
+      const centerX = x + stepW / 2;
+      const numSize = 0.4;
+      slide.addShape("rect", {
+        x: centerX - numSize / 2,
+        y: lineY,
+        w: numSize,
+        h: numSize,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(String(i + 1), {
+        x: centerX - numSize / 2,
+        y: lineY,
+        w: numSize,
+        h: numSize,
+        fontSize: 14,
+        bold: true,
+        color: SD_COLORS.white,
+        fontFace: SD_FONTS.heading,
+        align: "center",
+        valign: "middle",
+      });
+      slide.addText(step.title, {
+        x,
+        y: 3.1,
+        w: stepW,
+        h: 0.5,
+        fontSize: 13,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.heading,
+        align: "center",
+      });
+      slide.addText(step.description, {
+        x: x + 0.15,
+        y: 3.7,
+        w: stepW - 0.3,
+        h: 2.5,
+        fontSize: 10,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+        align: "center",
+        valign: "top",
+      });
+    });
+  },
+};
+
+// src/templates/comparison.ts
+var comparisonTemplate = {
+  id: "comparison",
+  name: "Comparison",
+  description:
+    "Side-by-side comparison with two columns and row-based items. Ideal for before/after, current vs. proposed, or vendor comparisons.",
+  category: "Content",
+  contentAreas: [
+    {
+      name: "title",
+      type: "text",
+      required: false,
+      description: "Slide title (default: 'Comparison')",
+    },
+    {
+      name: "leftHeading",
+      type: "text",
+      required: true,
+      description: "Left column heading (e.g., 'Current State', 'Before')",
+    },
+    {
+      name: "rightHeading",
+      type: "text",
+      required: true,
+      description: "Right column heading (e.g., 'Proposed', 'After')",
+    },
+    {
+      name: "items",
+      type: "table",
+      required: true,
+      description:
+        "Array of { label, left, right } objects \u2014 each row compares one aspect",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
+    const title = String(data.title ?? "Comparison");
+    const items = data.items;
+    slide.addText(title, {
+      x: 0.5,
+      y: 0.8,
+      w: 9,
+      h: 0.6,
+      fontSize: 24,
+      bold: true,
+      color: SD_COLORS.dark,
+      fontFace: SD_FONTS.heading,
+    });
+    const tableX = 0.5;
+    const tableY = 1.8;
+    const labelW = 2.5;
+    const colW = 4.5;
+    const rowH = 0.65;
+    slide.addShape("rect", {
+      x: tableX + labelW,
+      y: tableY,
+      w: colW,
+      h: rowH,
+      fill: { color: SD_COLORS.dark },
+    });
+    slide.addShape("rect", {
+      x: tableX + labelW + colW + 0.05,
+      y: tableY,
+      w: colW,
+      h: rowH,
+      fill: { color: SD_COLORS.green },
+    });
+    slide.addText(String(data.leftHeading), {
+      x: tableX + labelW,
+      y: tableY,
+      w: colW,
+      h: rowH,
+      fontSize: 13,
+      bold: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      align: "center",
+      valign: "middle",
+    });
+    slide.addText(String(data.rightHeading), {
+      x: tableX + labelW + colW + 0.05,
+      y: tableY,
+      w: colW,
+      h: rowH,
+      fontSize: 13,
+      bold: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      align: "center",
+      valign: "middle",
+    });
+    items.forEach((item, i) => {
+      const y = tableY + rowH + 0.05 + i * (rowH + 0.05);
+      const bgColor = i % 2 === 0 ? SD_COLORS.lightGray : SD_COLORS.white;
+      slide.addShape("rect", {
+        x: tableX,
+        y,
+        w: labelW - 0.05,
+        h: rowH,
+        fill: { color: SD_COLORS.dark },
+      });
+      slide.addText(item.label, {
+        x: tableX + 0.15,
+        y,
+        w: labelW - 0.35,
+        h: rowH,
+        fontSize: 11,
+        bold: true,
+        color: SD_COLORS.white,
+        fontFace: SD_FONTS.body,
+        valign: "middle",
+      });
+      slide.addShape("rect", {
+        x: tableX + labelW,
+        y,
+        w: colW,
+        h: rowH,
+        fill: { color: bgColor },
+      });
+      slide.addText(item.left, {
+        x: tableX + labelW + 0.15,
+        y,
+        w: colW - 0.3,
+        h: rowH,
+        fontSize: 11,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+        valign: "middle",
+      });
+      slide.addShape("rect", {
+        x: tableX + labelW + colW + 0.05,
+        y,
+        w: colW,
+        h: rowH,
+        fill: { color: bgColor },
+      });
+      slide.addText(item.right, {
+        x: tableX + labelW + colW + 0.2,
+        y,
+        w: colW - 0.3,
+        h: rowH,
+        fontSize: 11,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+        valign: "middle",
+      });
+    });
+  },
+};
+
+// src/templates/case-study.ts
+var caseStudyTemplate = {
+  id: "case-study",
+  name: "Case Study / Project Spotlight",
+  description:
+    "Project spotlight layout with client name, challenge, solution, and results. Matches the master deck's 'Project Spotlight' pattern.",
+  category: "Content",
+  contentAreas: [
+    {
+      name: "label",
+      type: "text",
+      required: false,
+      description: "Section label (default: 'Project Spotlight')",
+    },
+    {
+      name: "clientName",
+      type: "text",
+      required: true,
+      description: "Client or project name",
+    },
+    {
+      name: "summary",
+      type: "text",
+      required: false,
+      description: "One-line project summary",
+    },
+    {
+      name: "challenge",
+      type: "text",
+      required: false,
+      description: "The business challenge or problem",
+    },
+    {
+      name: "solution",
+      type: "text",
+      required: false,
+      description: "Smart Data's approach and solution",
+    },
+    {
+      name: "results",
+      type: "bullets",
+      required: false,
+      description:
+        "Array of result strings (e.g., ['$16M revenue recovered', '3-month timeline'])",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
+    const label = String(data.label ?? "Project Spotlight");
+    slide.addText(label.toUpperCase(), {
+      x: 0.5,
+      y: 0.8,
+      w: 5,
+      h: 0.35,
+      fontSize: 10,
+      bold: true,
+      color: SD_COLORS.green,
+      fontFace: SD_FONTS.body,
+    });
+    slide.addText(String(data.clientName), {
+      x: 0.5,
+      y: 1.1,
+      w: 9,
+      h: 0.6,
+      fontSize: 24,
+      bold: true,
+      color: SD_COLORS.dark,
+      fontFace: SD_FONTS.heading,
+    });
+    if (data.summary) {
+      slide.addText(String(data.summary), {
+        x: 0.5,
+        y: 1.75,
+        w: 11,
+        h: 0.4,
+        fontSize: 13,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+      });
+    }
+    slide.addShape("rect", {
+      x: 0.5,
+      y: 2.3,
+      w: 11.5,
+      h: 0.03,
+      fill: { color: SD_COLORS.lightGray },
+    });
+    const sections = [];
+    if (data.challenge)
+      sections.push({ heading: "Challenge", content: String(data.challenge) });
+    if (data.solution)
+      sections.push({ heading: "Solution", content: String(data.solution) });
+    const colCount = sections.length + (data.results ? 1 : 0);
+    const colW = colCount > 0 ? 11.5 / colCount : 11.5;
+    sections.forEach((section, i) => {
+      const x = 0.5 + i * colW;
+      slide.addShape("rect", {
+        x,
+        y: 2.6,
+        w: colW - 0.3,
+        h: 0.05,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(section.heading.toUpperCase(), {
+        x,
+        y: 2.8,
+        w: colW - 0.3,
+        h: 0.35,
+        fontSize: 10,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.heading,
+      });
+      slide.addText(section.content ?? "", {
+        x,
+        y: 3.2,
+        w: colW - 0.3,
+        h: 3.5,
+        fontSize: 11,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+        valign: "top",
+        lineSpacingMultiple: 1.4,
+      });
+    });
+    if (data.results) {
+      const results = data.results;
+      const x = 0.5 + sections.length * colW;
+      slide.addShape("rect", {
+        x,
+        y: 2.6,
+        w: colW - 0.3,
+        h: 0.05,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText("RESULTS", {
+        x,
+        y: 2.8,
+        w: colW - 0.3,
+        h: 0.35,
+        fontSize: 10,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.heading,
+      });
+      const bulletText = results
+        .map((r) => ({
+          text: `\u25A0  ${r}
+`,
+          options: { fontSize: 11 },
+        }))
+        .flat();
+      slide.addText(bulletText, {
+        x,
+        y: 3.2,
+        w: colW - 0.3,
+        h: 3.5,
+        color: SD_COLORS.darkGray,
+        fontFace: SD_FONTS.body,
+        valign: "top",
+        lineSpacingMultiple: 1.6,
+      });
+    }
+  },
+};
+
+// src/templates/image-content.ts
+var imageContentTemplate = {
+  id: "image-content",
+  name: "Image + Content",
+  description:
+    "Split layout with an image placeholder on the left and text content on the right. Image is provided as a base64 PNG/JPG string or file path.",
+  category: "Content",
+  contentAreas: [
+    {
+      name: "title",
+      type: "text",
+      required: true,
+      description: "Content heading",
+    },
+    {
+      name: "body",
+      type: "text",
+      required: true,
+      description: "Body text or bullet points (use newlines to separate)",
+    },
+    {
+      name: "imageData",
+      type: "image-placeholder",
+      required: false,
+      description:
+        "Base64 image data string (image/png;base64,...) or file path. If omitted, shows a branded placeholder.",
+    },
+    {
+      name: "imagePosition",
+      type: "text",
+      required: false,
+      description: "Image position: 'left' (default) or 'right'",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
+    const imageOnRight = String(data.imagePosition ?? "left") === "right";
+    const imgX = imageOnRight ? 6.83 : 0;
+    const contentX = imageOnRight ? 0.5 : 7;
+    const imgW = 6.33;
+    const contentW = 5.5;
+    if (data.imageData) {
+      const imgStr = String(data.imageData);
+      const isBase64 = imgStr.startsWith("image/");
+      slide.addImage({
+        ...(isBase64 ? { data: imgStr } : { path: imgStr }),
+        x: imgX,
+        y: 0.6,
+        w: imgW,
+        h: 6.5,
+        sizing: { type: "cover", w: imgW, h: 6.5 },
+      });
+    } else {
+      slide.addShape("rect", {
+        x: imgX,
+        y: 0.6,
+        w: imgW,
+        h: 6.5,
+        fill: { color: SD_COLORS.navyMid },
+      });
+      slide.addShape("rect", {
+        x: imgX + 1.5,
+        y: 2,
+        w: 3,
+        h: 3,
+        fill: { color: SD_COLORS.charcoal },
+      });
+      slide.addShape("rect", {
+        x: imgX + 2.5,
+        y: 3.5,
+        w: 2,
+        h: 2,
+        fill: { color: SD_COLORS.dark },
+      });
+      slide.addText("IMAGE", {
+        x: imgX,
+        y: 3.5,
+        w: imgW,
+        h: 0.5,
+        fontSize: 14,
+        color: SD_COLORS.mediumGray,
+        fontFace: SD_FONTS.body,
+        align: "center",
+      });
+    }
+    slide.addText(String(data.title), {
+      x: contentX,
+      y: 1.2,
+      w: contentW,
+      h: 0.7,
+      fontSize: 22,
+      bold: true,
+      color: SD_COLORS.dark,
+      fontFace: SD_FONTS.heading,
+    });
+    slide.addShape("rect", {
+      x: contentX,
+      y: 1.95,
+      w: 1.5,
+      h: 0.04,
+      fill: { color: SD_COLORS.green },
+    });
+    slide.addText(String(data.body), {
+      x: contentX,
+      y: 2.2,
+      w: contentW,
+      h: 4.5,
+      fontSize: 12,
+      color: SD_COLORS.darkGray,
+      fontFace: SD_FONTS.body,
+      valign: "top",
+      lineSpacingMultiple: 1.5,
+    });
+  },
+};
+
 // src/templates/index.ts
 var templates = [
   coverTemplate,
@@ -45466,6 +46308,12 @@ var templates = [
   differentiatorsTemplate,
   nextStepsTemplate,
   thankYouTemplate,
+  statsMetricsTemplate,
+  quoteTestimonialTemplate,
+  processFlowTemplate,
+  comparisonTemplate,
+  caseStudyTemplate,
+  imageContentTemplate,
 ];
 var templateMap = new Map(templates.map((t) => [t.id, t]));
 function getAllTemplates() {

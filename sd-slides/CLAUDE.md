@@ -45,22 +45,24 @@ Commands must reference these full names in their `allowed-tools` frontmatter.
 
 Each slide type is a function in `mcp-server/src/templates/` that takes a pptxgenjs instance and content data, then adds a branded slide. Templates use constants from `master-layout.ts`:
 
-- **Brand colors:** Green `#5BB131`, Dark `#1B202E`, White `#FFFFFF`
-- **Font:** Poppins (bold preference for body text)
-- **Slide masters:** SD_BRANDED (content slides), SD_TITLE (cover/closing), SD_SECTION (dividers)
+- **Brand colors:** Green `#5BB131`, Dark `#1B202E`, White `#FFFFFF`, plus navy depth shades (`#1B2A46`, `#282C3A`, `#12141A`)
+- **Font:** Poppins (bold preference, multiple weights)
+- **Slide masters:** SD_BRANDED (white content), SD_TITLE (dark cover/closing), SD_SECTION (green dividers), SD_DARK (dark content)
+- **Logos:** Loaded from `assets/` at startup — light/dark mark + full wordmark, embedded in slide masters
+- **Design language:** Sharp rectangles only (no rounded corners), flat fills, geometric overlays, high-contrast
 
 ### Template Categories
 
-| Category   | Templates                       |
-| ---------- | ------------------------------- |
-| Opening    | `cover`, `agenda`               |
-| Structure  | `section-divider`               |
-| Content    | `content-bullets`, `two-column` |
-| People     | `team`                          |
-| Planning   | `timeline`                      |
-| Technical  | `architecture`                  |
-| Commercial | `investment`, `differentiators` |
-| Closing    | `next-steps`, `thank-you`       |
+| Category   | Templates                                                                                            |
+| ---------- | ---------------------------------------------------------------------------------------------------- |
+| Opening    | `cover`, `agenda`                                                                                    |
+| Structure  | `section-divider`                                                                                    |
+| Content    | `content-bullets`, `two-column`, `comparison`, `image-content`, `stats-metrics`, `quote-testimonial` |
+| People     | `team`                                                                                               |
+| Planning   | `timeline`, `process-flow`                                                                           |
+| Technical  | `architecture`                                                                                       |
+| Commercial | `investment`, `differentiators`, `case-study`                                                        |
+| Closing    | `next-steps`, `thank-you`                                                                            |
 
 ### MCP Tools
 

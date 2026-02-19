@@ -30,26 +30,28 @@ No authentication or internet connection required.
 4. Claude generates content and builds the .pptx file locally
 5. Open the file in PowerPoint, LibreOffice, or upload to Google Slides
 
-### Available Templates
+### Available Templates (18)
 
-| Category   | Templates                           |
-| ---------- | ----------------------------------- |
-| Opening    | Cover, Agenda                       |
-| Structure  | Section Divider                     |
-| Content    | Content with Bullets, Two Column    |
-| People     | Team                                |
-| Planning   | Timeline                            |
-| Technical  | Architecture Diagram                |
-| Commercial | Investment/Pricing, Differentiators |
-| Closing    | Next Steps, Thank You               |
+| Category   | Templates                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------- |
+| Opening    | Cover, Agenda                                                                            |
+| Structure  | Section Divider                                                                          |
+| Content    | Content Bullets, Two Column, Comparison, Image+Content, Stats/Metrics, Quote/Testimonial |
+| People     | Team                                                                                     |
+| Planning   | Timeline, Process Flow                                                                   |
+| Technical  | Architecture Diagram                                                                     |
+| Commercial | Investment/Pricing, Differentiators, Case Study                                          |
+| Closing    | Next Steps, Thank You                                                                    |
 
 ### Branding
 
-All templates use Smart Data branding:
+All templates use Smart Data branding derived from the master deck:
 
-- **Colors:** Green (#5BB131), Dark (#1B202E), White (#FFFFFF)
-- **Font:** Poppins (sans-serif, bold preference)
+- **Colors:** Green (#5BB131), Dark (#1B202E), White (#FFFFFF), plus navy depth shades
+- **Font:** Poppins (sans-serif, bold preference, multiple weights)
 - **Layout:** Widescreen (13.33" x 7.5")
+- **Logos:** SD mark and wordmark embedded on every slide
+- **Design:** Sharp rectangles, flat fills, geometric overlays
 
 ### Cross-Plugin Integration
 

@@ -40,7 +40,7 @@ export const twoColumnTemplate: SlideTemplate = {
     slide.addText(String(data.title ?? ""), {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -48,12 +48,15 @@ export const twoColumnTemplate: SlideTemplate = {
       fontFace: SD_FONTS.heading,
     });
 
+    const colW = 5.7;
+    const rightX = 6.83;
+
     // Left column
     if (data.leftHeading) {
       slide.addText(String(data.leftHeading), {
         x: 0.5,
         y: 1.7,
-        w: 4.2,
+        w: colW,
         h: 0.4,
         fontSize: 16,
         bold: true,
@@ -69,7 +72,7 @@ export const twoColumnTemplate: SlideTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.5,
       },
     }));
@@ -77,13 +80,13 @@ export const twoColumnTemplate: SlideTemplate = {
     slide.addText(leftBullets, {
       x: 0.5,
       y: data.leftHeading ? 2.2 : 1.7,
-      w: 4.2,
+      w: colW,
       h: 4.2,
     });
 
     // Divider line
     slide.addShape("rect", {
-      x: 4.85,
+      x: 6.45,
       y: 1.7,
       w: 0.02,
       h: 4.5,
@@ -93,9 +96,9 @@ export const twoColumnTemplate: SlideTemplate = {
     // Right column
     if (data.rightHeading) {
       slide.addText(String(data.rightHeading), {
-        x: 5.2,
+        x: rightX,
         y: 1.7,
-        w: 4.2,
+        w: colW,
         h: 0.4,
         fontSize: 16,
         bold: true,
@@ -111,15 +114,15 @@ export const twoColumnTemplate: SlideTemplate = {
         bold: true,
         color: SD_COLORS.dark,
         fontFace: SD_FONTS.body,
-        bullet: { code: "2022", color: SD_COLORS.green },
+        bullet: { code: "25A0", color: SD_COLORS.green },
         lineSpacingMultiple: 1.5,
       },
     }));
 
     slide.addText(rightBullets, {
-      x: 5.2,
+      x: rightX,
       y: data.rightHeading ? 2.2 : 1.7,
-      w: 4.2,
+      w: colW,
       h: 4.2,
     });
   },

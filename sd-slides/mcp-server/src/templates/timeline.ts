@@ -36,7 +36,7 @@ export const timelineTemplate: SlideTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -46,7 +46,7 @@ export const timelineTemplate: SlideTemplate = {
 
     const lineY = 3.2;
     const startX = 0.8;
-    const totalW = 8.4;
+    const totalW = 11.5;
     const phaseW = totalW / phases.length;
 
     // Horizontal line
@@ -62,7 +62,7 @@ export const timelineTemplate: SlideTemplate = {
       const cx = startX + i * phaseW + phaseW / 2;
 
       // Circle node
-      slide.addShape("ellipse", {
+      slide.addShape("rect", {
         x: cx - 0.18,
         y: lineY - 0.16,
         w: 0.36,
@@ -119,7 +119,7 @@ export const timelineTemplate: SlideTemplate = {
           w: phaseW,
           h: 1.5,
           fontSize: 10,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
           align: "center",
           valign: "top",

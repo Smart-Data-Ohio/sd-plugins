@@ -35,7 +35,7 @@ export const nextStepsTemplate: SlideTemplate = {
     slide.addText(title, {
       x: 0.5,
       y: 0.8,
-      w: 9,
+      w: 12,
       h: 0.6,
       fontSize: 24,
       bold: true,
@@ -47,7 +47,7 @@ export const nextStepsTemplate: SlideTemplate = {
       const y = 1.9 + i * 0.9;
 
       // Number circle
-      slide.addShape("ellipse", {
+      slide.addShape("rect", {
         x: 0.7,
         y: y + 0.05,
         w: 0.45,
@@ -72,7 +72,7 @@ export const nextStepsTemplate: SlideTemplate = {
       slide.addText(step.action, {
         x: 1.4,
         y,
-        w: 5.5,
+        w: 10.5,
         h: 0.35,
         fontSize: 14,
         bold: true,
@@ -88,10 +88,10 @@ export const nextStepsTemplate: SlideTemplate = {
         slide.addText(meta.join("  |  "), {
           x: 1.4,
           y: y + 0.35,
-          w: 5.5,
+          w: 10.5,
           h: 0.3,
           fontSize: 11,
-          color: SD_COLORS.mediumGray,
+          color: SD_COLORS.darkGray,
           fontFace: SD_FONTS.body,
         });
       }
