@@ -170,6 +170,16 @@
         "project-management",
         "continuous-improvement"
       ]
+    },
+    {
+      "name": "sd-invoice",
+      "source": "./sd-invoice",
+      "version": "0.1.0",
+      "description": "Invoice generation — produce client-ready invoices from Harvest time entries and bill rates, with support for T&M and milestone-based billing.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": ["invoicing", "billing", "payments", "accounts-receivable"]
     }
   ]
 }
