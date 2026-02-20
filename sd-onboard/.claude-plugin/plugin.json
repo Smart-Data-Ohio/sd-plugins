@@ -1,0 +1,8 @@
+{
+  "name": "sd-onboard",
+  "version": "0.1.0",
+  "description": "Client and project onboarding — standardized checklists and guided setup for new engagements, from Harvest project mapping to team member access provisioning.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
