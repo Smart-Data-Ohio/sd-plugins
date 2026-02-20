@@ -1,5 +1,10 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS, SD_LOGOS } from "./master-layout.js";
+import {
+  SD_COLORS,
+  SD_FONTS,
+  SD_LOGOS,
+  addDotPattern,
+} from "./master-layout.js";
 
 export const thankYouTemplate: SlideTemplate = {
   id: "thank-you",
@@ -41,6 +46,7 @@ export const thankYouTemplate: SlideTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
+    addDotPattern(slide);
 
     slide.addText(String(data.heading ?? "Thank You"), {
       x: 1,

@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 export const imageContentTemplate: SlideTemplate = {
   id: "image-content",
@@ -43,6 +43,9 @@ export const imageContentTemplate: SlideTemplate = {
     const imgW = 6.33;
     const contentW = 5.5;
 
+    const imgY = SD_LAYOUT.headerH;
+    const imgH = 7.1 - imgY;
+
     // Image area
     if (data.imageData) {
       const imgStr = String(data.imageData);
@@ -50,18 +53,18 @@ export const imageContentTemplate: SlideTemplate = {
       slide.addImage({
         ...(isBase64 ? { data: imgStr } : { path: imgStr }),
         x: imgX,
-        y: 0.6,
+        y: imgY,
         w: imgW,
-        h: 6.5,
-        sizing: { type: "cover", w: imgW, h: 6.5 },
+        h: imgH,
+        sizing: { type: "cover", w: imgW, h: imgH },
       });
     } else {
       // Branded placeholder — dark rectangle with logo
       slide.addShape("rect", {
         x: imgX,
-        y: 0.6,
+        y: imgY,
         w: imgW,
-        h: 6.5,
+        h: imgH,
         fill: { color: SD_COLORS.navyMid },
       });
       // Decorative squares
@@ -91,22 +94,23 @@ export const imageContentTemplate: SlideTemplate = {
       });
     }
 
-    // Content area
+    // Title in header bar
     slide.addText(String(data.title), {
-      x: contentX,
-      y: 1.2,
-      w: contentW,
-      h: 0.7,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 22,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     // Green accent line
     slide.addShape("rect", {
       x: contentX,
-      y: 1.95,
+      y: SD_LAYOUT.contentStartY,
       w: 1.5,
       h: 0.04,
       fill: { color: SD_COLORS.green },
@@ -114,9 +118,9 @@ export const imageContentTemplate: SlideTemplate = {
 
     slide.addText(String(data.body), {
       x: contentX,
-      y: 2.2,
+      y: SD_LAYOUT.contentStartY + 0.2,
       w: contentW,
-      h: 4.5,
+      h: 5.2,
       fontSize: 12,
       color: SD_COLORS.darkGray,
       fontFace: SD_FONTS.body,

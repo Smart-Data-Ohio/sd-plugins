@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface ArchComponent {
   name: string;
@@ -38,17 +38,18 @@ export const architectureTemplate: SlideTemplate = {
     const layers = data.layers as ArchLayer[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
-    const startY = 1.8;
+    const startY = SD_LAYOUT.contentStartY;
     const layerH = Math.min(1.2, 4.8 / layers.length);
     const layerGap = 0.15;
 

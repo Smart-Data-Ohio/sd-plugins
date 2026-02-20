@@ -17,6 +17,8 @@ import { processFlowTemplate } from "./process-flow.js";
 import { comparisonTemplate } from "./comparison.js";
 import { caseStudyTemplate } from "./case-study.js";
 import { imageContentTemplate } from "./image-content.js";
+import { clientLogosTemplate } from "./client-logos.js";
+import { contactInfoTemplate } from "./contact-info.js";
 
 const templates: SlideTemplate[] = [
   coverTemplate,
@@ -37,6 +39,8 @@ const templates: SlideTemplate[] = [
   comparisonTemplate,
   caseStudyTemplate,
   imageContentTemplate,
+  clientLogosTemplate,
+  contactInfoTemplate,
 ];
 
 const templateMap = new Map(templates.map((t) => [t.id, t]));

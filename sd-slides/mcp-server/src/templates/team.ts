@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface TeamMember {
   name: string;
@@ -33,14 +33,15 @@ export const teamTemplate: SlideTemplate = {
     const members = data.members as TeamMember[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const cols = members.length <= 3 ? members.length : 3;
@@ -54,7 +55,7 @@ export const teamTemplate: SlideTemplate = {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const x = 0.5 + col * (cardW + gap);
-      const y = 1.8 + row * (cardH + 0.3);
+      const y = SD_LAYOUT.contentStartY + row * (cardH + 0.3);
 
       // Green accent bar at top of card
       slide.addShape("rect", {

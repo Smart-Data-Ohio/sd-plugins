@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, addDotPattern } from "./master-layout.js";
 
 export const quoteTestimonialTemplate: SlideTemplate = {
   id: "quote-testimonial",
@@ -35,6 +35,7 @@ export const quoteTestimonialTemplate: SlideTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
 
     // Secondary navy panel behind quote area
     slide.addShape("rect", {

@@ -4409,14 +4409,12 @@ var require_schemes = __commonJS({
     function getSchemeHandler(scheme) {
       return (
         (scheme &&
-          /** @type {SchemeName} */
-          (
-            SCHEMES[scheme] ||
-              SCHEMES[
-                /** @type {SchemeName} */
-                scheme.toLowerCase()
-              ]
-          )) ||
+          (/** @type {SchemeName} */
+          SCHEMES[scheme] ||
+            SCHEMES[
+              /** @type {SchemeName} */
+              scheme.toLowerCase()
+            ])) ||
         void 0
       );
     }
@@ -13175,8 +13173,9 @@ var require_trees = __commonJS({
       }
       node = elems;
       do {
-        n = s.heap[1];
-        /*SMALLEST*/
+        n =
+          s.heap[1];
+          /*SMALLEST*/
         s.heap[1] = s.heap[s.heap_len--];
         /*SMALLEST*/
         pqdownheap(
@@ -13185,8 +13184,9 @@ var require_trees = __commonJS({
           1,
           /*SMALLEST*/
         );
-        m = s.heap[1];
-        /*SMALLEST*/
+        m =
+          s.heap[1];
+          /*SMALLEST*/
         s.heap[--s.heap_max] = n;
         s.heap[--s.heap_max] = m;
         tree[node * 2] = tree[n * 2] + tree[m * 2];
@@ -13194,7 +13194,7 @@ var require_trees = __commonJS({
           (s.depth[n] >= s.depth[m] ? s.depth[n] : s.depth[m]) + 1;
         tree[n * 2 + 1] = tree[m * 2 + 1] = node;
         s.heap[1] =
-          /*SMALLEST*/
+        /*SMALLEST*/
           node++;
         pqdownheap(
           s,
@@ -13203,8 +13203,9 @@ var require_trees = __commonJS({
           /*SMALLEST*/
         );
       } while (s.heap_len >= 2);
-      s.heap[--s.heap_max] = s.heap[1];
-      /*SMALLEST*/
+      s.heap[--s.heap_max] =
+        s.heap[1];
+        /*SMALLEST*/
       gen_bitlen(s, desc);
       gen_codes(tree, max_code, s.bl_count);
     }
@@ -44236,6 +44237,13 @@ var SD_FONTS = {
   heading: "Poppins",
   body: "Poppins",
 };
+var SD_LAYOUT = {
+  headerH: 1,
+  titleX: 0.5,
+  titleY: 0.15,
+  titleH: 0.7,
+  contentStartY: 1.3,
+};
 var __filename = fileURLToPath(import.meta.url);
 var __dirname = path.dirname(__filename);
 var assetsDir = path.resolve(__dirname, "..", "..", "assets");
@@ -44249,27 +44257,85 @@ var logoDark = loadLogoBase64("logo_dark.png");
 var logoLight = loadLogoBase64("logo_light.png");
 var fullNameLight = loadLogoBase64("full_sd_name_light.png");
 var fullNameDark = loadLogoBase64("full_sd_name_dark.png");
+var greenSwoosh = loadLogoBase64("sd-swoosh.png");
+function loadClientLogos() {
+  const logosDir = path.join(assetsDir, "logos");
+  if (!fs.existsSync(logosDir)) return [];
+  const SKIP_LOGOS = /* @__PURE__ */ new Set(["valeris.png"]);
+  const files = fs
+    .readdirSync(logosDir)
+    .filter(
+      (f) => /\.(png|jpg|jpeg)$/i.test(f) && !SKIP_LOGOS.has(f.toLowerCase()),
+    );
+  return files
+    .map((f) => {
+      const data = loadLogoBase64(path.join("logos", f));
+      if (!data) return null;
+      const name = f.replace(/\.(png|jpg|jpeg)$/i, "").replace(/[-_]/g, " ");
+      return { name, data };
+    })
+    .filter((x) => x !== null);
+}
+var clientLogos = loadClientLogos();
+function loadHeadshots() {
+  const headshotsDir = path.join(assetsDir, "headshots");
+  if (!fs.existsSync(headshotsDir)) return {};
+  const files = fs
+    .readdirSync(headshotsDir)
+    .filter((f) => /\.(png|jpg|jpeg)$/i.test(f));
+  const result = {};
+  for (const f of files) {
+    const data = loadLogoBase64(path.join("headshots", f));
+    if (data) result[f] = data;
+  }
+  return result;
+}
+var headshots = loadHeadshots();
 console.error(
-  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark}`,
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length}`,
 );
 var SD_LOGOS = {
   logoDark,
   logoLight,
   fullNameLight,
   fullNameDark,
+  greenSwoosh,
 };
+var SD_CLIENT_LOGOS = clientLogos;
+var SD_HEADSHOTS = headshots;
+function addDotPattern(slide) {
+  const dotSize = 0.05;
+  const cols = 8;
+  const rows = 12;
+  const startX = 0.3;
+  const startY = 0.4;
+  const spacingX = 0.65;
+  const spacingY = 0.58;
+  for (let col = 0; col < cols; col++) {
+    const transparency = 75 + (col / (cols - 1)) * 22;
+    for (let row = 0; row < rows; row++) {
+      slide.addShape("ellipse", {
+        x: startX + col * spacingX,
+        y: startY + row * spacingY,
+        w: dotSize,
+        h: dotSize,
+        fill: { color: SD_COLORS.white, transparency },
+      });
+    }
+  }
+}
 function defineSlideMasters(pptx) {
   pptx.defineSlideMaster({
     title: "SD_BRANDED",
     background: { color: SD_COLORS.white },
     objects: [
-      // Top dark bar
+      // Top dark bar (1.0" tall)
       {
         rect: {
           x: 0,
           y: 0,
           w: "100%",
-          h: 0.6,
+          h: SD_LAYOUT.headerH,
           fill: { color: SD_COLORS.dark },
         },
       },
@@ -44280,10 +44346,10 @@ function defineSlideMasters(pptx) {
             {
               image: {
                 data: logoLight,
-                x: 12.23,
-                y: 0.08,
-                w: 0.5,
-                h: 0.44,
+                x: 12.1,
+                y: 0.2,
+                w: 0.6,
+                h: 0.53,
               },
             },
           ]
@@ -44413,36 +44479,6 @@ function defineSlideMasters(pptx) {
       },
     ],
   });
-  pptx.defineSlideMaster({
-    title: "SD_SECTION",
-    background: { color: SD_COLORS.green },
-    objects: [
-      // Logo top-right (dark version on green background)
-      // logo_dark.png is 90x84 (ratio ~1.07:1)
-      ...(logoDark
-        ? [
-            {
-              image: {
-                data: logoDark,
-                x: 11.96,
-                y: 0.3,
-                w: 0.75,
-                h: 0.7,
-              },
-            },
-          ]
-        : []),
-      {
-        rect: {
-          x: 0,
-          y: 6.9,
-          w: "100%",
-          h: 0.6,
-          fill: { color: SD_COLORS.dark },
-        },
-      },
-    ],
-  });
 }
 
 // src/templates/cover.ts
@@ -44450,14 +44486,15 @@ var coverTemplate = {
   id: "cover",
   name: "Cover Slide",
   description:
-    "Title slide with Smart Data branding. Dark background with title, subtitle, date, and optional client name.",
+    "Title slide with Smart Data branding. Split layout: dark left panel with title text, right panel with optional image or branded placeholder.",
   category: "Opening",
   contentAreas: [
     {
       name: "title",
       type: "text",
       required: true,
-      description: "Main presentation title",
+      description:
+        "Main presentation title (displayed in large uppercase text)",
     },
     {
       name: "subtitle",
@@ -44477,47 +44514,98 @@ var coverTemplate = {
       required: false,
       description: "Client or audience name",
     },
+    {
+      name: "coverImage",
+      type: "image-placeholder",
+      required: false,
+      description:
+        "Base64 image data or file path for the right panel photo. If omitted, shows a branded geometric placeholder.",
+    },
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
-    slide.addShape("rect", {
-      x: 8.8,
-      y: -0.5,
-      w: 5.5,
-      h: 8.5,
-      fill: { color: SD_COLORS.navyMid },
-    });
-    slide.addShape("rect", {
-      x: 9.5,
-      y: 0.5,
-      w: 3,
+    addDotPattern(slide);
+    const splitX = 8;
+    const rightW = 13.33 - splitX;
+    const imgStr = data.coverImage ? String(data.coverImage) : null;
+    if (imgStr) {
+      const isBase64 = imgStr.startsWith("image/");
+      slide.addImage({
+        ...(isBase64 ? { data: imgStr } : { path: imgStr }),
+        x: splitX,
+        y: 0,
+        w: rightW,
+        h: 7.5,
+        sizing: { type: "cover", w: rightW, h: 7.5 },
+      });
+    } else {
+      slide.addShape("rect", {
+        x: splitX,
+        y: 0,
+        w: rightW,
+        h: 7.5,
+        fill: { color: SD_COLORS.navyMid },
+      });
+      slide.addShape("rect", {
+        x: splitX + 0.8,
+        y: 0.5,
+        w: 3,
+        h: 3,
+        fill: { color: SD_COLORS.charcoal },
+      });
+      slide.addShape("rect", {
+        x: splitX + 1.5,
+        y: 4,
+        w: 2.5,
+        h: 2.5,
+        fill: { color: SD_COLORS.navyDeep },
+      });
+    }
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 0.6,
+        y: 0.4,
+        w: 3,
+        h: 0.54,
+      });
+    }
+    slide.addText(String(data.title ?? "").toUpperCase(), {
+      x: 0.6,
+      y: 1.8,
+      w: 7,
       h: 3,
-      fill: { color: SD_COLORS.charcoal },
-    });
-    slide.addShape("rect", {
-      x: 10.2,
-      y: 4,
-      w: 2.5,
-      h: 2.5,
-      fill: { color: SD_COLORS.navyDeep },
-    });
-    slide.addText(String(data.title ?? ""), {
-      x: 1,
-      y: 2,
-      w: 8,
-      h: 1.2,
       fontSize: 36,
       bold: true,
       color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      lineSpacingMultiple: 1.1,
+      valign: "top",
     });
+    if (SD_LOGOS.greenSwoosh) {
+      slide.addImage({
+        data: SD_LOGOS.greenSwoosh,
+        x: 0.3,
+        y: 5.2,
+        w: 7.5,
+        h: 1.2,
+      });
+    } else {
+      slide.addShape("rect", {
+        x: 0.6,
+        y: 5.8,
+        w: 6,
+        h: 0.06,
+        fill: { color: SD_COLORS.green },
+      });
+    }
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
-        x: 1,
-        y: 3.3,
-        w: 8,
-        h: 0.6,
-        fontSize: 18,
+        x: 0.6,
+        y: 5,
+        w: 7,
+        h: 0.5,
+        fontSize: 16,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
       });
@@ -44527,22 +44615,13 @@ var coverTemplate = {
     if (data.date) footerParts.push(String(data.date));
     if (footerParts.length > 0) {
       slide.addText(footerParts.join("  |  "), {
-        x: 1,
-        y: 5.7,
-        w: 8,
+        x: 0.6,
+        y: 6.2,
+        w: 7,
         h: 0.4,
         fontSize: 14,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
-      });
-    }
-    if (SD_LOGOS.fullNameLight) {
-      slide.addImage({
-        data: SD_LOGOS.fullNameLight,
-        x: 1,
-        y: 6.3,
-        w: 2.5,
-        h: 0.45,
       });
     }
   },
@@ -44574,18 +44653,19 @@ var agendaTemplate = {
     const title = String(data.title ?? "Agenda");
     const items = data.items;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 28,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const rowH = 0.7;
     items.forEach((item, i) => {
-      const y = 1.8 + i * (rowH + 0.15);
+      const y = SD_LAYOUT.contentStartY + i * (rowH + 0.15);
       slide.addShape("rect", {
         x: 0.8,
         y,
@@ -44634,7 +44714,7 @@ var sectionDividerTemplate = {
   id: "section-divider",
   name: "Section Divider",
   description:
-    "Green background section break. Used to visually separate major sections of the presentation.",
+    "Dark background section break. Used to visually separate major sections of the presentation.",
   category: "Structure",
   contentAreas: [
     {
@@ -44651,40 +44731,33 @@ var sectionDividerTemplate = {
     },
   ],
   render(pptx, data) {
-    const slide = pptx.addSlide({ masterName: "SD_SECTION" });
+    const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
     slide.addShape("rect", {
-      x: 10,
-      y: -0.3,
-      w: 4,
-      h: 4,
-      fill: { color: SD_COLORS.greenLight },
-    });
-    slide.addShape("rect", {
-      x: 11,
-      y: 3.5,
-      w: 3,
-      h: 3.5,
-      fill: { color: SD_COLORS.dark },
-      transparency: 85,
+      x: 0.8,
+      y: 2.3,
+      w: 1.5,
+      h: 0.06,
+      fill: { color: SD_COLORS.green },
     });
     slide.addText(String(data.title ?? ""), {
-      x: 1,
-      y: 2.5,
-      w: 8,
-      h: 1,
-      fontSize: 32,
+      x: 0.8,
+      y: 2.6,
+      w: 10,
+      h: 1.2,
+      fontSize: 36,
       bold: true,
       color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
     });
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
-        x: 1,
-        y: 3.7,
-        w: 8,
+        x: 0.8,
+        y: 3.9,
+        w: 10,
         h: 0.6,
         fontSize: 16,
-        color: SD_COLORS.white,
+        color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
       });
     }
@@ -44717,19 +44790,20 @@ var contentBulletsTemplate = {
     const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
     const bullets = data.bullets;
     slide.addText(String(data.title ?? ""), {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
         x: 0.5,
-        y: 1.4,
+        y: SD_LAYOUT.contentStartY,
         w: 9,
         h: 0.4,
         fontSize: 14,
@@ -44737,7 +44811,9 @@ var contentBulletsTemplate = {
         fontFace: SD_FONTS.body,
       });
     }
-    const topY = data.subtitle ? 2 : 1.7;
+    const topY = data.subtitle
+      ? SD_LAYOUT.contentStartY + 0.5
+      : SD_LAYOUT.contentStartY;
     const bulletItems = bullets.map((item) => ({
       text: item,
       options: {
@@ -44796,21 +44872,22 @@ var twoColumnTemplate = {
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
     slide.addText(String(data.title ?? ""), {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const colW = 5.7;
     const rightX = 6.83;
     if (data.leftHeading) {
       slide.addText(String(data.leftHeading), {
         x: 0.5,
-        y: 1.7,
+        y: SD_LAYOUT.contentStartY,
         w: colW,
         h: 0.4,
         fontSize: 16,
@@ -44832,21 +44909,23 @@ var twoColumnTemplate = {
     }));
     slide.addText(leftBullets, {
       x: 0.5,
-      y: data.leftHeading ? 2.2 : 1.7,
+      y: data.leftHeading
+        ? SD_LAYOUT.contentStartY + 0.5
+        : SD_LAYOUT.contentStartY,
       w: colW,
-      h: 4.2,
+      h: 4.5,
     });
     slide.addShape("rect", {
       x: 6.45,
-      y: 1.7,
+      y: SD_LAYOUT.contentStartY,
       w: 0.02,
-      h: 4.5,
+      h: 5,
       fill: { color: SD_COLORS.lightGray },
     });
     if (data.rightHeading) {
       slide.addText(String(data.rightHeading), {
         x: rightX,
-        y: 1.7,
+        y: SD_LAYOUT.contentStartY,
         w: colW,
         h: 0.4,
         fontSize: 16,
@@ -44868,9 +44947,11 @@ var twoColumnTemplate = {
     }));
     slide.addText(rightBullets, {
       x: rightX,
-      y: data.rightHeading ? 2.2 : 1.7,
+      y: data.rightHeading
+        ? SD_LAYOUT.contentStartY + 0.5
+        : SD_LAYOUT.contentStartY,
       w: colW,
-      h: 4.2,
+      h: 4.5,
     });
   },
 };
@@ -44901,14 +44982,15 @@ var teamTemplate = {
     const title = String(data.title ?? "Our Team");
     const members = data.members;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const cols = members.length <= 3 ? members.length : 3;
     const rows = Math.ceil(members.length / cols);
@@ -44920,7 +45002,7 @@ var teamTemplate = {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const x = 0.5 + col * (cardW + gap);
-      const y = 1.8 + row * (cardH + 0.3);
+      const y = SD_LAYOUT.contentStartY + row * (cardH + 0.3);
       slide.addShape("rect", {
         x,
         y,
@@ -44997,16 +45079,17 @@ var timelineTemplate = {
     const title = String(data.title ?? "Project Timeline");
     const phases = data.phases;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
-    const lineY = 3.2;
+    const lineY = 2.8;
     const startX = 0.8;
     const totalW = 11.5;
     const phaseW = totalW / phases.length;
@@ -45105,16 +45188,17 @@ var architectureTemplate = {
     const title = String(data.title ?? "Architecture Overview");
     const layers = data.layers;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
-    const startY = 1.8;
+    const startY = SD_LAYOUT.contentStartY;
     const layerH = Math.min(1.2, 4.8 / layers.length);
     const layerGap = 0.15;
     layers.forEach((layer, i) => {
@@ -45218,14 +45302,15 @@ var investmentTemplate = {
     const title = String(data.title ?? "Investment Summary");
     const rows = data.rows;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const headerRow = [
       {
@@ -45327,7 +45412,7 @@ var investmentTemplate = {
     }
     slide.addTable(tableRows, {
       x: 0.5,
-      y: 1.7,
+      y: SD_LAYOUT.contentStartY,
       w: 12,
       colW: [4, 5, 3],
       border: { type: "solid", pt: 0.5, color: SD_COLORS.lightGray },
@@ -45374,14 +45459,15 @@ var differentiatorsTemplate = {
     const title = String(data.title ?? "Why Smart Data");
     const items = data.items;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const cols = items.length <= 3 ? items.length : 3;
     const rows = Math.ceil(items.length / cols);
@@ -45391,7 +45477,7 @@ var differentiatorsTemplate = {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const x = 0.5 + col * (cardW + 0.2);
-      const y = 1.8 + row * (cardH + 0.25);
+      const y = SD_LAYOUT.contentStartY + row * (cardH + 0.25);
       slide.addShape("rect", {
         x,
         y,
@@ -45456,17 +45542,18 @@ var nextStepsTemplate = {
     const title = String(data.title ?? "Next Steps");
     const steps = data.steps;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     steps.forEach((step, i) => {
-      const y = 1.9 + i * 0.9;
+      const y = SD_LAYOUT.contentStartY + 0.1 + i * 0.9;
       slide.addShape("rect", {
         x: 0.7,
         y: y + 0.05,
@@ -45555,6 +45642,7 @@ var thankYouTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
+    addDotPattern(slide);
     slide.addText(String(data.heading ?? "Thank You"), {
       x: 1,
       y: 2,
@@ -45620,6 +45708,7 @@ var statsMetricsTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
     const title = String(data.title ?? "By the Numbers");
     const metrics = data.metrics;
     slide.addText(title, {
@@ -45713,6 +45802,7 @@ var quoteTestimonialTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
     slide.addShape("rect", {
       x: 0.8,
       y: 1.2,
@@ -45791,20 +45881,21 @@ var processFlowTemplate = {
     const title = String(data.title ?? "Our Process");
     const steps = data.steps;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const count = steps.length;
     const totalW = 11.5;
     const stepW = totalW / count;
     const startX = 0.5;
-    const lineY = 2.4;
+    const lineY = 1.9;
     slide.addShape("rect", {
       x: startX + stepW * 0.5,
       y: lineY + 0.18,
@@ -45837,7 +45928,7 @@ var processFlowTemplate = {
       });
       slide.addText(step.title, {
         x,
-        y: 3.1,
+        y: 2.6,
         w: stepW,
         h: 0.5,
         fontSize: 13,
@@ -45848,7 +45939,7 @@ var processFlowTemplate = {
       });
       slide.addText(step.description, {
         x: x + 0.15,
-        y: 3.7,
+        y: 3.2,
         w: stepW - 0.3,
         h: 2.5,
         fontSize: 10,
@@ -45900,17 +45991,18 @@ var comparisonTemplate = {
     const title = String(data.title ?? "Comparison");
     const items = data.items;
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     const tableX = 0.5;
-    const tableY = 1.8;
+    const tableY = SD_LAYOUT.contentStartY;
     const labelW = 2.5;
     const colW = 4.5;
     const rowH = 0.65;
@@ -46061,18 +46153,19 @@ var caseStudyTemplate = {
     const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
     const label = String(data.label ?? "Project Spotlight");
     slide.addText(label.toUpperCase(), {
-      x: 0.5,
-      y: 0.8,
-      w: 5,
-      h: 0.35,
-      fontSize: 10,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
+      fontSize: 22,
       bold: true,
-      color: SD_COLORS.green,
-      fontFace: SD_FONTS.body,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     slide.addText(String(data.clientName), {
       x: 0.5,
-      y: 1.1,
+      y: SD_LAYOUT.contentStartY,
       w: 9,
       h: 0.6,
       fontSize: 24,
@@ -46083,7 +46176,7 @@ var caseStudyTemplate = {
     if (data.summary) {
       slide.addText(String(data.summary), {
         x: 0.5,
-        y: 1.75,
+        y: SD_LAYOUT.contentStartY + 0.6,
         w: 11,
         h: 0.4,
         fontSize: 13,
@@ -46093,7 +46186,7 @@ var caseStudyTemplate = {
     }
     slide.addShape("rect", {
       x: 0.5,
-      y: 2.3,
+      y: 2.2,
       w: 11.5,
       h: 0.03,
       fill: { color: SD_COLORS.lightGray },
@@ -46109,14 +46202,14 @@ var caseStudyTemplate = {
       const x = 0.5 + i * colW;
       slide.addShape("rect", {
         x,
-        y: 2.6,
+        y: 2.5,
         w: colW - 0.3,
         h: 0.05,
         fill: { color: SD_COLORS.green },
       });
       slide.addText(section.heading.toUpperCase(), {
         x,
-        y: 2.8,
+        y: 2.7,
         w: colW - 0.3,
         h: 0.35,
         fontSize: 10,
@@ -46126,7 +46219,7 @@ var caseStudyTemplate = {
       });
       slide.addText(section.content ?? "", {
         x,
-        y: 3.2,
+        y: 3.1,
         w: colW - 0.3,
         h: 3.5,
         fontSize: 11,
@@ -46141,14 +46234,14 @@ var caseStudyTemplate = {
       const x = 0.5 + sections.length * colW;
       slide.addShape("rect", {
         x,
-        y: 2.6,
+        y: 2.5,
         w: colW - 0.3,
         h: 0.05,
         fill: { color: SD_COLORS.green },
       });
       slide.addText("RESULTS", {
         x,
-        y: 2.8,
+        y: 2.7,
         w: colW - 0.3,
         h: 0.35,
         fontSize: 10,
@@ -46165,7 +46258,7 @@ var caseStudyTemplate = {
         .flat();
       slide.addText(bulletText, {
         x,
-        y: 3.2,
+        y: 3.1,
         w: colW - 0.3,
         h: 3.5,
         color: SD_COLORS.darkGray,
@@ -46218,23 +46311,25 @@ var imageContentTemplate = {
     const contentX = imageOnRight ? 0.5 : 7;
     const imgW = 6.33;
     const contentW = 5.5;
+    const imgY = SD_LAYOUT.headerH;
+    const imgH = 7.1 - imgY;
     if (data.imageData) {
       const imgStr = String(data.imageData);
       const isBase64 = imgStr.startsWith("image/");
       slide.addImage({
         ...(isBase64 ? { data: imgStr } : { path: imgStr }),
         x: imgX,
-        y: 0.6,
+        y: imgY,
         w: imgW,
-        h: 6.5,
-        sizing: { type: "cover", w: imgW, h: 6.5 },
+        h: imgH,
+        sizing: { type: "cover", w: imgW, h: imgH },
       });
     } else {
       slide.addShape("rect", {
         x: imgX,
-        y: 0.6,
+        y: imgY,
         w: imgW,
-        h: 6.5,
+        h: imgH,
         fill: { color: SD_COLORS.navyMid },
       });
       slide.addShape("rect", {
@@ -46263,33 +46358,394 @@ var imageContentTemplate = {
       });
     }
     slide.addText(String(data.title), {
-      x: contentX,
-      y: 1.2,
-      w: contentW,
-      h: 0.7,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 22,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
     slide.addShape("rect", {
       x: contentX,
-      y: 1.95,
+      y: SD_LAYOUT.contentStartY,
       w: 1.5,
       h: 0.04,
       fill: { color: SD_COLORS.green },
     });
     slide.addText(String(data.body), {
       x: contentX,
-      y: 2.2,
+      y: SD_LAYOUT.contentStartY + 0.2,
       w: contentW,
-      h: 4.5,
+      h: 5.2,
       fontSize: 12,
       color: SD_COLORS.darkGray,
       fontFace: SD_FONTS.body,
       valign: "top",
       lineSpacingMultiple: 1.5,
     });
+  },
+};
+
+// src/templates/client-logos.ts
+var clientLogosTemplate = {
+  id: "client-logos",
+  name: "Client Logos / Partners",
+  description:
+    "Showcase client or partner logos on a dark background. Left panel has a tagline, right area displays a grid of logos loaded from assets/logos/.",
+  category: "Commercial",
+  contentAreas: [
+    {
+      name: "tagline",
+      type: "text",
+      required: false,
+      description:
+        "Left-side tagline (default: 'Driving client success through innovative technologies since 2006')",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
+    const tagline = String(
+      data.tagline ??
+        "Driving client success through innovative technologies since 2006",
+    );
+    slide.addText(tagline, {
+      x: 0.5,
+      y: 1,
+      w: 4,
+      h: 4,
+      fontSize: 24,
+      italic: true,
+      bold: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      valign: "middle",
+      lineSpacingMultiple: 1.3,
+    });
+    const logos = SD_CLIENT_LOGOS;
+    if (logos.length === 0) {
+      slide.addText(
+        "Client logos will appear here.\nAdd PNG files to assets/logos/.",
+        {
+          x: 5,
+          y: 2.5,
+          w: 7.5,
+          h: 2,
+          fontSize: 14,
+          color: SD_COLORS.mediumGray,
+          fontFace: SD_FONTS.body,
+          align: "center",
+          valign: "middle",
+        },
+      );
+      return;
+    }
+    const cols = 4;
+    const gridX = 5;
+    const gridY = 0.8;
+    const cellW = 1.9;
+    const cellH = 1.1;
+    const gapX = 0.15;
+    const gapY = 0.15;
+    logos.forEach((logo, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = gridX + col * (cellW + gapX);
+      const y = gridY + row * (cellH + gapY);
+      slide.addImage({
+        data: logo.data,
+        x: x + 0.15,
+        y: y + 0.1,
+        w: cellW - 0.3,
+        h: cellH - 0.2,
+        sizing: { type: "contain", w: cellW - 0.3, h: cellH - 0.2 },
+      });
+    });
+  },
+};
+
+// src/headshot-mapping.ts
+var headshotMap = {
+  "alexa.png": "Alexa Murietta",
+  "chris.png": "Chris St. Amand",
+  "heather.png": "Heather Colvin",
+  "jay.png": "Jay Brown",
+  "jon.png": "Jon Greene",
+  "rajesh.png": "Rajesh Chintakunta",
+  "ravi.png": "Ravi Manchala",
+  "robyn.png": "Robyn Miller",
+  "scott.png": "Scott Wong",
+  "treg.png": "Treg Gilstorf",
+};
+var getNameFromHeadshot = (headshot) => {
+  return headshotMap[headshot] || "Unknown";
+};
+var leadershipTitles = {
+  "Alexa Murietta": "Director of Delivery",
+  "Chris St. Amand": "Chief Technology Officer",
+  "Heather Colvin": "Talent Acquisition Specialist",
+  "Jay Brown": "Business Development",
+  "Jon Greene": "Director of Talent Acquisition",
+  "Rajesh Chintakunta": "Head of Global Operations",
+  "Scott Wong": "Business Development",
+  "Treg Gilstorf": "Chief Operating Officer",
+  "Ravi Manchala": "President & CEO",
+  "Robyn Miller": "Business Development & Partnership Manager",
+};
+var getTitleFromName = (name) => {
+  return leadershipTitles[name] || "Smart Data Consultant";
+};
+
+// src/templates/contact-info.ts
+var availableContacts = Object.entries(headshotMap)
+  .map(([file, name]) => {
+    const title = leadershipTitles[name] ?? "Smart Data Consultant";
+    return `${file} -> ${name}, ${title}`;
+  })
+  .join("; ");
+var contactInfoTemplate = {
+  id: "contact-info",
+  name: "Contact / Reach Out",
+  description:
+    "Closing contact slide with dark top panel (heading + SD logo) and light bottom panel showing leadership headshot cards with name, title, and email. Also shows company blurb, phone, and website. IMPORTANT: Before using this template, present the list of available Smart Data contacts to the user and let them choose up to 4 people to feature. Available contacts: " +
+    availableContacts +
+    ". The 'contacts' array should use the headshot filename (e.g. 'ravi.png'). Name and title are auto-resolved from the filename.",
+  category: "Closing",
+  contentAreas: [
+    {
+      name: "heading",
+      type: "text",
+      required: false,
+      description:
+        "Top panel heading (default: 'Questions?\\nReach out, let\\'s chat!')",
+    },
+    {
+      name: "contacts",
+      type: "table",
+      required: true,
+      description:
+        "Array of contact objects with 'headshot' (filename from assets/headshots/, e.g. 'ravi.png'), and optional 'email' override. Name and title are auto-resolved from the headshot filename. Max 4 contacts. Ask the user which contacts to include.",
+    },
+    {
+      name: "blurb",
+      type: "text",
+      required: false,
+      description:
+        "Company description shown to the right of contacts (default: Smart Data value proposition)",
+    },
+    {
+      name: "phone",
+      type: "text",
+      required: false,
+      description: "Phone number (default: '(937) 886-9166')",
+    },
+    {
+      name: "website",
+      type: "text",
+      required: false,
+      description: "Website URL (default: 'www.smartdata.net')",
+    },
+  ],
+  render(pptx, data) {
+    const slide = pptx.addSlide();
+    const topH = 3;
+    slide.addShape("rect", {
+      x: 0,
+      y: 0,
+      w: "100%",
+      h: topH,
+      fill: { color: SD_COLORS.dark },
+    });
+    slide.addShape("rect", {
+      x: 0,
+      y: topH,
+      w: "100%",
+      h: 0.06,
+      fill: { color: SD_COLORS.green },
+    });
+    addDotPattern(slide);
+    const heading = String(
+      data.heading ?? "Questions?\nReach out, let\u2019s chat!",
+    );
+    slide.addText(heading, {
+      x: 0.6,
+      y: 0.4,
+      w: 8,
+      h: 2.2,
+      fontSize: 36,
+      bold: true,
+      italic: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      lineSpacingMultiple: 1.2,
+      valign: "middle",
+    });
+    if (SD_LOGOS.fullNameLight) {
+      slide.addImage({
+        data: SD_LOGOS.fullNameLight,
+        x: 10,
+        y: 0.6,
+        w: 2.8,
+        h: 0.5,
+      });
+    }
+    slide.addShape("rect", {
+      x: 0,
+      y: topH + 0.06,
+      w: "100%",
+      h: 7.5 - topH - 0.06,
+      fill: { color: SD_COLORS.white },
+    });
+    const rawContacts = data.contacts;
+    const contacts = rawContacts.slice(0, 4);
+    const cardCount = contacts.length;
+    const cardAreaW = cardCount <= 2 ? 7 : cardCount === 3 ? 9.5 : 12.3;
+    const cardW = cardAreaW / cardCount;
+    const cardStartX = 0.5;
+    const cardY = topH + 0.5;
+    const photoH = 3;
+    const photoW = cardW - 0.4;
+    contacts.forEach((contact, i) => {
+      const x = cardStartX + i * cardW;
+      const hsFile = contact.headshot ?? "";
+      const name = contact.name ?? getNameFromHeadshot(hsFile);
+      const title = contact.title ?? getTitleFromName(name);
+      const email2 = contact.email
+        ? String(contact.email)
+        : `${name.split(" ")[0].toLowerCase()}.${name.split(" ").slice(-1)[0].toLowerCase()}@smartdata.net`;
+      const hsData = SD_HEADSHOTS[hsFile];
+      if (hsData) {
+        slide.addShape("rect", {
+          x: x + 0.1,
+          y: cardY,
+          w: photoW,
+          h: photoH,
+          fill: { color: SD_COLORS.lightGray },
+        });
+        slide.addImage({
+          data: hsData,
+          x: x + 0.1,
+          y: cardY,
+          w: photoW,
+          h: photoH,
+          sizing: { type: "cover", w: photoW, h: photoH },
+        });
+        slide.addShape("ellipse", {
+          x: x + photoW - 0.15,
+          y: cardY + 0.1,
+          w: 0.2,
+          h: 0.2,
+          fill: { color: SD_COLORS.green },
+        });
+      } else {
+        slide.addShape("rect", {
+          x: x + 0.1,
+          y: cardY,
+          w: photoW,
+          h: photoH,
+          fill: { color: SD_COLORS.lightGray },
+        });
+      }
+      const cardOverlayY = cardY + photoH - 0.75;
+      slide.addShape("rect", {
+        x: x + 0.1,
+        y: cardOverlayY,
+        w: photoW,
+        h: 0.75,
+        fill: { color: SD_COLORS.white, transparency: 10 },
+      });
+      slide.addText(name, {
+        x: x + 0.25,
+        y: cardOverlayY + 0.05,
+        w: photoW - 0.6,
+        h: 0.35,
+        fontSize: 13,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.heading,
+        valign: "middle",
+      });
+      slide.addText(title, {
+        x: x + 0.25,
+        y: cardOverlayY + 0.35,
+        w: photoW - 0.6,
+        h: 0.3,
+        fontSize: 10,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.body,
+        valign: "top",
+      });
+      slide.addText(email2, {
+        x: x + 0.1,
+        y: cardY + photoH + 0.1,
+        w: photoW,
+        h: 0.35,
+        fontSize: 10,
+        italic: true,
+        color: SD_COLORS.green,
+        fontFace: SD_FONTS.body,
+      });
+    });
+    if (cardCount <= 3) {
+      const blurbX = cardCount <= 2 ? 7.5 : 10.2;
+      const blurbW = 13.33 - blurbX - 0.4;
+      const blurb = String(
+        data.blurb ??
+          "We help clients across multiple industries improve operations, reduce costs, increase efficiency, and maximize customer satisfaction. At Smart Data, we are more than just a software development firm, we are your IT partner.",
+      );
+      slide.addText(blurb, {
+        x: blurbX,
+        y: topH + 0.6,
+        w: blurbW,
+        h: 2.6,
+        fontSize: 12,
+        italic: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.body,
+        lineSpacingMultiple: 1.5,
+        valign: "top",
+      });
+      const phone = String(data.phone ?? "(937) 886-9166");
+      const website = String(data.website ?? "www.smartdata.net");
+      slide.addShape("ellipse", {
+        x: blurbX,
+        y: topH + 3.35,
+        w: 0.22,
+        h: 0.22,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(phone, {
+        x: blurbX + 0.3,
+        y: topH + 3.3,
+        w: blurbW - 0.3,
+        h: 0.35,
+        fontSize: 12,
+        bold: true,
+        color: SD_COLORS.dark,
+        fontFace: SD_FONTS.body,
+      });
+      slide.addShape("ellipse", {
+        x: blurbX,
+        y: topH + 3.75,
+        w: 0.22,
+        h: 0.22,
+        fill: { color: SD_COLORS.green },
+      });
+      slide.addText(website, {
+        x: blurbX + 0.3,
+        y: topH + 3.7,
+        w: blurbW - 0.3,
+        h: 0.35,
+        fontSize: 12,
+        bold: true,
+        color: SD_COLORS.green,
+        fontFace: SD_FONTS.body,
+      });
+    }
   },
 };
 
@@ -46313,6 +46769,8 @@ var templates = [
   comparisonTemplate,
   caseStudyTemplate,
   imageContentTemplate,
+  clientLogosTemplate,
+  contactInfoTemplate,
 ];
 var templateMap = new Map(templates.map((t) => [t.id, t]));
 function getAllTemplates() {

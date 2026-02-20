@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface Differentiator {
   heading: string;
@@ -32,14 +32,15 @@ export const differentiatorsTemplate: SlideTemplate = {
     const items = data.items as Differentiator[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const cols = items.length <= 3 ? items.length : 3;
@@ -51,7 +52,7 @@ export const differentiatorsTemplate: SlideTemplate = {
       const col = i % cols;
       const row = Math.floor(i / cols);
       const x = 0.5 + col * (cardW + 0.2);
-      const y = 1.8 + row * (cardH + 0.25);
+      const y = SD_LAYOUT.contentStartY + row * (cardH + 0.25);
 
       // Blue accent bar at top of card
       slide.addShape("rect", {

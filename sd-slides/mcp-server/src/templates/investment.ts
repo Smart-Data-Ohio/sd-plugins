@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface InvestmentRow {
   item: string;
@@ -45,14 +45,15 @@ export const investmentTemplate: SlideTemplate = {
     const rows = data.rows as InvestmentRow[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     // Build table data
@@ -160,7 +161,7 @@ export const investmentTemplate: SlideTemplate = {
 
     slide.addTable(tableRows as any[][], {
       x: 0.5,
-      y: 1.7,
+      y: SD_LAYOUT.contentStartY,
       w: 12,
       colW: [4, 5, 3],
       border: { type: "solid", pt: 0.5, color: SD_COLORS.lightGray },

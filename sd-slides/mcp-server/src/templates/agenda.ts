@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 export const agendaTemplate: SlideTemplate = {
   id: "agenda",
@@ -27,19 +27,20 @@ export const agendaTemplate: SlideTemplate = {
     const items = data.items as string[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 28,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const rowH = 0.7;
     items.forEach((item, i) => {
-      const y = 1.8 + i * (rowH + 0.15);
+      const y = SD_LAYOUT.contentStartY + i * (rowH + 0.15);
 
       // Green number square
       slide.addShape("rect", {

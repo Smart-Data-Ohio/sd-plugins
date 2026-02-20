@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 export const caseStudyTemplate: SlideTemplate = {
   id: "case-study",
@@ -50,22 +50,23 @@ export const caseStudyTemplate: SlideTemplate = {
     const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
     const label = String(data.label ?? "Project Spotlight");
 
-    // Section label
+    // Section label in header bar
     slide.addText(label.toUpperCase(), {
-      x: 0.5,
-      y: 0.8,
-      w: 5,
-      h: 0.35,
-      fontSize: 10,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
+      fontSize: 22,
       bold: true,
-      color: SD_COLORS.green,
-      fontFace: SD_FONTS.body,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     // Client name
     slide.addText(String(data.clientName), {
       x: 0.5,
-      y: 1.1,
+      y: SD_LAYOUT.contentStartY,
       w: 9,
       h: 0.6,
       fontSize: 24,
@@ -78,7 +79,7 @@ export const caseStudyTemplate: SlideTemplate = {
     if (data.summary) {
       slide.addText(String(data.summary), {
         x: 0.5,
-        y: 1.75,
+        y: SD_LAYOUT.contentStartY + 0.6,
         w: 11,
         h: 0.4,
         fontSize: 13,
@@ -90,7 +91,7 @@ export const caseStudyTemplate: SlideTemplate = {
     // Divider line
     slide.addShape("rect", {
       x: 0.5,
-      y: 2.3,
+      y: 2.2,
       w: 11.5,
       h: 0.03,
       fill: { color: SD_COLORS.lightGray },
@@ -112,7 +113,7 @@ export const caseStudyTemplate: SlideTemplate = {
       // Green accent bar
       slide.addShape("rect", {
         x,
-        y: 2.6,
+        y: 2.5,
         w: colW - 0.3,
         h: 0.05,
         fill: { color: SD_COLORS.green },
@@ -120,7 +121,7 @@ export const caseStudyTemplate: SlideTemplate = {
 
       slide.addText(section.heading.toUpperCase(), {
         x,
-        y: 2.8,
+        y: 2.7,
         w: colW - 0.3,
         h: 0.35,
         fontSize: 10,
@@ -131,7 +132,7 @@ export const caseStudyTemplate: SlideTemplate = {
 
       slide.addText(section.content ?? "", {
         x,
-        y: 3.2,
+        y: 3.1,
         w: colW - 0.3,
         h: 3.5,
         fontSize: 11,
@@ -149,7 +150,7 @@ export const caseStudyTemplate: SlideTemplate = {
 
       slide.addShape("rect", {
         x,
-        y: 2.6,
+        y: 2.5,
         w: colW - 0.3,
         h: 0.05,
         fill: { color: SD_COLORS.green },
@@ -157,7 +158,7 @@ export const caseStudyTemplate: SlideTemplate = {
 
       slide.addText("RESULTS", {
         x,
-        y: 2.8,
+        y: 2.7,
         w: colW - 0.3,
         h: 0.35,
         fontSize: 10,
@@ -172,7 +173,7 @@ export const caseStudyTemplate: SlideTemplate = {
 
       slide.addText(bulletText, {
         x,
-        y: 3.2,
+        y: 3.1,
         w: colW - 0.3,
         h: 3.5,
         color: SD_COLORS.darkGray,

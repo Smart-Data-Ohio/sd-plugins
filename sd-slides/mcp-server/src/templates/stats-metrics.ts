@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, addDotPattern } from "./master-layout.js";
 
 interface Metric {
   value: string;
@@ -29,6 +29,7 @@ export const statsMetricsTemplate: SlideTemplate = {
   ],
   render(pptx, data) {
     const slide = pptx.addSlide({ masterName: "SD_DARK" });
+    addDotPattern(slide);
     const title = String(data.title ?? "By the Numbers");
     const metrics = data.metrics as Metric[];
 

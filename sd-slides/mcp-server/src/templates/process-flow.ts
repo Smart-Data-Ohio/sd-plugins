@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface ProcessStep {
   title: string;
@@ -32,21 +32,22 @@ export const processFlowTemplate: SlideTemplate = {
     const steps = data.steps as ProcessStep[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const count = steps.length;
     const totalW = 11.5;
     const stepW = totalW / count;
     const startX = 0.5;
-    const lineY = 2.4;
+    const lineY = 1.9;
 
     // Horizontal connector line
     slide.addShape("rect", {
@@ -87,7 +88,7 @@ export const processFlowTemplate: SlideTemplate = {
       // Step title
       slide.addText(step.title, {
         x,
-        y: 3.1,
+        y: 2.6,
         w: stepW,
         h: 0.5,
         fontSize: 13,
@@ -100,7 +101,7 @@ export const processFlowTemplate: SlideTemplate = {
       // Step description
       slide.addText(step.description, {
         x: x + 0.15,
-        y: 3.7,
+        y: 3.2,
         w: stepW - 0.3,
         h: 2.5,
         fontSize: 10,

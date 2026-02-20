@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface NextStep {
   action: string;
@@ -33,18 +33,19 @@ export const nextStepsTemplate: SlideTemplate = {
     const steps = data.steps as NextStep[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     steps.forEach((step, i) => {
-      const y = 1.9 + i * 0.9;
+      const y = SD_LAYOUT.contentStartY + 0.1 + i * 0.9;
 
       // Number circle
       slide.addShape("rect", {

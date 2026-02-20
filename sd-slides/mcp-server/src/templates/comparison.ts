@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface ComparisonItem {
   label: string;
@@ -46,18 +46,19 @@ export const comparisonTemplate: SlideTemplate = {
     const items = data.items as ComparisonItem[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const tableX = 0.5;
-    const tableY = 1.8;
+    const tableY = SD_LAYOUT.contentStartY;
     const labelW = 2.5;
     const colW = 4.5;
     const rowH = 0.65;

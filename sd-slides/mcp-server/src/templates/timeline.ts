@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 interface TimelinePhase {
   label: string;
@@ -34,17 +34,18 @@ export const timelineTemplate: SlideTemplate = {
     const phases = data.phases as TimelinePhase[];
 
     slide.addText(title, {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
-    const lineY = 3.2;
+    const lineY = 2.8;
     const startX = 0.8;
     const totalW = 11.5;
     const phaseW = totalW / phases.length;

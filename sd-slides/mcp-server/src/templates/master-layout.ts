@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Pptx = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Slide = any;
 
 // Smart Data brand colors — derived from master deck analysis
 export const SD_COLORS = {
@@ -29,6 +31,15 @@ export const SD_FONTS = {
   body: "Poppins",
 } as const;
 
+// Shared layout constants for SD_BRANDED slides
+export const SD_LAYOUT = {
+  headerH: 1.0,
+  titleX: 0.5,
+  titleY: 0.15,
+  titleH: 0.7,
+  contentStartY: 1.3,
+} as const;
+
 // Resolve assets directory relative to the bundle output (dist/index.js → ../../assets/)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,10 +57,50 @@ const logoDark = loadLogoBase64("logo_dark.png");
 const logoLight = loadLogoBase64("logo_light.png");
 const fullNameLight = loadLogoBase64("full_sd_name_light.png");
 const fullNameDark = loadLogoBase64("full_sd_name_dark.png");
+const greenSwoosh = loadLogoBase64("sd-swoosh.png");
+
+// Load client logos from assets/logos/ directory
+function loadClientLogos(): Array<{ name: string; data: string }> {
+  const logosDir = path.join(assetsDir, "logos");
+  if (!fs.existsSync(logosDir)) return [];
+  const SKIP_LOGOS = new Set(["valeris.png"]);
+  const files = fs
+    .readdirSync(logosDir)
+    .filter(
+      (f) => /\.(png|jpg|jpeg)$/i.test(f) && !SKIP_LOGOS.has(f.toLowerCase()),
+    );
+  return files
+    .map((f) => {
+      const data = loadLogoBase64(path.join("logos", f));
+      if (!data) return null;
+      const name = f.replace(/\.(png|jpg|jpeg)$/i, "").replace(/[-_]/g, " ");
+      return { name, data };
+    })
+    .filter((x): x is { name: string; data: string } => x !== null);
+}
+
+const clientLogos = loadClientLogos();
+
+// Load leadership headshots from assets/headshots/ directory
+function loadHeadshots(): Record<string, string> {
+  const headshotsDir = path.join(assetsDir, "headshots");
+  if (!fs.existsSync(headshotsDir)) return {};
+  const files = fs
+    .readdirSync(headshotsDir)
+    .filter((f) => /\.(png|jpg|jpeg)$/i.test(f));
+  const result: Record<string, string> = {};
+  for (const f of files) {
+    const data = loadLogoBase64(path.join("headshots", f));
+    if (data) result[f] = data;
+  }
+  return result;
+}
+
+const headshots = loadHeadshots();
 
 // Diagnostic: log to stderr (MCP uses stdout for protocol)
 console.error(
-  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark}`,
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length}`,
 );
 
 // Export for use in individual slide templates
@@ -58,21 +109,54 @@ export const SD_LOGOS = {
   logoLight,
   fullNameLight,
   fullNameDark,
+  greenSwoosh,
 } as const;
 
+export const SD_CLIENT_LOGOS = clientLogos;
+
+export const SD_HEADSHOTS = headshots;
+
+/**
+ * Draw a fading dot pattern on the left side of a dark-background slide.
+ * Small white circles arranged in a grid, transparency increasing left-to-right.
+ */
+export function addDotPattern(slide: Slide): void {
+  const dotSize = 0.05;
+  const cols = 8;
+  const rows = 12;
+  const startX = 0.3;
+  const startY = 0.4;
+  const spacingX = 0.65;
+  const spacingY = 0.58;
+
+  for (let col = 0; col < cols; col++) {
+    // Opacity fades from ~75% transparent on the left to ~97% on the right
+    const transparency = 75 + (col / (cols - 1)) * 22;
+    for (let row = 0; row < rows; row++) {
+      slide.addShape("ellipse", {
+        x: startX + col * spacingX,
+        y: startY + row * spacingY,
+        w: dotSize,
+        h: dotSize,
+        fill: { color: SD_COLORS.white, transparency },
+      });
+    }
+  }
+}
+
 export function defineSlideMasters(pptx: Pptx): void {
-  // Standard branded slide with dark header bar
+  // Standard branded slide with dark header bar (thicker, title placed inside by templates)
   pptx.defineSlideMaster({
     title: "SD_BRANDED",
     background: { color: SD_COLORS.white },
     objects: [
-      // Top dark bar
+      // Top dark bar (1.0" tall)
       {
         rect: {
           x: 0,
           y: 0,
           w: "100%",
-          h: 0.6,
+          h: SD_LAYOUT.headerH,
           fill: { color: SD_COLORS.dark },
         },
       },
@@ -83,10 +167,10 @@ export function defineSlideMasters(pptx: Pptx): void {
             {
               image: {
                 data: logoLight,
-                x: 12.23,
-                y: 0.08,
-                w: 0.5,
-                h: 0.44,
+                x: 12.1,
+                y: 0.2,
+                w: 0.6,
+                h: 0.53,
               },
             },
           ]
@@ -216,38 +300,6 @@ export function defineSlideMasters(pptx: Pptx): void {
           w: 8,
           h: 0.04,
           fill: { color: SD_COLORS.green },
-        },
-      },
-    ],
-  });
-
-  // Section divider — green background
-  pptx.defineSlideMaster({
-    title: "SD_SECTION",
-    background: { color: SD_COLORS.green },
-    objects: [
-      // Logo top-right (dark version on green background)
-      // logo_dark.png is 90x84 (ratio ~1.07:1)
-      ...(logoDark
-        ? [
-            {
-              image: {
-                data: logoDark,
-                x: 11.96,
-                y: 0.3,
-                w: 0.75,
-                h: 0.7,
-              },
-            },
-          ]
-        : []),
-      {
-        rect: {
-          x: 0,
-          y: 6.9,
-          w: "100%",
-          h: 0.6,
-          fill: { color: SD_COLORS.dark },
         },
       },
     ],

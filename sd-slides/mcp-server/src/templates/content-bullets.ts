@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 export const contentBulletsTemplate: SlideTemplate = {
   id: "content-bullets",
@@ -27,20 +27,21 @@ export const contentBulletsTemplate: SlideTemplate = {
     const bullets = data.bullets as string[];
 
     slide.addText(String(data.title ?? ""), {
-      x: 0.5,
-      y: 0.8,
-      w: 9,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
         x: 0.5,
-        y: 1.4,
+        y: SD_LAYOUT.contentStartY,
         w: 9,
         h: 0.4,
         fontSize: 14,
@@ -49,7 +50,9 @@ export const contentBulletsTemplate: SlideTemplate = {
       });
     }
 
-    const topY = data.subtitle ? 2.0 : 1.7;
+    const topY = data.subtitle
+      ? SD_LAYOUT.contentStartY + 0.5
+      : SD_LAYOUT.contentStartY;
 
     const bulletItems = bullets.map((item) => ({
       text: item,

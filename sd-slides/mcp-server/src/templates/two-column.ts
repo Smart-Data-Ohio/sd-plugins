@@ -1,5 +1,5 @@
 import type { SlideTemplate } from "../types.js";
-import { SD_COLORS, SD_FONTS } from "./master-layout.js";
+import { SD_COLORS, SD_FONTS, SD_LAYOUT } from "./master-layout.js";
 
 export const twoColumnTemplate: SlideTemplate = {
   id: "two-column",
@@ -38,14 +38,15 @@ export const twoColumnTemplate: SlideTemplate = {
     const slide = pptx.addSlide({ masterName: "SD_BRANDED" });
 
     slide.addText(String(data.title ?? ""), {
-      x: 0.5,
-      y: 0.8,
-      w: 12,
-      h: 0.6,
+      x: SD_LAYOUT.titleX,
+      y: SD_LAYOUT.titleY,
+      w: 11,
+      h: SD_LAYOUT.titleH,
       fontSize: 24,
       bold: true,
-      color: SD_COLORS.dark,
+      color: SD_COLORS.white,
       fontFace: SD_FONTS.heading,
+      valign: "middle",
     });
 
     const colW = 5.7;
@@ -55,7 +56,7 @@ export const twoColumnTemplate: SlideTemplate = {
     if (data.leftHeading) {
       slide.addText(String(data.leftHeading), {
         x: 0.5,
-        y: 1.7,
+        y: SD_LAYOUT.contentStartY,
         w: colW,
         h: 0.4,
         fontSize: 16,
@@ -79,17 +80,19 @@ export const twoColumnTemplate: SlideTemplate = {
 
     slide.addText(leftBullets, {
       x: 0.5,
-      y: data.leftHeading ? 2.2 : 1.7,
+      y: data.leftHeading
+        ? SD_LAYOUT.contentStartY + 0.5
+        : SD_LAYOUT.contentStartY,
       w: colW,
-      h: 4.2,
+      h: 4.5,
     });
 
     // Divider line
     slide.addShape("rect", {
       x: 6.45,
-      y: 1.7,
+      y: SD_LAYOUT.contentStartY,
       w: 0.02,
-      h: 4.5,
+      h: 5.0,
       fill: { color: SD_COLORS.lightGray },
     });
 
@@ -97,7 +100,7 @@ export const twoColumnTemplate: SlideTemplate = {
     if (data.rightHeading) {
       slide.addText(String(data.rightHeading), {
         x: rightX,
-        y: 1.7,
+        y: SD_LAYOUT.contentStartY,
         w: colW,
         h: 0.4,
         fontSize: 16,
@@ -121,9 +124,11 @@ export const twoColumnTemplate: SlideTemplate = {
 
     slide.addText(rightBullets, {
       x: rightX,
-      y: data.rightHeading ? 2.2 : 1.7,
+      y: data.rightHeading
+        ? SD_LAYOUT.contentStartY + 0.5
+        : SD_LAYOUT.contentStartY,
       w: colW,
-      h: 4.2,
+      h: 4.5,
     });
   },
 };
