@@ -3,14 +3,25 @@ import {
   SD_COLORS,
   SD_FONTS,
   SD_LOGOS,
+  SD_COVER_IMAGES,
   addDotPattern,
 } from "./master-layout.js";
+
+// Build a list of available cover images for the template description
+const availableCoverImages = Object.keys(SD_COVER_IMAGES);
+const coverImageList =
+  availableCoverImages.length > 0
+    ? "Available pre-loaded cover images: " +
+      availableCoverImages.join(", ") +
+      ". Ask the user which cover image they'd like to use."
+    : "No pre-loaded cover images found in assets/cover-images/.";
 
 export const coverTemplate: SlideTemplate = {
   id: "cover",
   name: "Cover Slide",
   description:
-    "Title slide with Smart Data branding. Split layout: dark left panel with title text, right panel with optional image or branded placeholder.",
+    "Title slide with Smart Data branding. Split layout: dark left panel with title text, right panel with optional image or branded placeholder. " +
+    coverImageList,
   category: "Opening",
   contentAreas: [
     {
@@ -40,10 +51,10 @@ export const coverTemplate: SlideTemplate = {
     },
     {
       name: "coverImage",
-      type: "image-placeholder",
+      type: "text",
       required: false,
       description:
-        "Base64 image data or file path for the right panel photo. If omitted, shows a branded geometric placeholder.",
+        "Filename of a pre-loaded cover image from assets/cover-images/ (e.g. 'default.png', 'team.png'). If omitted, shows a branded geometric placeholder. Ask the user which image to use.",
     },
   ],
   render(pptx, data) {
@@ -56,11 +67,26 @@ export const coverTemplate: SlideTemplate = {
     const splitX = 8.0;
     const rightW = 13.33 - splitX;
 
-    const imgStr = data.coverImage ? String(data.coverImage) : null;
-    if (imgStr) {
-      const isBase64 = imgStr.startsWith("image/");
+    // Resolve cover image: check pre-loaded assets first, then treat as file path
+    const coverImageInput = data.coverImage ? String(data.coverImage) : null;
+    const resolvedImage = coverImageInput
+      ? (SD_COVER_IMAGES[coverImageInput] ?? null)
+      : null;
+
+    if (resolvedImage) {
       slide.addImage({
-        ...(isBase64 ? { data: imgStr } : { path: imgStr }),
+        data: resolvedImage,
+        x: splitX,
+        y: 0,
+        w: rightW,
+        h: 7.5,
+        sizing: { type: "cover", w: rightW, h: 7.5 },
+      });
+    } else if (coverImageInput) {
+      // Fallback: treat as base64 or file path
+      const isBase64 = coverImageInput.startsWith("image/");
+      slide.addImage({
+        ...(isBase64 ? { data: coverImageInput } : { path: coverImageInput }),
         x: splitX,
         y: 0,
         w: rightW,

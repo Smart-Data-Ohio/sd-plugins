@@ -58,6 +58,7 @@ const logoLight = loadLogoBase64("logo_light.png");
 const fullNameLight = loadLogoBase64("full_sd_name_light.png");
 const fullNameDark = loadLogoBase64("full_sd_name_dark.png");
 const greenSwoosh = loadLogoBase64("sd-swoosh.png");
+const dotPattern = loadLogoBase64("dots.png");
 
 // Load client logos from assets/logos/ directory
 function loadClientLogos(): Array<{ name: string; data: string }> {
@@ -98,9 +99,26 @@ function loadHeadshots(): Record<string, string> {
 
 const headshots = loadHeadshots();
 
+// Load cover images from assets/cover-images/ directory
+function loadCoverImages(): Record<string, string> {
+  const coverDir = path.join(assetsDir, "cover-images");
+  if (!fs.existsSync(coverDir)) return {};
+  const files = fs
+    .readdirSync(coverDir)
+    .filter((f) => /\.(png|jpg|jpeg)$/i.test(f));
+  const result: Record<string, string> = {};
+  for (const f of files) {
+    const data = loadLogoBase64(path.join("cover-images", f));
+    if (data) result[f] = data;
+  }
+  return result;
+}
+
+const coverImages = loadCoverImages();
+
 // Diagnostic: log to stderr (MCP uses stdout for protocol)
 console.error(
-  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length}`,
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} dots=${!!dotPattern} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length} coverImages=${Object.keys(coverImages).length}`,
 );
 
 // Export for use in individual slide templates
@@ -116,32 +134,21 @@ export const SD_CLIENT_LOGOS = clientLogos;
 
 export const SD_HEADSHOTS = headshots;
 
+export const SD_COVER_IMAGES = coverImages;
+
 /**
- * Draw a fading dot pattern on the left side of a dark-background slide.
- * Small white circles arranged in a grid, transparency increasing left-to-right.
+ * Add the fading dot pattern overlay on a dark-background slide.
+ * Uses the dots.png asset stretched across the full slide.
  */
 export function addDotPattern(slide: Slide): void {
-  const dotSize = 0.05;
-  const cols = 8;
-  const rows = 12;
-  const startX = 0.3;
-  const startY = 0.4;
-  const spacingX = 0.65;
-  const spacingY = 0.58;
-
-  for (let col = 0; col < cols; col++) {
-    // Opacity fades from ~75% transparent on the left to ~97% on the right
-    const transparency = 75 + (col / (cols - 1)) * 22;
-    for (let row = 0; row < rows; row++) {
-      slide.addShape("ellipse", {
-        x: startX + col * spacingX,
-        y: startY + row * spacingY,
-        w: dotSize,
-        h: dotSize,
-        fill: { color: SD_COLORS.white, transparency },
-      });
-    }
-  }
+  if (!dotPattern) return;
+  slide.addImage({
+    data: dotPattern,
+    x: 0,
+    y: 0,
+    w: 13.33,
+    h: 7.5,
+  });
 }
 
 export function defineSlideMasters(pptx: Pptx): void {

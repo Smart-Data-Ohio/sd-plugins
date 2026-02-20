@@ -44258,6 +44258,7 @@ var logoLight = loadLogoBase64("logo_light.png");
 var fullNameLight = loadLogoBase64("full_sd_name_light.png");
 var fullNameDark = loadLogoBase64("full_sd_name_dark.png");
 var greenSwoosh = loadLogoBase64("sd-swoosh.png");
+var dotPattern = loadLogoBase64("dots.png");
 function loadClientLogos() {
   const logosDir = path.join(assetsDir, "logos");
   if (!fs.existsSync(logosDir)) return [];
@@ -44291,8 +44292,22 @@ function loadHeadshots() {
   return result;
 }
 var headshots = loadHeadshots();
+function loadCoverImages() {
+  const coverDir = path.join(assetsDir, "cover-images");
+  if (!fs.existsSync(coverDir)) return {};
+  const files = fs
+    .readdirSync(coverDir)
+    .filter((f) => /\.(png|jpg|jpeg)$/i.test(f));
+  const result = {};
+  for (const f of files) {
+    const data = loadLogoBase64(path.join("cover-images", f));
+    if (data) result[f] = data;
+  }
+  return result;
+}
+var coverImages = loadCoverImages();
 console.error(
-  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length}`,
+  `[sd-slides] Assets dir: ${assetsDir} | logos loaded: light=${!!logoLight} dark=${!!logoDark} fullLight=${!!fullNameLight} fullDark=${!!fullNameDark} swoosh=${!!greenSwoosh} dots=${!!dotPattern} clientLogos=${clientLogos.length} headshots=${Object.keys(headshots).length} coverImages=${Object.keys(coverImages).length}`,
 );
 var SD_LOGOS = {
   logoDark,
@@ -44303,26 +44318,16 @@ var SD_LOGOS = {
 };
 var SD_CLIENT_LOGOS = clientLogos;
 var SD_HEADSHOTS = headshots;
+var SD_COVER_IMAGES = coverImages;
 function addDotPattern(slide) {
-  const dotSize = 0.05;
-  const cols = 8;
-  const rows = 12;
-  const startX = 0.3;
-  const startY = 0.4;
-  const spacingX = 0.65;
-  const spacingY = 0.58;
-  for (let col = 0; col < cols; col++) {
-    const transparency = 75 + (col / (cols - 1)) * 22;
-    for (let row = 0; row < rows; row++) {
-      slide.addShape("ellipse", {
-        x: startX + col * spacingX,
-        y: startY + row * spacingY,
-        w: dotSize,
-        h: dotSize,
-        fill: { color: SD_COLORS.white, transparency },
-      });
-    }
-  }
+  if (!dotPattern) return;
+  slide.addImage({
+    data: dotPattern,
+    x: 0,
+    y: 0,
+    w: 13.33,
+    h: 7.5,
+  });
 }
 function defineSlideMasters(pptx) {
   pptx.defineSlideMaster({
@@ -44482,11 +44487,19 @@ function defineSlideMasters(pptx) {
 }
 
 // src/templates/cover.ts
+var availableCoverImages = Object.keys(SD_COVER_IMAGES);
+var coverImageList =
+  availableCoverImages.length > 0
+    ? "Available pre-loaded cover images: " +
+      availableCoverImages.join(", ") +
+      ". Ask the user which cover image they'd like to use."
+    : "No pre-loaded cover images found in assets/cover-images/.";
 var coverTemplate = {
   id: "cover",
   name: "Cover Slide",
   description:
-    "Title slide with Smart Data branding. Split layout: dark left panel with title text, right panel with optional image or branded placeholder.",
+    "Title slide with Smart Data branding. Split layout: dark left panel with title text, right panel with optional image or branded placeholder. " +
+    coverImageList,
   category: "Opening",
   contentAreas: [
     {
@@ -44516,10 +44529,10 @@ var coverTemplate = {
     },
     {
       name: "coverImage",
-      type: "image-placeholder",
+      type: "text",
       required: false,
       description:
-        "Base64 image data or file path for the right panel photo. If omitted, shows a branded geometric placeholder.",
+        "Filename of a pre-loaded cover image from assets/cover-images/ (e.g. 'default.png', 'team.png'). If omitted, shows a branded geometric placeholder. Ask the user which image to use.",
     },
   ],
   render(pptx, data) {
@@ -44527,11 +44540,23 @@ var coverTemplate = {
     addDotPattern(slide);
     const splitX = 8;
     const rightW = 13.33 - splitX;
-    const imgStr = data.coverImage ? String(data.coverImage) : null;
-    if (imgStr) {
-      const isBase64 = imgStr.startsWith("image/");
+    const coverImageInput = data.coverImage ? String(data.coverImage) : null;
+    const resolvedImage = coverImageInput
+      ? (SD_COVER_IMAGES[coverImageInput] ?? null)
+      : null;
+    if (resolvedImage) {
       slide.addImage({
-        ...(isBase64 ? { data: imgStr } : { path: imgStr }),
+        data: resolvedImage,
+        x: splitX,
+        y: 0,
+        w: rightW,
+        h: 7.5,
+        sizing: { type: "cover", w: rightW, h: 7.5 },
+      });
+    } else if (coverImageInput) {
+      const isBase64 = coverImageInput.startsWith("image/");
+      slide.addImage({
+        ...(isBase64 ? { data: coverImageInput } : { path: coverImageInput }),
         x: splitX,
         y: 0,
         w: rightW,
