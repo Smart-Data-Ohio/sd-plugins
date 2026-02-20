@@ -118,7 +118,7 @@ export const coverTemplate: SlideTemplate = {
       valign: "top",
     });
 
-    // Green swoosh or accent line near bottom of left panel
+    // Green swoosh near bottom of left panel
     if (SD_LOGOS.greenSwoosh) {
       slide.addImage({
         data: SD_LOGOS.greenSwoosh,
@@ -126,15 +126,6 @@ export const coverTemplate: SlideTemplate = {
         y: 5.2,
         w: 7.5,
         h: 1.2,
-      });
-    } else {
-      // Fallback: green accent line
-      slide.addShape("rect", {
-        x: 0.6,
-        y: 5.8,
-        w: 6.0,
-        h: 0.06,
-        fill: { color: SD_COLORS.green },
       });
     }
 

@@ -44590,14 +44590,6 @@ var coverTemplate = {
         w: 7.5,
         h: 1.2,
       });
-    } else {
-      slide.addShape("rect", {
-        x: 0.6,
-        y: 5.8,
-        w: 6,
-        h: 0.06,
-        fill: { color: SD_COLORS.green },
-      });
     }
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
