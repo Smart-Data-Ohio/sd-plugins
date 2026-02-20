@@ -44251,7 +44251,17 @@ function loadLogoBase64(filename) {
   const filePath = path.join(assetsDir, filename);
   if (!fs.existsSync(filePath)) return null;
   const data = fs.readFileSync(filePath);
-  return `image/png;base64,${data.toString("base64")}`;
+  const header = data.slice(0, 8).toString("hex");
+  let mime;
+  if (header.startsWith("89504e47")) {
+    mime = "image/png";
+  } else if (header.startsWith("ffd8ff")) {
+    mime = "image/jpeg";
+  } else {
+    console.error(`[sd-slides] Skipping unsupported image format: ${filename}`);
+    return null;
+  }
+  return `${mime};base64,${data.toString("base64")}`;
 }
 var logoDark = loadLogoBase64("logo_dark.png");
 var logoLight = loadLogoBase64("logo_light.png");
@@ -44321,12 +44331,14 @@ var SD_HEADSHOTS = headshots;
 var SD_COVER_IMAGES = coverImages;
 function addDotPattern(slide) {
   if (!dotPattern) return;
+  const dotH = 7.5;
+  const dotW = dotH * (323 / 1080);
   slide.addImage({
     data: dotPattern,
     x: 0,
     y: 0,
-    w: 13.33,
-    h: 7.5,
+    w: dotW,
+    h: dotH,
   });
 }
 function defineSlideMasters(pptx) {
@@ -44472,16 +44484,6 @@ function defineSlideMasters(pptx) {
             },
           ]
         : []),
-      // Green accent line near bottom
-      {
-        rect: {
-          x: 1,
-          y: 5.5,
-          w: 8,
-          h: 0.04,
-          fill: { color: SD_COLORS.green },
-        },
-      },
     ],
   });
 }
@@ -44607,15 +44609,6 @@ var coverTemplate = {
       lineSpacingMultiple: 1.1,
       valign: "top",
     });
-    if (SD_LOGOS.greenSwoosh) {
-      slide.addImage({
-        data: SD_LOGOS.greenSwoosh,
-        x: 0.3,
-        y: 5.2,
-        w: 7.5,
-        h: 1.2,
-      });
-    }
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
         x: 0.6,
@@ -44633,12 +44626,21 @@ var coverTemplate = {
     if (footerParts.length > 0) {
       slide.addText(footerParts.join("  |  "), {
         x: 0.6,
-        y: 6.2,
+        y: 5.6,
         w: 7,
         h: 0.4,
         fontSize: 14,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
+      });
+    }
+    if (SD_LOGOS.greenSwoosh) {
+      slide.addImage({
+        data: SD_LOGOS.greenSwoosh,
+        x: 0,
+        y: 6,
+        w: 7.7,
+        h: 1.5,
       });
     }
   },
@@ -45661,9 +45663,9 @@ var thankYouTemplate = {
     const slide = pptx.addSlide({ masterName: "SD_TITLE" });
     addDotPattern(slide);
     slide.addText(String(data.heading ?? "Thank You"), {
-      x: 1,
+      x: 0,
       y: 2,
-      w: 8,
+      w: 13.33,
       h: 1,
       fontSize: 40,
       bold: true,
@@ -45678,9 +45680,9 @@ var thankYouTemplate = {
     if (data.website) contactLines.push(String(data.website));
     if (contactLines.length > 0) {
       slide.addText(contactLines.join("\n"), {
-        x: 1,
+        x: 0,
         y: 3.5,
-        w: 8,
+        w: 13.33,
         h: 1.5,
         fontSize: 14,
         color: SD_COLORS.green,
@@ -46411,7 +46413,7 @@ var clientLogosTemplate = {
   id: "client-logos",
   name: "Client Logos / Partners",
   description:
-    "Showcase client or partner logos on a dark background. Left panel has a tagline, right area displays a grid of logos loaded from assets/logos/.",
+    "Showcase client or partner logos on a dark background. Full-width grid with tagline in the top-left area. Logos are loaded from assets/logos/.",
   category: "Commercial",
   contentAreas: [
     {
@@ -46419,7 +46421,7 @@ var clientLogosTemplate = {
       type: "text",
       required: false,
       description:
-        "Left-side tagline (default: 'Driving client success through innovative technologies since 2006')",
+        "Top-left tagline (default: 'Driving client success through innovative technologies since 2006')",
     },
   ],
   render(pptx, data) {
@@ -46429,27 +46431,27 @@ var clientLogosTemplate = {
       data.tagline ??
         "Driving client success through innovative technologies since 2006",
     );
-    slide.addText(tagline, {
-      x: 0.5,
-      y: 1,
-      w: 4,
-      h: 4,
-      fontSize: 24,
-      italic: true,
-      bold: true,
-      color: SD_COLORS.white,
-      fontFace: SD_FONTS.heading,
-      valign: "middle",
-      lineSpacingMultiple: 1.3,
-    });
     const logos = SD_CLIENT_LOGOS;
     if (logos.length === 0) {
+      slide.addText(tagline, {
+        x: 0.5,
+        y: 1,
+        w: 5,
+        h: 4,
+        fontSize: 24,
+        italic: true,
+        bold: true,
+        color: SD_COLORS.white,
+        fontFace: SD_FONTS.heading,
+        valign: "middle",
+        lineSpacingMultiple: 1.3,
+      });
       slide.addText(
         "Client logos will appear here.\nAdd PNG files to assets/logos/.",
         {
-          x: 5,
+          x: 5.5,
           y: 2.5,
-          w: 7.5,
+          w: 7,
           h: 2,
           fontSize: 14,
           color: SD_COLORS.mediumGray,
@@ -46461,26 +46463,54 @@ var clientLogosTemplate = {
       return;
     }
     const cols = 4;
-    const gridX = 5;
-    const gridY = 0.8;
-    const cellW = 1.9;
-    const cellH = 1.1;
-    const gapX = 0.15;
-    const gapY = 0.15;
-    logos.forEach((logo, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const x = gridX + col * (cellW + gapX);
-      const y = gridY + row * (cellH + gapY);
-      slide.addImage({
-        data: logo.data,
-        x: x + 0.15,
-        y: y + 0.1,
-        w: cellW - 0.3,
-        h: cellH - 0.2,
-        sizing: { type: "contain", w: cellW - 0.3, h: cellH - 0.2 },
-      });
+    const gridX = 0.5;
+    const gridY = 0.5;
+    const totalW = 12.33;
+    const cellW = totalW / cols;
+    const cellH = 1.3;
+    const gapY = 0.05;
+    const taglineCols = 2;
+    const taglineRows = 2;
+    slide.addText(tagline, {
+      x: gridX + 0.1,
+      y: gridY + 0.1,
+      w: cellW * taglineCols - 0.2,
+      h: (cellH + gapY) * taglineRows - 0.2,
+      fontSize: 24,
+      italic: true,
+      bold: true,
+      color: SD_COLORS.white,
+      fontFace: SD_FONTS.heading,
+      valign: "middle",
+      lineSpacingMultiple: 1.3,
     });
+    let logoIdx = 0;
+    const totalRows = Math.ceil(
+      (logos.length + taglineCols * taglineRows) / cols,
+    );
+    for (let row = 0; row < totalRows && logoIdx < logos.length; row++) {
+      for (let col = 0; col < cols && logoIdx < logos.length; col++) {
+        if (row < taglineRows && col < taglineCols) continue;
+        const x = gridX + col * cellW;
+        const y = gridY + row * (cellH + gapY);
+        const logo = logos[logoIdx];
+        logoIdx++;
+        const padX = 0.3;
+        const padY = 0.15;
+        slide.addImage({
+          data: logo.data,
+          x: x + padX,
+          y: y + padY,
+          w: cellW - padX * 2,
+          h: cellH - padY * 2,
+          sizing: {
+            type: "contain",
+            w: cellW - padX * 2,
+            h: cellH - padY * 2,
+          },
+        });
+      }
+    }
   },
 };
 

@@ -144,17 +144,7 @@ export const coverTemplate: SlideTemplate = {
       valign: "top",
     });
 
-    // Green swoosh near bottom of left panel
-    if (SD_LOGOS.greenSwoosh) {
-      slide.addImage({
-        data: SD_LOGOS.greenSwoosh,
-        x: 0.3,
-        y: 5.2,
-        w: 7.5,
-        h: 1.2,
-      });
-    }
-
+    // Subtitle text — above the swoosh
     if (data.subtitle) {
       slide.addText(String(data.subtitle), {
         x: 0.6,
@@ -175,12 +165,23 @@ export const coverTemplate: SlideTemplate = {
     if (footerParts.length > 0) {
       slide.addText(footerParts.join("  |  "), {
         x: 0.6,
-        y: 6.2,
+        y: 5.6,
         w: 7.0,
         h: 0.4,
         fontSize: 14,
         color: SD_COLORS.green,
         fontFace: SD_FONTS.body,
+      });
+    }
+
+    // Green swoosh — decorative, anchored to bottom of left panel
+    if (SD_LOGOS.greenSwoosh) {
+      slide.addImage({
+        data: SD_LOGOS.greenSwoosh,
+        x: 0.0,
+        y: 6.0,
+        w: 7.7,
+        h: 1.5,
       });
     }
   },

@@ -49,9 +49,9 @@ export const thankYouTemplate: SlideTemplate = {
     addDotPattern(slide);
 
     slide.addText(String(data.heading ?? "Thank You"), {
-      x: 1,
+      x: 0,
       y: 2.0,
-      w: 8,
+      w: 13.33,
       h: 1.0,
       fontSize: 40,
       bold: true,
@@ -68,9 +68,9 @@ export const thankYouTemplate: SlideTemplate = {
 
     if (contactLines.length > 0) {
       slide.addText(contactLines.join("\n"), {
-        x: 1,
+        x: 0,
         y: 3.5,
-        w: 8,
+        w: 13.33,
         h: 1.5,
         fontSize: 14,
         color: SD_COLORS.green,

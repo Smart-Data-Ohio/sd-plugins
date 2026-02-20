@@ -49,7 +49,19 @@ function loadLogoBase64(filename: string): string | null {
   const filePath = path.join(assetsDir, filename);
   if (!fs.existsSync(filePath)) return null;
   const data = fs.readFileSync(filePath);
-  return `image/png;base64,${data.toString("base64")}`;
+  // Detect actual image format from file header bytes
+  const header = data.slice(0, 8).toString("hex");
+  let mime: string;
+  if (header.startsWith("89504e47")) {
+    mime = "image/png";
+  } else if (header.startsWith("ffd8ff")) {
+    mime = "image/jpeg";
+  } else {
+    // Unsupported format (HEIC, AVIF, etc.) — skip
+    console.error(`[sd-slides] Skipping unsupported image format: ${filename}`);
+    return null;
+  }
+  return `${mime};base64,${data.toString("base64")}`;
 }
 
 // Load logos once at startup
@@ -137,17 +149,20 @@ export const SD_HEADSHOTS = headshots;
 export const SD_COVER_IMAGES = coverImages;
 
 /**
- * Add the fading dot pattern overlay on a dark-background slide.
- * Uses the dots.png asset stretched across the full slide.
+ * Add the fading dot pattern overlay on the left side of a dark-background slide.
+ * Uses the dots.png asset at its natural proportions (323x1080, ratio ~0.299).
  */
 export function addDotPattern(slide: Slide): void {
   if (!dotPattern) return;
+  // dots.png is 323x1080 — keep native aspect ratio, full slide height
+  const dotH = 7.5;
+  const dotW = dotH * (323 / 1080); // ~2.24"
   slide.addImage({
     data: dotPattern,
     x: 0,
     y: 0,
-    w: 13.33,
-    h: 7.5,
+    w: dotW,
+    h: dotH,
   });
 }
 
@@ -299,16 +314,6 @@ export function defineSlideMasters(pptx: Pptx): void {
             },
           ]
         : []),
-      // Green accent line near bottom
-      {
-        rect: {
-          x: 1,
-          y: 5.5,
-          w: 8,
-          h: 0.04,
-          fill: { color: SD_COLORS.green },
-        },
-      },
     ],
   });
 }
