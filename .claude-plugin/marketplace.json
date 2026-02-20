@@ -155,6 +155,21 @@
         "proposals",
         "pitch-decks"
       ]
+    },
+    {
+      "name": "sd-retro",
+      "source": "./sd-retro",
+      "version": "0.1.0",
+      "description": "Project retrospectives — structured capture of what worked well, what could improve, and concrete action items from completed engagements.",
+      "author": {
+        "name": "Smart Data"
+      },
+      "tags": [
+        "retrospectives",
+        "lessons-learned",
+        "project-management",
+        "continuous-improvement"
+      ]
     }
   ]
 }

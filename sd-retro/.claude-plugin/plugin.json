@@ -1,0 +1,8 @@
+{
+  "name": "sd-retro",
+  "version": "0.1.0",
+  "description": "Project retrospectives — structured capture of what worked well, what could improve, and concrete action items from completed engagements.",
+  "author": {
+    "name": "Smart Data"
+  }
+}
